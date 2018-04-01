@@ -1,6 +1,6 @@
 library(tidyverse)
 
-
+#test for changes
 # 1/4 for classic linear model
 classic<-function(n){
   
