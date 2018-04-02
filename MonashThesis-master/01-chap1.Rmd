@@ -5,78 +5,49 @@ knit: "bookdown::render_book"
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, message=FALSE, cache=TRUE)
-# Load any R packages you need here
-library(forecast)
-library(ggplot2)
+library(tidyverse)
+library(nullabor)
 ```
 
-# Introduction {#ch:intro}
+# Introduction and literature review {#ch:intro}
 
-This is where you introduce the main ideas of your thesis, and an overview of the context and background.
+The multiple regression model for cross-sectional data is still the most widely used vehicle for empirical analysis in economics and other social sciences (Wooldridge, 2017). Detecting possible violations of the Gauss-Markov assumptions is crucial to interpret the data properly, especially in the early stage of analysis. In this paper, we will focus on testing two of the issues in one go by reading residual plots. More specifically, we want to distinguish non-linear relationship between dependent-independent variables and linear relationship but with heteroskedasticity from the classic linear model.
 
-In a PhD, Chapter 2 would normally contain a literature review. Typically, Chapters 3--5 would contain your own contributions. Think of each of these as potential papers to be submitted to journals. Finally, Chapter 6 provides some concluding remarks, discussion, ideas for future research, and so on. Appendixes can contain additional material that don't fit into any chapters, but that you want to put on record. For example, additional tables, output, etc.
+The residuals are the deviation from the observed and the predicted values according to the assumed model. If the assumptions about the validity of the model are valid, the residual plot (scatter plot between the residuals and the predicted values) will have a random distribution. Otherwise, it will have unexplained systematic pattern (George, 1992).
 
-## Rmarkdown
+Former studies have shown that human eyes are sensitive to such patterns. With proper manipulation, visualized plots can be used as test statistics. A simple but rigorous protocol that provides inferential validity is lineup, named after the 'police lineup' of criminal investigations. The protocol consists of generating 19 null plots (in general), inserting the plot of the real data in a random location among the null plots and asking the human viewer to single out one of the 20 plots as most different from the others (Buja, 2009). If the real plot is chosen, we reject the null hypothesis. Figure 1 is an example of lineup. Which plot do you think is the most different? If you choose one, you choose the plot of real data. (Simchoni, 2018) This protocol was proved to be valid and powerful therotically and also through human experiments, especially when the assumptions for doing conventional tests are violated (Mahbubul, 2013).
 
-In this template, the rest of the chapter shows how to use Rmarkdown. The big advantage of using Rmarkdown is that it allows you to include your R code directly into your thesis, to ensure there are no errors in copying and pasting, and that everything is reproducible. It also helps you stay better organized.
+```{r plots, message=FALSE, fig.cap="An example of lineup"}
+lineup_data_mtcars <- lineup(null_permute("hp"), mtcars, pos = sample(1,1))
 
-For details on using _R Markdown_ see <http://rmarkdown.rstudio.com>.  
-
-## Data
-
-Included in this template is a file called `sales.csv`.  This contains quarterly data on Sales and Advertising budget for a small company over the period 1981--2005. It also contains the GDP (gross domestic product) over the same period. All series have been adjusted for inflation.  We can load in this data set using the following command:
-
-```{r loaddata, echo=TRUE}
-sales <- ts(read.csv("data/sales.csv")[,-1], start=1981, frequency=4)
+ggplot(lineup_data_mtcars, aes(disp, hp)) +
+  geom_point() +
+  facet_wrap(~ .sample)
 ```
+Althrough visual statistical inference is promising for tackling many challenging issues in statistics, it is expensive and time consuming to render every single test with human experiment. In light of the deep learning neural network, we are now going to train the computers to read the residual plots for us. Hopefully, once we have a well-trained model, it only costs us a few seconds to do a visual test with high accuracy.
 
-Any data you use in your thesis can go into the data directory. The data should be in exactly the format you obtained it. Do no editing or manipulation of the data outside of R. Any data munging should be scripted in R and form part of your thesis files (possibly hidden in the output).
+In his blog, Simchoni has designed a deep learning model to test the significance of linear relationship between two variables for samples of size 50. The model reached over 93% accuracy on unseen test data. He also mentioned that the computer fails to pick up a strong non-linear relationship even though the Pearson'r is as high as -0.84. I think one can think of this as a disadvantage of the deep learning model, because it is not flexible compared to human vision, as Simchoni explained in his article. Since Human can easily detect any relationship between the two variables, while the model can only tell linear relationship as trained. On the other hand, I think this is also an advantage of deep learning model, or visualization itself. If your purpose is to detect linear relationship exclusively, you do not want other types of relationships to mess up your decision, then this model does a really good job of ignoring noises, especially compared to conventional Pearson'r. Just as Anscombe’s Quartet demonstrated, totally different plots can give exactly the same statistics. Furthermore, if we want the model to distinguish not only linear relationship from no relationship, but also be able to tell what the relationship is, we need to adjust our design of training accordingly.
 
-## Figures
+This is also what I am trying to do here, given what Simchoni has done, I am going to extend his study further by augmenting the model for a broader usage.
 
-Figure \ref{fig:deaths} shows time plots of the data we just loaded. Notice how figure captions and references work. Chunk names can be used as figure labels with `fig:` prefixed. Never manually type figure numbers, as they can change when you add or delete figures. This way, the figure numbering is always correct.
 
-```{r deaths, message=FALSE, fig.cap="Quarterly sales, advertising and GDP data."}
-autoplot(sales, facets=TRUE, ylab="", xlab="Year")
-```
 
-## Results from analyses
 
-We can fit a dynamic regression model to the sales data.
 
-```{r, echo=FALSE}
-fit <- auto.arima(sales[,"Sales"], xreg=sales[,2:3], D=1)
-if(!identical(fit$arma, c(0L,1L,0L,1L,4L,0L,1L)))
-  stop("Model not ARIMA(0,0,1)(0,1,1)[4]")
-#This is an example of how to put checks into your R code to warn you if something has gone wrong. 
-```
 
-If $y_t$ denotes the sales in quarter $t$, $x_t$ denotes the corresponding advertising budget and $z_t$ denotes the GDP, then the resulting model is:
-\begin{equation}
-  y_t - y_{t-4} = \beta (x_t-x_{t-4}) + \gamma (z_t-z_{t-4}) + \theta_1 \varepsilon_{t-1} + \Theta_1 \varepsilon_{t-4} + \varepsilon_t
-\end{equation}
-where
-$\beta = `r format(fit[['coef']]['AdBudget'], digits=2, nsmall=2)`$, 
-$\gamma = `r format(fit[['coef']]['GDP'], digits=2, nsmall=2)`$, 
-$\theta_1 = `r format(fit[['coef']]['ma1'], digits=2, nsmall=2)`$, 
-and
-$\Theta_1 = `r format(fit[['coef']]['sma1'], digits=2, nsmall=2)`$.
 
-## Tables
 
-Let's assume future advertising spend and GDP are at the current levels. Then forecasts for the next year are given in Table \ref{tab:salesforecasts}.
 
-```{r forecasts, results="asis"}
-currentad <- rep(tail(sales[,"AdBudget"],1),4)
-currentgdp <- rep(tail(sales[,"GDP"],1),4)
-fc <- forecast(fit, xreg=data.frame(AdBudget=currentad, GDP=currentgdp))
-knitLatex::xTab(format(as.data.frame(fc), nsmall=1, digits=1),
-   caption.bottom="Forecasts for the next year assuming Advertising budget and GDP are unchanged.",
-   booktabs=TRUE, 
-   label='tab:salesforecasts')
-```
 
-Again, notice the use of labels and references to automatically generate Table numbers. In this case, we need to generate the label ourselves. 
 
-The `knitLatex` package is useful for generating tables from R output. Other packages can do similar things including the `kable` function in `knitr` which is somewhat simpler but you have less control over the result. If you use `knitLatex` to generate tables, don't forget to include `results="asis"` in the chunk settings.
+
+
+
+
+
+
+
+
+
+
 
