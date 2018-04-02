@@ -1,0 +1,24 @@
+---
+knit: "bookdown::render_book"
+---
+
+# Abstract {-}
+
+When we fit a linear regression model, with one continuous dependent variable and some explanatory variables, many problems may occur. For example, the relationship between dependent-explanatory is not linear; the error terms may be correlated to each other; the variance of errors may not be constant; outliers and high leverage points may be present, etc. Plots of residuals versus predicted (or fitted) value are a useful graphical tool for detecting most of the problems. (An introduction to statistical learning, Gareth James)
+
+Former studies have also shown that visual statistical test is a valid and powerful tool in the context of linear models. Protocols like lineup can be used to provide reliable human visual tests. (Mahububul Majumder, jasa) However, rendering every visual test with human could be expensive and time consuming in practice. 
+
+Therefore, in this paper, we are going to utilize the deep learning model and "teach" the computers to read the residual plots, to address two of the issues, non-linearity and heteroskedasticity, as mentioned above. After training the model, we will compare its performance with human experiments.
+
+ 
+
+
+
+
+
+
+
+<!-- 
+The following line is required to re-set page numbering after preliminary material. Do not remove
+-->
+\clearpage\pagenumbering{arabic}\setcounter{page}{0}

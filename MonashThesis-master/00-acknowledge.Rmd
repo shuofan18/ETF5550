@@ -1,0 +1,7 @@
+---
+knit: "bookdown::render_book"
+---
+
+# Acknowledgements {-}
+
+I would like to thank my supervisor, Di, for being patient with me as always.
