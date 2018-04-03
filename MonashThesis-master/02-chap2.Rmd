@@ -13,9 +13,9 @@ We will start with the simulation of the original dataset, x and y, with randoml
 
 ## Classic Linear Model {#sec:classic}
 
-Classic linear model is the most straightforward type to be designed. Since we will fit a linear model to the data, residual plot of this type will show no patterns in general. However, there may still be some undesired patterns formed out of randomness, especially when the sample size is small. We will simply ignore these noises and group them altogether as residuals from "classic linear model". And also, the correlation between the two original variables makes little difference on the final resiual plot, so we arbitrarily choose the coefficient from a uniform distribution from 0.5 to 1.5. Below are three examples generated from this model.
+Classic linear model is the most straightforward type to be designed. Since we will fit a linear model to the data, residual plot of this type will show no patterns in general. However, there may still be some undesired patterns formed out of randomness, especially when the sample size is small. We will simply ignore these noises and group them altogether as residuals from "classic linear model". And also, the correlation between the two original variables makes little difference on the final resiual plot, so we arbitrarily choose the coefficient from a uniform distribution from 0.5 to 1.5. Below are four examples generated from this model.
 
-```{r classic, message=FALSE, cache=TRUE}
+```{r classic_plot, message=FALSE, cache=TRUE}
 library(gridExtra)
 classic<-function(n){
   
@@ -33,7 +33,7 @@ classic<-function(n){
   return(tibble(res, yhat))
 }
 set.seed(0405)
-N <- sample(20:800, 3, replace=TRUE)
+N <- sample(20:800, 4, replace=TRUE)
   cls <- tibble(N) %>% 
     mutate(res=map(N, classic))
     cls <- cls$res
@@ -41,16 +41,125 @@ N <- sample(20:800, 3, replace=TRUE)
 p1 <-   ggplot(cls[[1]], aes(x=yhat, y=res)) +geom_point()
 p2 <-   ggplot(cls[[2]], aes(x=yhat, y=res)) +geom_point()
 p3 <-   ggplot(cls[[3]], aes(x=yhat, y=res)) +geom_point()
+p4 <-   ggplot(cls[[4]], aes(x=yhat, y=res)) +geom_point()
   
-grid.arrange(p1,p2,p3,nrow=1, heights=1/3) 
+grid.arrange(p1,p2,p3,p4,nrow=2, heights=c(1,1)) 
 
 ```
 
 ## Linear Model with Heteroskedasticity {#sec:heter}
 
-It is impossible to list out all types of heteroskedasticity via a simple function. Here I am trying to present four kinds mainly. The first two is when the variace of y is monotonically changing with x, while the other two have a change point in the middle. To ensure the variance is positive, we use exponential function for creating the monotonic changing variance. So the 
+The only difference of designing this model is to give a non-zero relationship between variance of y and x. It is impossible to list out all types of heteroskedasticity via a simple function form. Here I am trying to present four kinds mainly. The first two is when the variace of y is monotonically increasing or decreasing with x, while the other two has a turn point in the middle. Y will be generated from a normal distribution with mean equals to $\beta x$ and variance from one of the three equations below.
+
+$$var(y_i)=e^{\lambda x_i}+\epsilon_i$$ where $\lambda$ is randomly chosen from a uniform distribution from -1 to 1, and $\epsilon$ is generated from an exponential distribution independently. This function is used for providing monotonic changing variance. When $\lambda$ is positive, it will give us increasing variance, and decreasing when negative. Both deterministic and random parts are from exponential family, this ensures the variance is positive.
+
+$$var(y_i)= ax_i^2+bx_i+c+\left|c-\frac{b^2}{2a}\right|+\epsilon_i$$ where $\epsilon$ is generated from an exponential distribution independently, a is a positive random number, b and c are randomly selected from standard normal distribution. The absolute value in the middle guarantees the variance to be positive. Variance from this function decreases at first and then becomes increasing.
+
+The third one is the density function of standard normal with x being the quantiles, and it also has an $\epsilon$ to produce some randomness. Obviously this function will make the variance increase at first and then become decrease. Below are four examples generated from this model.
+
+```{r heter_plot, message=FALSE, cache=TRUE}
+heter<-function(n, index){
+  lambda <- runif(1,-2,2)
+  beta<-runif(1,0.5,1.5)
+  a <- abs(lambda)
+  b <- rnorm(1)
+  c <- rnorm(1)
+  
+  x<-runif(n, -2, 2)
+  m <- mean(x)
+
+  if (index==1){
+    y <- rnorm(n, beta*x, exp(x*lambda)+rexp(n))
+  } else if (index==2) {
+    y <- rnorm(n, beta*x, a*x^2+b*x+c+abs(c-b^2/(2*a))+rexp(n))
+  } else {
+    y <- rnorm(n, beta*x, dnorm(x, mean = m)+rexp(n))
+  }
+  
+  tibble(x, y)
+  model<-lm(y ~ x)
+  res<-residuals(model)
+  yhat<-predict(model)
+  res<-(res-mean(res))/sd(res)
+  yhat<-(yhat-mean(yhat))/sd(yhat)
+  return(tibble(res, yhat))
+}
+set.seed(0403)
+N12 <- sample(20:800, 2, replace=TRUE)
+  het12 <- tibble(N12) %>% 
+    mutate(res=map(N12, heter, index=1))
+    het12 <- het12$res
+N3 <- sample(20:800, 1, replace=TRUE)
+  het3 <- tibble(N3) %>% 
+    mutate(res=map(N3, heter, index=2))
+    het3 <- het3$res
+N4 <- sample(20:800, 1, replace=TRUE)
+  het4 <- tibble(N4) %>% 
+    mutate(res=map(N4, heter, index=3))
+    het4 <- het4$res
+    
+p1 <-   ggplot(het12[[1]], aes(x=yhat, y=res)) +geom_point()
+p2 <-   ggplot(het12[[2]], aes(x=yhat, y=res)) +geom_point()
+p3 <-   ggplot(het3[[1]], aes(x=yhat, y=res)) +geom_point()
+p4 <-   ggplot(het4[[1]], aes(x=yhat, y=res)) +geom_point()
+  
+grid.arrange(p1,p2,p3,p4,nrow=2, heights=c(1,1)) 
+
+```
 
 ## Non-linear model {#sec:poly}
+
+The most difficult part is the non-linear relationship, given the tremendous possibilities. Therotically, we can make use of the Taylor series to generate all kinds of continous and differentiable non-linear models. But we cannot include infinite orders of x. Therefore, at this stage, I only include a polynomial of x to the order of five with each parameter being randomly generated. I chose five because normally the order of the non-linear relationship of data from Economics world do not exceed four. What's more, it is already good enough to vary the shape of our plots. Also, since order four and five are not as common as lower orders, we attach a bernoulli term with 0.5 success rate to them respectively. So the Y will be a normal distribution with mean $\beta_1x+\beta_2x^2+\beta_3x^3+\beta_4x^4+\beta_5x^5$, and variance $\beta_1^2+\beta_2^2+\beta_3^2+2\beta_4^2+2\beta_5^2$. We adjust the variance to be increase for higher orders so the data could has more variation. Below are four examples generated from this model.
+
+```{r poly_plot, message=FALSE, cache=TRUE}
+nonpoly<-function(n){
+  
+  p1<-rnorm(1,0,2)
+  p2<-rnorm(1,0,2)
+  p3<-rnorm(1,0,2)*rbinom(1,1,0.5)
+  p4<-rnorm(1,0,2)*rbinom(1,1,0.3)
+  p5<-rnorm(1,0,1)*rbinom(1,1,0.2)
+  
+  x<-runif(n,-3,3)
+  y<-rnorm(n, p1*x+p2*x^2+p3*x^3+p4*x^4+p5*x^5, p1^2+2*p2^2+2*p3^2+2*p4^2+2*p5^2)
+  
+  tibble(x, y)
+  model<-lm(y ~ x)
+  res<-residuals(model)
+  yhat<-predict(model)
+  res<-(res-mean(res))/sd(res)
+  yhat<-(yhat-mean(yhat))/sd(yhat)
+  return(tibble(res, yhat))
+}
+
+set.seed(0002)
+N <- sample(20:800, 4, replace=TRUE)
+  pl <- tibble(N) %>% 
+    mutate(res=map(N, nonpoly))
+    pl <- pl$res
+    
+p1 <-   ggplot(pl[[1]], aes(x=yhat, y=res)) +geom_point()
+p2 <-   ggplot(pl[[2]], aes(x=yhat, y=res)) +geom_point()
+p3 <-   ggplot(pl[[3]], aes(x=yhat, y=res)) +geom_point()
+p4 <-   ggplot(pl[[4]], aes(x=yhat, y=res)) +geom_point()
+  
+grid.arrange(p1,p2,p3,p4,nrow=2, heights=c(1,1)) 
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
