@@ -3,7 +3,7 @@ chapter: 2
 knit: "bookdown::render_book"
 ---
 
-# Literature Review {#ch:litreview}
+# Model Design {#ch:modesign}
 
 This chapter contains a summary of the context in which your research is set. 
 
@@ -16,7 +16,7 @@ You will need to organize the literature review around themes, and within each t
 All citations should be done using markdown notation as shown below. This way, your bibliography will be compiled automatically and correctly.
 
 
-## Exponential Smoothing {#sec:expsmooth}
+## Classic Linear Model {#sec:classic}
 
 Exponential smoothing was originally developed in the late 1950s [@Brown59;@Brown63;@Holt57;@Winters60]. Because of their computational simplicity and interpretability, they became widely used in practice.
 
