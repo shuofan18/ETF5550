@@ -5,23 +5,66 @@ knit: "bookdown::render_book"
 
 # Model Design {#ch:modesign}
 
-This chapter contains a summary of the context in which your research is set. 
+## Deep learning neural network
 
-Imagine you are writing for your fellow PhD students. Topics that are well-known to them do not have to be included here. But things that they may not know about should be included.
+To teach a model to tell what kind of data we have (linear, nonlinear or heteroskedasticity), we are going to implement the supervised learning technique. For simplicity, we can think of the deep learning neural network as a super complex nonlinear model which could estimate hundreds of thousands parameters with big enough dataset. As usual regression problem, we need to provide the model with dependent variable and independent variables. In this case, the independent variable will be the residual plots simulated from different relationships, and dependent variable will be the group labels of that plot. Once we have these estimated parameters, we then can use them to classify unseen residual plots. So the key point of model design is to simulate data that can produce representative and somehow varied residual plots for its kind.
 
-Resist the temptation to discuss everything you've read in the last few years. And you are not writing a textbook either. This chapter is meant to provide the background necessary to understand the material in subsequent chapters. Stick to that.
-
-You will need to organize the literature review around themes, and within each theme provide a story explaining the development of ideas to date. In each theme, you should get to the point where your ideas will fit in. But leave your ideas to later chapters. This way it is clear what has been done beforehand, and what new contributions you are making to the research field.
-
-All citations should be done using markdown notation as shown below. This way, your bibliography will be compiled automatically and correctly.
-
+We will start with the simulation of the original dataset, x and y, with randomly chosed sample sizes, fit a linear model to it regardless and collect the residual plots. In Simchoni's study, instead of actually plotting the data, he rounded all randomly generated numbers to integers and use them as coordinates directly. To generate different kinds of data with more freedom, we will not change all data and actually plot them using ggplot2 in R. After that we will save all plots to our local computer, and use Keras package to read them back into R as matrix later on. For simplicity, we will sample x randomly from a uniform distribution from -2 to 2 for each model. 
 
 ## Classic Linear Model {#sec:classic}
 
-Exponential smoothing was originally developed in the late 1950s [@Brown59;@Brown63;@Holt57;@Winters60]. Because of their computational simplicity and interpretability, they became widely used in practice.
+Classic linear model is the most straightforward type to be designed. Since we will fit a linear model to the data, residual plot of this type will show no patterns in general. However, there may still be some undesired patterns formed out of randomness, especially when the sample size is small. We will simply ignore these noises and group them altogether as residuals from "classic linear model". And also, the correlation between the two original variables makes little difference on the final resiual plot, so we arbitrarily choose the coefficient from a uniform distribution from 0.5 to 1.5. Below are three examples generated from this model.
 
-Empirical studies by @MH79 and @Metal82 found little difference in forecast accuracy between exponential smoothing and ARIMA models. This made the family of exponential smoothing procedures an attractive proposition [see @CKOS01].
+```{r classic, message=FALSE, cache=TRUE}
+library(gridExtra)
+classic<-function(n){
+  
+  beta<-runif(1,0.5,1.5)
+  
+  x<-runif(n, -2, 2)
+  y<-rnorm(n, beta*x, 1)
+  
+  tibble(x, y)
+  model<-lm(y ~ x)
+  res<-residuals(model)
+  yhat<-predict(model)
+  res<-(res-mean(res))/sd(res)
+  yhat<-(yhat-mean(yhat))/sd(yhat)
+  return(tibble(res, yhat))
+}
+set.seed(0405)
+N <- sample(20:800, 3, replace=TRUE)
+  cls <- tibble(N) %>% 
+    mutate(res=map(N, classic))
+    cls <- cls$res
+    
+p1 <-   ggplot(cls[[1]], aes(x=yhat, y=res)) +geom_point()
+p2 <-   ggplot(cls[[2]], aes(x=yhat, y=res)) +geom_point()
+p3 <-   ggplot(cls[[3]], aes(x=yhat, y=res)) +geom_point()
+  
+grid.arrange(p1,p2,p3,nrow=1, heights=1/3) 
 
-The methods were less popular in academic circles until  @OKS97 introduced a state space formulation of some of the methods, which was extended in @HKSG02 to cover the full range of exponential smoothing methods.
+```
+
+## Linear Model with Heteroskedasticity {#sec:heter}
+
+It is impossible to list out all types of heteroskedasticity via a simple function. Here I am trying to present four kinds mainly. The first two is when the variace of y is monotonically changing with x, while the other two have a change point in the middle. To ensure the variance is positive, we use exponential function for creating the monotonic changing variance. So the 
+
+## Non-linear model {#sec:poly}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
