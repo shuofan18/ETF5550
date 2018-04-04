@@ -73,20 +73,20 @@ nonpoly<-function(n){
   #ggplot(aes(x=yhat,y=res))+geom_point()
 
 #generating data from three models
-N <- sample(20:800, 100, replace = TRUE)
+N <- sample(20:1500, 19, replace = TRUE)
   classic_ <- tibble(N) %>%
   mutate(res = map(N, classic))
   classic_<-classic_$res
-NH <- sample(20:800, 100, replace = TRUE)
-  heter_ <- tibble(NH) %>%
-  mutate(res = map(NH, heter))
+
+  heter_ <- tibble(N) %>%
+  mutate(res = map(N, heter))
   heter_<-heter_$res
-NP <- sample(20:800, 100, replace = TRUE)
-  poly_ <- tibble(NP) %>%
-  mutate(res = map(NP, nonpoly))
+
+  poly_ <- tibble(N) %>%
+  mutate(res = map(N, nonpoly))
   poly_<-poly_$res
 
-names(classic_) <- c(1:100)
+names(classic_) <- c(1:19)
 names(heter_) <- c(1:100)
 names(poly_) <- c(1:100)
 
@@ -113,7 +113,7 @@ savepic <- function(pdata, i){
 setwd("/Volumes/5550/original data")
 
 name <- deparse(substitute(classic_))
-mapply(savepic, classic_, c(1:100))
+mapply(savepic, classic_, c(1:19))
 
 name <- deparse(substitute(heter_))
 mapply(savepic, heter_, c(1:100))
@@ -137,6 +137,10 @@ validation_poly_dir <- file.path(validation_dir, "poly")
 test_classic_dir <- file.path(test_dir, "classic")
 test_heter_dir <- file.path(test_dir, "heter")
 test_poly_dir <- file.path(test_dir, "poly")
+test_lineup <- file.path(test_dir,"lineup")
+test_lineup_null <- file.path(test_lineup, "classic")
+test_lineup_heter <- file.path(test_lineup, "heter")
+test_lineup_poly <- file.path(test_lineup, "poly")
 
 dir.create(train_dir)
 dir.create(validation_dir)
@@ -150,6 +154,11 @@ dir.create(validation_poly_dir)
 dir.create(test_classic_dir)
 dir.create(test_heter_dir)
 dir.create(test_poly_dir)
+dir.create(test_lineup)
+dir.create(test_lineup_null)
+dir.create(test_lineup_heter)
+dir.create(test_lineup_poly)
+
 
 #copy images from original folder to separate train, test, validation folders
 fnames <- paste0("classic_",1:300,".png")
@@ -182,7 +191,9 @@ fnames <- paste0("poly_",1:200,".png")
 file.copy(file.path(original_dataset_dir,fnames),
           file.path(test_poly_dir))
 
-
+fnames <- paste0("classic_",1:19,".png")
+file.copy(file.path(original_dataset_dir,fnames),
+          file.path(test_lineup))
 
 
 
