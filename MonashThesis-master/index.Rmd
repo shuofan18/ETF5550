@@ -1,5 +1,5 @@
 ---
-title: 'Human vs. Computer'
+title: 'Human vs. Computer: Can we teach the computer to read residual plots?'
 degreetype: 'Master'
 author: 'Shuofan Zhang'
 degrees: 'Master, Monash University'
