@@ -31,7 +31,7 @@ In his blog, Simchoni has designed a deep learning model to test the significanc
 
 ![](figures/datasaurus.png){width=15cm}
 
-This is also what I am trying to do here, given what Simchoni has done, I am going to extend his study further by augmenting the model to meet a broader purpose. Hopefully, it will shorten the distance between human vision and computer vision.
+This is also what we are trying to do here, given what Simchoni has done, we will extend his study further by augmenting the model to meet a broader purpose. Hopefully, it will shorten the distance between human vision and computer vision. Chapter 2 will talk about our model design in details. A lot of decisions have been made in that section. We will also explain the reasons for each decision. Chapter 3 is about the convolutional neural network and its performance based on our current data sets.
 
 
 

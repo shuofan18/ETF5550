@@ -13,6 +13,7 @@ train_datagen <- image_data_generator(rescale = 1/255)
 validation_datagen <- image_data_generator(rescale = 1/255)  
 test_datagen <- image_data_generator(rescale = 1/255)
 
+
 train_generator <- flow_images_from_directory(
   train_dir,                                                       
   train_datagen,                                                   
@@ -41,7 +42,9 @@ test_generator <- flow_images_from_directory(
 )
 
 
-# define deep learning model (mnist)
+
+
+# define deep learning model 
 model <- keras_model_sequential() %>%
   layer_conv_2d(filters = 32, kernel_size = c(3, 3), activation = "relu",
                 input_shape = c(150, 150, 1)) %>%
@@ -76,5 +79,33 @@ history <- model %>% fit_generator(
 
 model %>% save_model_hdf5("model_1.h5")
 
-model %>% evaluate_generator(test_generator, steps = 5)
+model %>% evaluate_generator(test_generator, steps = 20)
+modelfile <- h5file("model_1.h5", 'a')
+
+
+####### test for one image
+
+test_datagen_lineup <- image_data_generator(rescale = 1/255)
+
+test_generator_lineup <- flow_images_from_directory(
+  test_lineup,
+  test_datagen_lineup,
+  target_size = c(150, 150),
+  color_mode = "grayscale",
+  batch_size = 20,
+  class_mode = "categorical"
+)
+
+model %>% evaluate_generator(test_generator_lineup, steps=1)
+
+
+
+
+
+
+
+
+
+
+
 

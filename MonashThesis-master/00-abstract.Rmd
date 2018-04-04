@@ -4,11 +4,11 @@ knit: "bookdown::render_book"
 
 # Abstract {-}
 
-When we fit a linear regression model, with one continuous dependent variable and some explanatory variables, many problems may occur. For example, the relationship between dependent-explanatory is not linear; the error terms may be correlated to each other; the variance of errors may not be constant; outliers and high leverage points may be present, etc. Plots of residuals versus predicted (or fitted) value are a useful graphical tool for detecting most of the problems [@ISL13].
+When we fit a linear regression model, with one continuous dependent variable and some explanatory variables, many problems may occur. For example, the relationship between dependent-explanatory is not linear; the error terms may be correlated to each other; the variance of errors may not be constant; outliers and high leverage points may be present, etc. Plots of residuals versus predicted (or fitted) value are a useful graphical tool for detecting most of the problems [@ISL13]. It can be difficult for beginners to learn how to recognize patterns seen could arise by chance and that the model is proper.
 
-Visual statistical test proved valid and powerful in the context of linear models by previous studies. Protocols like lineup can be used to provide reliable human visual tests [@MM13]. However, rendering every visual test with human could be expensive and time consuming in practice. 
+Computer vision has advanced rapidly in recent years, primarily by building deep learning models.
 
-Therefore, in this paper, we are going to utilize the deep learning model and "teach" the computers to read the residual plots, to address two of the issues, non-linearity and heteroskedasticity, as mentioned above. After training the model, we will compare its performance with human experiments.
+Therefore, in this paper, we are going to investigate wether deep learning neural network could be used to teach a computer to do better than a human on reading residual plots. Two of the issues, non-linearity and heteroskedasticity, will be addressed here. After training the model, we will compare its performance with human database.
 
  
 
