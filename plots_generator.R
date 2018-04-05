@@ -4,9 +4,9 @@ library(tidyverse)
 # 1/4 for classic linear model
 classic<-function(n){
   
-  beta<-runif(1,0.5,1.5)
+  beta<-runif(1,0.5,1)
   
-  x<-runif(n, -3, 3)
+  x<-rnorm(n, 0, 3)
   y<-rnorm(n, beta*x, 1)
   
   tibble(x, y)
@@ -20,23 +20,34 @@ classic<-function(n){
 
 # 2/4 for linear model with heteroskedasticity 
 heter<-function(n){
-  lambda <- runif(1,-1,1)
-  beta<-runif(1,0.5,1.5)
-  a <- abs(lambda)
-  b <- rnorm(1)
-  c <- rnorm(1)
   
-  x<-runif(n, -3, 3)
-  m <- mean(x)
+  x<-rnorm(n, 0, 3)
+  beta<-runif(1,0.5,1)
   
-  index <- sample(c(1:3),1)
-  if (index==1){
-    y <- rnorm(n, beta*x, exp(x*lambda)+rexp(n))
-  } else if (index==2) {
-    y <- rnorm(n, beta*x, a*x^2+b*x+c+abs(c-b^2/(2*a))+rexp(n))
-  } else {
-    y <- rnorm(n, beta*x, dnorm(x, mean = m)+rexp(n))
+  a <- runif(1,0,2)*rbinom(1,1,0.5)
+  b <- runif(1,-4,4)
+  c <- rnorm(1,0,2)
+  
+  variance <- 0.25*(a*x^2+b*x+c)+rnorm(n,0,0.25)
+  
+  index <- sample(0:1,1)
+  if (index==1) {
+    variance <- -variance
   }
+  
+  min <- min(variance)
+  
+  if (min<0){
+    variance <- variance-min
+  }
+  
+  max <- max(variance)
+  while (max>5) {
+    variance <- 0.8* variance
+    max <- max(variance)
+  }
+  
+  y<-rnorm(n, beta*x, variance)
   
   tibble(x, y)
   model<-lm(y ~ x)
@@ -57,7 +68,7 @@ nonpoly<-function(n){
   p4<-rnorm(1,0,2)*rbinom(1,1,0.3)
   p5<-rnorm(1,0,1)*rbinom(1,1,0.2)
   
-  x<-runif(n,-3,3)
+  x<-rnorm(n, 0, 3)
   y<-rnorm(n, p1*x+p2*x^2+p3*x^3+p4*x^4+p5*x^5, p1^2+2*p2^2+2*p3^2+2*p4^2+2*p5^2)
   
   tibble(x, y)
@@ -137,10 +148,7 @@ validation_poly_dir <- file.path(validation_dir, "poly")
 test_classic_dir <- file.path(test_dir, "classic")
 test_heter_dir <- file.path(test_dir, "heter")
 test_poly_dir <- file.path(test_dir, "poly")
-test_lineup <- file.path(test_dir,"lineup")
-test_lineup_null <- file.path(test_lineup, "classic")
-test_lineup_heter <- file.path(test_lineup, "heter")
-test_lineup_poly <- file.path(test_lineup, "poly")
+
 
 dir.create(train_dir)
 dir.create(validation_dir)
@@ -154,10 +162,7 @@ dir.create(validation_poly_dir)
 dir.create(test_classic_dir)
 dir.create(test_heter_dir)
 dir.create(test_poly_dir)
-dir.create(test_lineup)
-dir.create(test_lineup_null)
-dir.create(test_lineup_heter)
-dir.create(test_lineup_poly)
+
 
 
 #copy images from original folder to separate train, test, validation folders
@@ -191,9 +196,54 @@ fnames <- paste0("poly_",1:200,".png")
 file.copy(file.path(original_dataset_dir,fnames),
           file.path(test_poly_dir))
 
-fnames <- paste0("classic_",1:19,".png")
+
+#################### experiments
+
+test_lineup <- file.path(test_dir,"lineup")
+test_lineup_null <- file.path(test_lineup, "classic")
+test_lineup_heter <- file.path(test_lineup, "heter")
+test_lineup_poly <- file.path(test_lineup, "poly")
+
+dir.create(test_lineup)
+dir.create(test_lineup_null)
+dir.create(test_lineup_heter)
+dir.create(test_lineup_poly)
+
+
+
+N <- rep(3000, each=300)
+classic_ <- tibble(N) %>%
+  mutate(res = map(N, classic))
+classic_<-classic_$res
+
+names(classic_) <- c(1:300)
+name <- deparse(substitute(classic_))
+mapply(savepic, classic_, c(1:300))
+
+
+fnames <- paste0("classic_",1:300,".png")
 file.copy(file.path(original_dataset_dir,fnames),
-          file.path(test_lineup))
+          file.path(test_lineup_null))
+
+N <- rep(3000, each=300)
+heter_ <- tibble(N) %>%
+  mutate(res = map(N, heter))
+heter_<-heter_$res
+
+names(heter_) <- c(1:300)
+name <- deparse(substitute(heter_))
+mapply(savepic, heter_, c(1:300))
+
+
+fnames <- paste0("heter_",1:300,".png")
+file.copy(file.path(original_dataset_dir,fnames),
+          file.path(test_lineup_heter))
+
+
+
+
+
+
 
 
 

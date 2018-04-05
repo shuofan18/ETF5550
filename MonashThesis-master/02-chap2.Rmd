@@ -9,7 +9,7 @@ Steps in the experiment are:
 
 1. Simulate data from the different models
 2. Fit a linear model to the data, extract standardized residuals and fitted values
-3. Save residual plots as a fixed image size
+3. Save residual plots as fixed-sized images
 4. Train a deep learning classifier to recognise the departures from assumptions
 5. Test the model's performance and compute the accuracy
 
@@ -18,19 +18,28 @@ Steps in the experiment are:
 These factors are being controlled in the data simulation
 
 - Type of relationship: linear, nonlinear or heteroskedasticity
-- Sample size: randomly generated between 20-800
+- Explanatory variables: $X \sim N(0,3)$ and intercept $\beta_0=0$
+- Sample size: randomly generated between 20-1500
 - Image size: fixed `150x150`
 
 <!--
 **ADD: explanations of choices** 
 -->
 
-For each group (linear, nonlinear or heteroskedasticity) 900 simulated data sets will be generated at first to facilitate model modification. (The data sets will be augmented later on for training.) The sample sizes will be 900 random numbers generated from 20 to 1500. These sample sizes will be kept the same for the three groups. We choose 20 to 1500, because when the sample size is smaller than 20, say, 10, there is hardly any patterns to see (as shown in figure 2.1). And 1500 is big enough to give a good description about the true relationship within the data. Since we make the transparency of the points to be 0.01, more points being added to the plot will just make the plot looks darker.
-We set image size to be 150 $\times$ 150 pixels, because it is able to show the plots clearly and also it is reasonable small to be saved and processed easily.
+Three groups of models are included in the two hypothesis tests, linear, nonlinear and heteroskedasticity. So the residual plots from these three models are the target to be designed. 
+
+Although we want to perform this test under multivariate regression setting, we will use only one X variable to generate all different kinds of plots for training. Because the "statistics" we will use is the residual plot, one X variable is enough for us to generate different patterns in that plot for convnets to learn. And this also makes the design process much simpler. As for generation of X, we need to consider the distributions of X since it does have an impact on the shape of the scatters. For instance, if X are generated from a uniform distribution, then the plots will look like a square especially when the sample size is large; while more like a circle if X follows normal distribution. In this paper, we are going to fix the distribution of X variables as the same normal distribution $N(0,3)$ for all three groups of data. This way, we treat the X variables as non-random as what we do in practice, so we can compare different relationships of X and Y more easily.
+
+We will set intercept to be zero for all three models, since it has no impact on the patterns of residual plots.
+
+For each group 900 simulated data sets will be generated at first to facilitate deep learning model modification. (The data sets will be augmented later on for training.) 
+The sample sizes will be 900 random numbers generated from 20 to 1500. These sample sizes will be kept the same for all the three groups. We choose 20 to 1500, because when the sample size is smaller than 20, say, 10, there is hardly any patterns to see (as shown in figure 2.1). And 1500 is large enough to give a good description about the true relationship within the data, and is light enough to be processed. Since we make the transparency of the points to be 0.01, more points being added to the plot will just make the plot looks darker. Note the upper bound of the sample size is subject to possible changes according to our future study. 
+
+We set image size to be 150 $\times$ 150 pixels, because this size is able to show the plots clearly and also reasonably small so the images can be saved and processed easily.
 
 <!--
-Attention: plots layout!!!
--->
+
+Attention: plots layout.
 
 ```{r sample10, echo=FALSE, fig.cap="Three residual plots of sample size 10 generated from different models, hard to see any systematic patterns", message=FALSE, warning=FALSE}
 classic<-function(n){
@@ -107,38 +116,36 @@ p10 <- nonpoly(10) %>%
 library(gridExtra)
 grid.arrange(c10, h10, p10, ncol=1)
 ```
-
+-->
 
 ### Models for relationship
 
 #### Classic linear model 
 
-This is the null scenario. If the data arises from a classical linear model, then the residual plots will not show departures from the assumptions. What's more, after standardization, all residuals will follow standard normal distribution. Therefore, number of explanatory variables will not make any differences to the residual plots, neither does the variance of the error term nor the correlation coefficient between X and Y. So we will set the variance of error term to be one, and randomly select a correlation from 0.5 to 1.5. However, the distributions of X does have an impact on the shape of our scatter plots. For instance, if X are generated from a uniform distribution, then the plots will look like a square especially when the sample size is large; while more like a circle if X follows normal distribution. In this paper, we are going to fix the distribution of X variables as the same normal distribution for all three groups of data. This way, we treat the X variables as non-random as what we do in practice, so we can compare different relationship of X and Y more easily.
+This is the null scenario, eg. all Gauss-Markov assumptions are true in the original linear model of X and Y. If the data arises from this model, then the residual plots will not show departures from the assumptions. However, there may still be some undesired patterns formed out of randomness, especially when the sample size is small. Unlike what Simchoni did in his post, we will not use any conventional tests to sort out the "significant" observations. Imagine when you have millions of observations from a null distribution, the plot will just look like a black block in the middle and show no pattern at all, where the visual inference can be 100% sure to accept the null, while the convetional tests will still rejects 5% of these observations regardless based on its presetting. Hence, we will simply use the true parent model as the residuals' identification directly and ignore those noises.
 
-$$y_i = \beta_0 + \beta_1 X_i + \varepsilon_i, ~~i=1, \dots , n$$
+$$Y_i = \beta_0 + \beta_1 X_i + \varepsilon_i, ~~i=1, \dots , n$$
 
 with elements of the model generated by the following processes
 
-- $X\sim U[-3,3]$
+- $X\sim N[0,3]$
 - $\beta_0 = 0$
-- $\beta_1\sim U[0.5, 1.5]$
+- $\beta_1\sim U[0.5, 1]$
 - $\varepsilon\sim N(0, 1)$
-- $n\sim U[20, 800]$
+- $n\sim U[20, 1500]$
 
 **ADD: explanation of choices, eg error variance=1**
 
-<!--
-Classic linear model is the most straightforward type to be designed. Since we will fit a linear model to the data, residual plot of this type will show no patterns in general. However, there may still be some undesired patterns formed out of randomness, especially when the sample size is small. We will simply ignore these noises and group them altogether as residuals from "classic linear model". And also, the correlation between the two original variables makes little difference on the final resiual plot, so we arbitrarily choose the coefficient from a uniform distribution from 0.5 to 1.5. Below are four examples generated from this model.
--->
+After standardization, all residuals will follow standard normal distribution. Therefore, variance of the error term will not make any differences to the residual plots, neither does the correlation coefficient between X and Y. So we will set variance of error term to be one, then randomly select a correlation from 0.5 to 1.  Figure 2.2 are four examples of residual plots generated under classic linear model.
 
 
 ```{r classic_plot, message=FALSE, cache=TRUE}
 library(gridExtra)
 classic<-function(n){
   
-  beta<-runif(1,0.5,1.5)
+  beta<-runif(1,0.5,1)
   
-  x<-runif(n, -3, 3)
+  x<-rnorm(n, 0, 3)
   y<-rnorm(n, beta*x, 1)
   
   tibble(x, y)
@@ -150,7 +157,7 @@ classic<-function(n){
   return(tibble(res, yhat))
 }
 set.seed(0405)
-N <- sample(20:800, 4, replace=TRUE)
+N <- sample(20:1500, 4, replace=TRUE)
   cls <- tibble(N) %>% 
     mutate(res=map(N, classic))
     cls <- cls$res
@@ -173,38 +180,58 @@ grid.arrange(p1,p2,p3,p4,nrow=2, heights=c(1,1))
 ```
 
 
-
-
 #### Linear Model with Heteroskedasticity {#sec:heter}
 
 **CHANGE THIS SECTION TO BE EXPLICIT LIKE THE CLASSIC MODEL**
 
-The only difference of designing this model is to give a non-zero relationship between variance of y and x. It is impossible to list out all types of heteroskedasticity via a simple function form. Here I am trying to present four kinds mainly. The first two is when the variace of y is monotonically increasing or decreasing with x, while the other two has a turn point in the middle. Y will be generated from a normal distribution with mean equals to $\beta x$ and variance from one of the three equations below.
+This model is designed to present one of the alternative hypothesis, eg. when the constant variance assumption is violated holding all other conditions unchanged.
 
-$$var(y_i)=e^{\lambda x_i}+\epsilon_i$$ where $\lambda$ is randomly chosen from a uniform distribution from -1 to 1, and $\epsilon$ is generated from an exponential distribution independently. This function is used for providing monotonic changing variance. When $\lambda$ is positive, it will give us increasing variance, and decreasing when negative. Both deterministic and random parts are from exponential family, this ensures the variance is positive.
+Hence, the only difference needs to be made for this model is to add a non-zero relationship between the variance of Y and X. It is impossible to list out all types of heteroskedasticity by a simple function form. Here I am trying to present four kinds of relationship between variance of Y and X using a second order polynomial. With randomly generated parameters, the variance of Y could be monotonically increasing/decreasing with X, or has a turning point in the middle.
 
-$$var(y_i)= ax_i^2+bx_i+c+\left|c-\frac{b^2}{2a}\right|+\epsilon_i$$ where $\epsilon$ is generated from an exponential distribution independently, a is a positive random number, b and c are randomly selected from standard normal distribution. The absolute value in the middle guarantees the variance to be positive. Variance from this function decreases at first and then becomes increasing.
+$$Y_i = \beta_0 + \beta_1 X_i + \varepsilon_i, ~~i=1, \dots , n$$
 
-The third one is the density function of standard normal with x being the quantiles, and it also has an $\epsilon$ to produce some randomness. Obviously this function will make the variance increase at first and then become decrease. Below are four examples generated from this model.
+with elements of the model generated by the following processes
+
+- $X\sim N[0,\ 3]$
+- $\beta_0 = 0$
+- $\beta_1\sim U[0.5,\ 1]$
+- $\varepsilon_i\sim N(0,\ ax_i^2+bx_i+c+v_i)$
+- $v_i \sim N(0,\ 0.25)$
+- $n\sim U[20,\ 1500]$
+
+Choices of the distribution to generate a, b, c and v are basically an empirical work. With freedom of choosing a and b, all four types of relationships can be realized. Primarily, we want the residual plots to show variations among different data sets; on the other hand, we need to take a bit control on the choices of these parameters, prevent the final variance from being too large so the linear relationship between X and Y will not disappear. Figure 2.3 are four examples of residual plots generated under this model.
+
 
 ```{r heter_plot, message=FALSE, cache=TRUE}
-heter<-function(n, index){
-  lambda <- runif(1,-2,2)
-  beta<-runif(1,0.5,1.5)
-  a <- abs(lambda)
-  b <- rnorm(1)
-  c <- rnorm(1)
+heter<-function(n){
   
-  x<-runif(n, -3, 3)
-  m <- mean(x)
-
-  if (index==1){
-    y <- rnorm(n, beta*x, exp(x*lambda)+rexp(n))
-  } else if (index==2) {
-    y <- rnorm(n, beta*x, a*x^2+b*x+c+abs(c-b^2/(2*a))+rexp(n))
-  } else {
-    y <- rnorm(n, beta*x, dnorm(x, mean = m)+rexp(n))
+  x<-rnorm(n, 0, 3)
+  beta<-runif(1,0.5,1)
+  
+  a <- runif(1,0,2)*rbinom(1,1,0.5)
+  b <- runif(1,-4,4)
+  c <- rnorm(1,0,2)
+  
+  variance <- 0.25*(a*x^2+b*x+c)+rnorm(n,0,0.25)
+  
+  index <- sample(0:1,1)
+  if (index==1) {
+    variance <- -variance
   }
+  
+  min <- min(variance)
+  
+  if (min<0){
+    variance <- variance-min
+  }
+  
+  max <- max(variance)
+  while (max>5) {
+    variance <- 0.8* variance
+    max <- max(variance)
+  }
+  
+  y<-rnorm(n, beta*x, variance)
   
   tibble(x, y)
   model<-lm(y ~ x)
@@ -214,24 +241,17 @@ heter<-function(n, index){
   yhat<-(yhat-mean(yhat))/sd(yhat)
   return(tibble(res, yhat))
 }
-set.seed(0403)
-N12 <- sample(20:800, 2, replace=TRUE)
-  het12 <- tibble(N12) %>% 
-    mutate(res=map(N12, heter, index=1))
-    het12 <- het12$res
-N3 <- sample(20:800, 1, replace=TRUE)
-  het3 <- tibble(N3) %>% 
-    mutate(res=map(N3, heter, index=2))
-    het3 <- het3$res
-N4 <- sample(20:800, 1, replace=TRUE)
-  het4 <- tibble(N4) %>% 
-    mutate(res=map(N4, heter, index=3))
-    het4 <- het4$res
+set.seed(0003)
+N <- sample(20:1500, 4, replace=TRUE)
+  het <- tibble(N) %>% 
+    mutate(res=map(N, heter))
+    het <- het$res
+
     
-p1 <-   ggplot(het12[[1]], aes(x=yhat, y=res), alpha=0.01) +geom_point()
-p2 <-   ggplot(het12[[2]], aes(x=yhat, y=res), alpha=0.01) +geom_point()
-p3 <-   ggplot(het3[[1]], aes(x=yhat, y=res), alpha=0.01) + geom_point()
-p4 <-   ggplot(het4[[1]], aes(x=yhat, y=res), alpha=0.01) + geom_point()
+p1 <-   ggplot(het[[1]], aes(x=yhat, y=res), alpha=0.01) +geom_point()
+p2 <-   ggplot(het[[2]], aes(x=yhat, y=res), alpha=0.01) +geom_point()
+p3 <-   ggplot(het[[3]], aes(x=yhat, y=res), alpha=0.01) + geom_point()
+p4 <-   ggplot(het[[4]], aes(x=yhat, y=res), alpha=0.01) + geom_point()
   
 grid.arrange(p1,p2,p3,p4,nrow=2, heights=c(1,1)) 
 
@@ -239,7 +259,12 @@ grid.arrange(p1,p2,p3,p4,nrow=2, heights=c(1,1))
 
 #### Non-linear model {#sec:poly}
 
-The relatively most difficult part is the non-linear relationship, given the tremendous possibilities. Luckily, we do not need to list out every single possibility. Because our purpose is for the model to tell if there is any kind of non-linear patterns, but not to specify which type it is. As long as the curve looks proper, we do not worry about if it is from a logarithm function or squared root. Therefore all we want is for the model to "see" varied patterns, we just need to find a way to show different curvature. Therotically, we can make use of the Taylor series to generate all kinds of continous and differentiable non-linear relationship. But we cannot include infinite orders of x neither can we generate infinite parameters for each order. Therefore, at this stage, I only include a polynomial of x to the order of five with each parameter being randomly generated. I chose five because normally the order of the non-linear relationship of data from Economics world do not exceed four. What's more, it is already good enough to vary the shape of our plots. Also, since order four and five are not as common as lower orders, we attach a bernoulli term with 0.5 success rate to them respectively. So the Y will be a normal distribution with mean $\beta_1x+\beta_2x^2+\beta_3x^3+\beta_4x^4+\beta_5x^5$, and variance $\beta_1^2+\beta_2^2+\beta_3^2+2\beta_4^2+2\beta_5^2$. We adjust the variance to be increase for higher orders so the data could has more variation. Below are four examples generated from this model.
+This data set will be designed to be representative of non-linear relationship between X and Y, keep all other factors being the same with the classic linear model.
+
+Obviously we cannot write down all different non-linear relationships between X and Y. Luckily, we do not need to actually do that. Because our purpose is for the model to tell if there is any kind of non-linear patterns, but not to specify which type it is. As long as the relationship between residual plots is curved, we do not worry about if it is from a logarithm function or squared root. Therefore all we want is for the model to "see" varied patterns, we just need to find a way to show different curvature. Hence, at this stage, we only include a polynomial of X to the order of five with each parameter being randomly generated. I chose five because normally the order of the non-linear relationship of data from Economics world do not exceed four. What's more, we find this design is good enough to vary the pattern of our plots. Also, since order four and five are not as common as lower orders, we attach a bernoulli term with 0.5 success rate to them respectively. 
+
+So the Y will be a normal distribution with mean
+$\beta_1x+\beta_2x^2+\beta_3x^3+\beta_4x^4+\beta_5x^5$, and variance $\beta_1^2+\beta_2^2+\beta_3^2+2\beta_4^2+2\beta_5^2$. We adjust the variance to be increase for higher orders so the data could has more variation. Below are four examples generated from this model.
 
 ```{r poly_plot, message=FALSE, cache=TRUE}
 nonpoly<-function(n){

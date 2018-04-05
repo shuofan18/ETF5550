@@ -17,29 +17,14 @@ Problem statement
 The multiple regression model for cross-sectional data is still the most widely used vehicle for empirical analysis in economics and other social sciences [@IE17]. Detecting possible violations of the Gauss-Markov assumptions is crucial to interpret the data properly, especially in the early stage of analysis. There are several distribution tests that are commonly used, for instance, the Breusch-Pagan test and White test for investigating heteroskedasticity. But primarily residual plots are the main diagnostic tool and these rely on human evaluation. Because plots show a lot more information than a single statistics. A good example here would be Anscome’s Quartet. It is a set of four distinct datasets each consisting of 11 (x,y) pairs where each dataset produces the same summary statistics (mean, standard deviation, and correlation) while producing vastly different plots [@ANS73]. Matejka and Fitzmaurice also did an interesting study on this issue, they used 'datasaurus' data from [@DS16] and generated a series of data with same statistics but very different plots [@JM17].
 
 
-```{r saurus, out.width = "400px", fig.cap="Each dataset has the same summary statistics to two decimal places: (E(x)=54.26, E(y)= 47.83, sd(x) = 16.76, sd(y) = 26.93, Pearson’s r = -0.06)."}
-knitr::include_graphics("/Users/stanza/Documents/GitHub/ETF5550/MonashThesis-master/figures/datasaurus.png")
+```{r saurus, fig.cap="Each dataset has the same summary statistics to two decimal places: (E(x)=54.26, E(y)= 47.83, sd(x) = 16.76, sd(y) = 26.93, Pearson’s r = -0.06)."}
+library(datasauRus)
+ggplot(datasaurus_dozen, aes(x = x, y = y, colour = dataset)) +
+  geom_point() +
+  theme_void() +
+  theme(legend.position = "none") +
+  facet_wrap( ~ dataset, ncol = 3)
 ```
-
-<!--
-
-```{r datasaurus, fig.cap="Each dataset has the same summary statistics to two decimal places: ($\bar{x}$=54.26, $\bar{y}$= 47.83, sdx = 16.76, sdy = 26.93, Pearson’s r = -0.06)."}
-
-datasaurus <- read.csv("/Users/stanza/Documents/GitHub/ETF5550/datasaurus.csv")
-names(datasaurus) <- c("x","y")
-ggplot(datasaurus, aes(x=x, y=y)) + geom_point()
-
-```
-
--->
-
-The question that arises today is whether we can train a computer to read residual plots, particularly with a computer vision approach such as deep learning. 
-
-<!--
-Motivation based on Simchoni's blog post
--->
-
-Motivation for the task is provided in a blog post by Giora Simchoni [@SIM18]. He has designed a deep learning model to test the significance of linear relationship between two variables for samples of size 50. The model reached over 93% accuracy on unseen test data. He also mentioned that the computer fails to pick up a strong non-linear relationship even though the Pearson'r is as high as -0.84 [@SIM18]. So the short conclusion is the computer vision is not as flexible as human vision. As Simchoni explained in his article, the model can only tell linear relationship as trained. However, we think this fact is just another example reflecting the importance of visualization as we discussed above. Strong correlation does not necessarily mean linear relationship. We should always refer to the plot before making any statement. What's more, if we want the model to be more flexible, we could simply adjust our design of training accordingly. Therefore, in this article, we are trying to further Simchoni's study. More specifically, we want our model to distinguish non-linear relationship, linear relationship but with heteroskedasticity from classic linear model, where 'classic' means all Gauss-Markov assumptions are met.
 
 <!--
 Visual inference literature explanation - framework for assessing detection of difference from a null
@@ -55,11 +40,24 @@ ggplot(lineup_data_mtcars, aes(disp, hp)) +
   facet_wrap(~ .sample)
 ```
 
+The question that arises today is whether we can train a computer to read residual plots, particularly with a computer vision approach such as deep learning. 
+
+<!--
+Motivation based on Simchoni's blog post
+-->
+
+Motivation for the task is provided in a blog post by Giora Simchoni [@SIM18]. He has designed a deep learning model to test the significance of linear relationship between two variables for samples of size 50. The model reached over 93% accuracy on unseen test data. He also mentioned that the computer fails to pick up a strong non-linear relationship even though the Pearson'r is as high as -0.84 [@SIM18]. So the short conclusion is the computer vision is not as flexible as human vision. As Simchoni explained in his article, the model can only tell linear relationship as trained. However, we think this fact is just another example reflecting the importance of visualization as we discussed above. Strong correlation does not necessarily mean linear relationship. We should always refer to the plot before making any statement. What's more, if we want the model to be more flexible, we could simply adjust our design of training accordingly. Therefore, in this article, we are trying to further Simchoni's study. More specifically, we want our model to perform two hypothesis tests as following. 
+
+$H_0$: The residual plot belongs to a classical linear model where all assumptions are met.
+$H_1$: There is heteroskedasticity in the data while other conditions are the same with the null.
+And another alternative hypothesis is,
+$H_1$: There is non-linear relationship in the data while other conditions are the same with the null.
+
 <!--
 Explain deep learning models 
 -->
 
-The model we will use is the convolutional neural networks, also known as convnets, a type of deep-learning model almost universally used in computer vision applications [@DLR18]. For simplicity, we can think of the deep learning neural network as a super complex nonlinear model which could estimate hundreds of thousands parameters with big enough dataset. As usual regression problem, we need to provide the model with dependent variable and independent variables. In this case, the independent variable will be the residual plots simulated from different relationships, and dependent variable will be the group labels of that plot. Once we have these estimated parameters, we then can use them to classify unseen residual plots. The structure of the model is given by figure 1.3. A total number of 3,453,571 parameters will be estimated.
+The model we will use is the convolutional neural networks, also known as convnets, a type of deep-learning model almost universally used in computer vision applications [@DLR18]. For simplicity, we can think of the deep learning neural network as a super complex nonlinear model which could estimate hundreds of thousands parameters with big enough dataset. As usual regression problem, we need to provide the model with dependent variable and independent variables. In this case, the independent variable will be the residual plots simulated from different relationships, and dependent variable will be the group labels of that plot. Once we have these estimated parameters, we then can use them to classify unseen residual plots. The structure of the model is given by figure 1.3. 
 
 <!--
 The layout of this chunk need to be adjusted
