@@ -50,14 +50,15 @@ Motivation for the task is provided in a blog post by Giora Simchoni [@SIM18]. H
 
 $H_0$: The residual plot belongs to a classical linear model where all assumptions are met.
 $H_1$: There is heteroskedasticity in the data while other conditions are the same with the null.
-And another alternative hypothesis is,
+
+$H_0$: The residual plot belongs to a classical linear model where all assumptions are met.
 $H_1$: There is non-linear relationship in the data while other conditions are the same with the null.
 
 <!--
 Explain deep learning models 
 -->
 
-The model we will use is the convolutional neural networks, also known as convnets, a type of deep-learning model almost universally used in computer vision applications [@DLR18]. For simplicity, we can think of the deep learning neural network as a super complex nonlinear model which could estimate hundreds of thousands parameters with big enough dataset. As usual regression problem, we need to provide the model with dependent variable and independent variables. In this case, the independent variable will be the residual plots simulated from different relationships, and dependent variable will be the group labels of that plot. Once we have these estimated parameters, we then can use them to classify unseen residual plots. The structure of the model is given by figure 1.3. 
+The model we will use is the convolutional neural networks, also known as convnets, a type of deep-learning model almost universally used in computer vision applications [@DLR18]. For simplicity, we can think of the deep learning neural network as a super complex nonlinear model which could estimate hundreds of thousands parameters with big enough dataset. As usual regression problem, to get the estimates of unknown parameters, we need to provide the model with dependent variable and independent variables. In this case, the independent variable will be the residual plots simulated from the null distribution and the alternative distribution, and dependent variable will be the labels of that plot indicating the true relationship of the original data. Once we have these estimated parameters, we then can use them to classify unseen residual plots, eg. to perform hypothesis tests. The structure of the model is given by figure 1.3. 
 
 <!--
 The layout of this chunk need to be adjusted

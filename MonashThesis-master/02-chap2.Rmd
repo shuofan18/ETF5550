@@ -26,9 +26,9 @@ These factors are being controlled in the data simulation
 **ADD: explanations of choices** 
 -->
 
-Three groups of models are included in the two hypothesis tests, linear, nonlinear and heteroskedasticity. So the residual plots from these three models are the target to be designed. 
+Three groups of models are included in the two hypothesis tests, linear, nonlinear and heteroskedasticity. So our target is to train the computer to distinguish the residual plots from these three models. 
 
-Although we want to perform this test under multivariate regression setting, we will use only one X variable to generate all different kinds of plots for training. Because the "statistics" we will use is the residual plot, one X variable is enough for us to generate different patterns in that plot for convnets to learn. And this also makes the design process much simpler. As for generation of X, we need to consider the distributions of X since it does have an impact on the shape of the scatters. For instance, if X are generated from a uniform distribution, then the plots will look like a square especially when the sample size is large; while more like a circle if X follows normal distribution. In this paper, we are going to fix the distribution of X variables as the same normal distribution $N(0,3)$ for all three groups of data. This way, we treat the X variables as non-random as what we do in practice, so we can compare different relationships of X and Y more easily.
+Although we want to perform this test under multivariate regression setting, we will use only one X variable to generate all different kinds of plots for training. Because the "statistics" we will use is the residual plot, in terms of teaching the computer of reading these plots, one X variable is enough for us to generate different patterns in that plot for convnets to learn. And this also makes the design process much simpler. As for generation of X, we need to consider the distributions of X since it does have an impact on the shape of the scatters. For instance, if X are generated from a uniform distribution, then the plots will look like a square especially when the sample size is large; while more like a circle if X follows normal distribution. In this paper, we are going to fix the distribution of X variables as the same normal distribution $N(0,3)$ for all three groups of data. This way, we treat the X variables as non-random as what we do in practice, so we can compare different relationships of X and Y more easily.
 
 We will set intercept to be zero for all three models, since it has no impact on the patterns of residual plots.
 
@@ -122,7 +122,7 @@ grid.arrange(c10, h10, p10, ncol=1)
 
 #### Classic linear model 
 
-This is the null scenario, eg. all Gauss-Markov assumptions are true in the original linear model of X and Y. If the data arises from this model, then the residual plots will not show departures from the assumptions. However, there may still be some undesired patterns formed out of randomness, especially when the sample size is small. Unlike what Simchoni did in his post, we will not use any conventional tests to sort out the "significant" observations. Imagine when you have millions of observations from a null distribution, the plot will just look like a black block in the middle and show no pattern at all, where the visual inference can be 100% sure to accept the null, while the convetional tests will still rejects 5% of these observations regardless based on its presetting. Hence, we will simply use the true parent model as the residuals' identification directly and ignore those noises.
+This is the null scenario, eg. all Gauss-Markov assumptions are true in the original linear model of X and Y. If the data arises from this model, then the residual plots will not show departures from the assumptions. However, there may still be some undesired patterns formed out of randomness, especially when the sample size is small. Unlike what Simchoni did in his post, we will not use any conventional tests to sort out the "significant" observations. Because we want to know if the deep learning model can distinguish from patterns formed by chance and by nature. Hence, we will simply use the true parent model as the residuals' identification directly for training.
 
 $$Y_i = \beta_0 + \beta_1 X_i + \varepsilon_i, ~~i=1, \dots , n$$
 
@@ -184,7 +184,7 @@ grid.arrange(p1,p2,p3,p4,nrow=2, heights=c(1,1))
 
 **CHANGE THIS SECTION TO BE EXPLICIT LIKE THE CLASSIC MODEL**
 
-This model is designed to present one of the alternative hypothesis, eg. when the constant variance assumption is violated holding all other conditions unchanged.
+This model is designed to represent one of the alternative hypothesis, eg. when the constant variance assumption is violated holding all other conditions unchanged.
 
 Hence, the only difference needs to be made for this model is to add a non-zero relationship between the variance of Y and X. It is impossible to list out all types of heteroskedasticity by a simple function form. Here I am trying to present four kinds of relationship between variance of Y and X using a second order polynomial. With randomly generated parameters, the variance of Y could be monotonically increasing/decreasing with X, or has a turning point in the middle.
 
@@ -199,7 +199,7 @@ with elements of the model generated by the following processes
 - $v_i \sim N(0,\ 0.25)$
 - $n\sim U[20,\ 1500]$
 
-Choices of the distribution to generate a, b, c and v are basically an empirical work. With freedom of choosing a and b, all four types of relationships can be realized. Primarily, we want the residual plots to show variations among different data sets; on the other hand, we need to take a bit control on the choices of these parameters, prevent the final variance from being too large so the linear relationship between X and Y will not disappear. Figure 2.3 are four examples of residual plots generated under this model.
+Choices of the distribution to generate a, b, c and v is mainly an empirical work. With freedom of choosing a and b, all four types of relationships can be realized. Primarily, we want the residual plots to show variations among different data sets; on the other hand, we need to take a bit control on the choices of these parameters, prevent the final variance from being too large so the linear relationship between X and Y will not disappear. Figure 2.3 are four examples of residual plots generated under this model.
 
 
 ```{r heter_plot, message=FALSE, cache=TRUE}
@@ -259,7 +259,7 @@ grid.arrange(p1,p2,p3,p4,nrow=2, heights=c(1,1))
 
 #### Non-linear model {#sec:poly}
 
-This data set will be designed to be representative of non-linear relationship between X and Y, keep all other factors being the same with the classic linear model.
+This data set will be representative of non-linear relationship between X and Y, keep all other factors being the same with the classic linear model.
 
 Obviously we cannot write down all different non-linear relationships between X and Y. Luckily, we do not need to actually do that. Because our purpose is for the model to tell if there is any kind of non-linear patterns, but not to specify which type it is. As long as the relationship between residual plots is curved, we do not worry about if it is from a logarithm function or squared root. Therefore all we want is for the model to "see" varied patterns, we just need to find a way to show different curvature. Hence, at this stage, we only include a polynomial of X to the order of five with each parameter being randomly generated. I chose five because normally the order of the non-linear relationship of data from Economics world do not exceed four. What's more, we find this design is good enough to vary the pattern of our plots. Also, since order four and five are not as common as lower orders, we attach a bernoulli term with 0.5 success rate to them respectively. 
 
@@ -305,15 +305,19 @@ grid.arrange(p1,p2,p3,p4,nrow=2, heights=c(0.6,0.6))
 
 ## Extract residuals and fitted values
 
-
+We will design three functions to generate three different types of data. Within each function, we will return the standardized residuals and predicted value of Y from the fitted linear model. After running each funtion N times (N=900 for the early stage), we will get three lists each containing N sets of residuals and predicted Y.
 
 ## Scale data into fixed image size
 
+We will use ggplot2 package in R to generate residual plots and use ggsave funtion to resize and save all plots to our local drive. So all plots will be a squared image with same width and height.
+
 ## Train the deep learning classifier
+
+We will use Keras package in R to implement the convolutional neural network. For now, we have simulated 900 images of each group as our training set; 200 images of each group as the validation set; and 300 images of each group as the unseen test set. 
 
 ## Assess the accuracy
 
-
+After 30 iterations, the accuracy of the training set has reached 99.25%, 93.3% for validation set, and 94% for test set. We will generate more images later on for training to improve the model's performance and render some comparison with human data.
 
 
 
