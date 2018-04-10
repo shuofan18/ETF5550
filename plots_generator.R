@@ -103,7 +103,7 @@ names(poly_) <- c(1:100)
 
 savepic <- function(pdata, i){ 
   ggplot(as.data.frame(pdata), aes(x = yhat, y=res, alpha = 0.01)) + 
-    geom_point() + 
+    geom_point(alpha = 0.4) +
     theme(axis.line=element_blank(),
           axis.text.x=element_blank(),
           axis.text.y=element_blank(),
