@@ -19,16 +19,19 @@ For now, we have simulated 900 images of each group as our training set; 200 ima
 -->
 # Software
 
-- github page
-- R, packages
+- The thesis, code and data is available on the github repository [https://github.com/shuofan18/ETF5550](https://github.com/shuofan18/ETF5550)
+- Software used to conduct this research is @R, @Tensorflow, @keras, @tidyverse
 
 # Timeline
 
-|Date | Component |
-|:----|:----------|
-|     | Simulation experiment completed|
-|     | Comparison with Turk studies|
-
+\begin{tabular}{lp{10cm}}
+Date & Component \\\hline
+Apr 27 & Deep learning model trained \\
+May 4  & Classification of new residual plots with model and results summarised\\
+May 18 & Comparison with Turk studies\\
+May 24 & Refinements made, final summaries written\\
+May 31 & Thesis finalised\\
+\end{tabular}
 
 
 

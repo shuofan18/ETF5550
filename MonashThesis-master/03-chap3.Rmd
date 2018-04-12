@@ -6,10 +6,27 @@ knit: "bookdown::render_book"
 
 # Comparison with Turk studies
 
+A large database of results from a human subjects test conducted to validate the lineup protocol relative to a classical tests is going to be used for this part of the work. This data was collected as part of the work presented in @MM13. Experiment 2 examined the performance of humans in recognising linear association between two variables, in direct comparison to conducting a $t$-test of $H_o: \beta_k=0$ vs $H_a: \beta_k\neq 0$ assessing the importance of including variable $k$ in the linear model. An example lineup is shown in Figure \ref{expt2}. For this lineup, 63 of the 65 people who examined it selected the data plot (position 20) from the null plots. There is clear evidence that the data displayed in plot 20 is not from $H_o: \beta_k=0$. 
+
+\begin{figure*}[h]
+\centerline{\includegraphics[width=15cm]{figures/plot_turk2_300_350_12_3.png}}
+\caption{One of 70 lineups used in experiment 2 Majumder et al (2012). Of the 65 people who examined the lineup,  63 selected the data plot, which is in position 20.}
+\label{expt2}
+\end{figure*}
+
+<!--
 After accessing the performance of the convets, we now feel confident about its ability to do hypothesis test within the framework that we designed. Obviously we can always improve its ability on unseen data by generating more variation for training. The question now is how well computer performs compared to human in terms of reading residual plots.
+-->
 
+This experiment utilised 70 lineups of size 20 plot, with varying degrees of departure from the $H_o: \beta_k=0$. There were 351 evaluations by human subjects. These results will be used for comparison with the deep learning model. 
+
+The trained deep learning model will be applied to the data from this experiment. The model will be asked classify each plot in each lineup. We will calculate how frequently the data plot is selected as not a null plot, and compare this to the frequencies obtained by human evaluation. 
+
+<!--
 To do the comparison, we plan to do two small experiments. First, we will use the second experiment data from @MM13, and adjust the deep learning model to do exactly the same thing, and access the model's accuracy. Second, we will generate some new lineups using data simulated from the framework discussed in this paper, and let some people read them, then calculate the accuracy of human reading. From these two comparisons, hopefully, we will have a good sense of how computers do compared to human.
+-->
 
+<!--
 ## Explanation of experiments 2, 3 from Majumder et al
 
 
@@ -19,7 +36,7 @@ To do the comparison, we plan to do two small experiments. First, we will use th
 
 
 ## Compare accuracy of computer vs human reading
-
+-->
 
 
 
