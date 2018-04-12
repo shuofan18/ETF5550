@@ -6,13 +6,17 @@ knit: "bookdown::render_book"
 
 # Comparison with Turk studies
 
-Now, with the trained deep learning model, we are ready to start the comparison between computers and human. The second experiment data from @MM13 will be used as human performance.
+After accessing the performance of the convets, we now feel confident about its ability to do hypothesis test within the framework that we designed. Obviously we can always improve its ability on unseen data by generating more variation for training. The question now is how well computer performs compared to human in terms of reading residual plots.
+
+To do the comparison, we plan to do two small experiments. First, we will use the second experiment data from @MM13, and adjust the deep learning model to do exactly the same thing, and access the model's accuracy. Second, we will generate some new lineups using data simulated from the framework discussed in this paper, and let some people read them, then calculate the accuracy of human reading. From these two comparisons, hopefully, we will have a good sense of how computers do compared to human.
 
 ## Explanation of experiments 2, 3 from Majumder et al
 
 
 
 ## Classify samples using our model
+
+
 
 ## Compare accuracy of computer vs human reading
 

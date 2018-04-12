@@ -309,16 +309,15 @@ We will design three functions to generate three different types of data. Within
 
 ## Scale data into fixed image size
 
-We will use ggplot2 package in R to generate residual plots and use ggsave funtion to resize and save all plots to our local drive. So all plots will be a squared image with same width and height.
+We will use ggplot2 package in R to generate residual plots and use ggsave funtion to resize and save all plots to our local drive. So all plots will be a squared image with same width and height. This helps us to see better the patterns in the scatter plot and also is easier for the deep learning model to process the image data.
 
 ## Train the deep learning classifier
 
-We will use Keras package in R to implement the convolutional neural network. For now, we have simulated 900 images of each group as our training set; 200 images of each group as the validation set; and 300 images of each group as the unseen test set. 
+We will use Keras package in R to implement the convolutional neural network. For now, given the computation capibility, we have simulated 900 images of each group as our training set; 200 images of each group as the validation set; and 300 images of each group as the unseen test set. These sets will be enlarged later on to improve the model's ability on unseen data.
 
 ## Assess the accuracy
 
-After 30 iterations, the accuracy of the training set has reached 99.25%, 93.3% for validation set, and 94% for test set. We will generate more images later on for training to improve the model's performance and render some comparison with human data.
-
+After 30 iterations, the accuracy of the training set has reached 99.25%, 93.3% for validation set, and 94% for test set. This performance is consistent with our expectation of the deep learning model. 
 
 
 
