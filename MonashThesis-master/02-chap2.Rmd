@@ -119,7 +119,7 @@ We set image size to be 150 $\times$ 150 pixels, because this size is able to sh
 
 ### Models for relationship
 
-#### Classic linear model 
+#### Classic linear model - no relationship
 
 This is the null scenario, eg. all Gauss-Markov assumptions are true in the original linear model of X and Y. If the data arises from this model, then the residual plots will not show departures from the assumptions. However, there may still be some undesired patterns formed out of randomness, especially when the sample size is small. Unlike what Simchoni did in his post, we will not use any conventional tests to sort out the "significant" observations. Because we want to know if the deep learning model can distinguish from patterns formed by chance and by nature. Hence, we will simply use the true parent model as the residuals' identification directly for training.
 
@@ -176,6 +176,10 @@ p4 <- ggplot(cls[[4]], aes(x=yhat, y=res)) +
 grid.arrange(p1,p2,p3,p4,nrow=2, heights=c(1,1)) 
 
 ```
+
+#### Classic linear model - important variable left out
+
+This level of the experiment is important to be able to do the comparison with the human subject study. 
 
 #### Linear Model with Heteroskedasticity {#sec:heter}
 
