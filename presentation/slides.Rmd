@@ -67,6 +67,8 @@ ggplot(lineup(null_permute(".std.resid"), df_mod), aes(x=x, y=.std.resid)) + geo
 - Computer vision has advanced substantially
 - Computer vision underlying self-driving cars, robotics
 - Computer vision is being build on deep learning models
+-
+- If we can train a computer to read residual plots we can have it process a lot more data, than a human can manage.
 
 ## Aside: Volvo admits its self-driving cars are confused by kangaroos
 
