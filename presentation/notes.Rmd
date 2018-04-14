@@ -1,0 +1,79 @@
+---
+title: "notes"
+author: "Shuofan Zhang"
+date: "4/16/2018"
+output: 
+  beamer_presentation:
+    fig_height: 5
+    fig_width: 8
+    highlight: tango
+    theme: metropolis
+header-includes:
+  - \usepackage{MonashBlue}
+---
+
+## Goal
+
+**Teach the computer to read residual plots**
+
+
+The multiple regression model for cross-sectional data is still the most widely used vehicle for empirical analysis in economics and other social sciences". Detecting possible violations of the Gauss-Markov assumptions is crucial to interpret the data properly, especially in the early stage of analysis. There are several distribution tests that are commonly used, for instance, the Breusch-Pagan test and White test for investigating heteroskedasticity. But primarily residual plots are the main diagnostic tool (Gauss-Markov assumption, Uncaptured (non-)linear components, Heteroskedasticity, Clumps of outliers), and these rely on human evaluation. It can be difficult for beginners to learn how to recognize patterns seen could arise by chance and that the model is proper.
+Computer vision has advanced rapidly in recent years, primarily by building deep learning models. Therefore, in this paper, we are going to investigate wether deep learning neural network could be used to teach a computer to do better than a human on reading residual plots. Two of the issues, non-linearity and heteroskedasticity, will be addressed here. After training the model, we will compare its performance with human database.
+
+
+## Why plots? 
+
+The short answer is because plots show a lot more information than a single statistics. 
+A good example here will be Matejka and Fitzmaurice's paper, where they generated this set of interesting plots. The original plot here is the dinasaur, and then they add tiny little bit of changes to this data and only keep the ones when the statistics are still the same, keep doing this, after different number of iterations, they get this set of different plots, but all of them have the same statistics up to two decimal places.
+As Anscombe said in 1973,
+"...make both calculations and graphs. Both sorts of output should be studied; each will contribute to understanding."
+
+
+## Visual inference
+
+So the graphs are very important, and it replys on human evaluation. How to utilize these information provided by graphs and make valid inference? 
+
+
+
+## Visual inference
+
+
+
+## Deep learning
+
+
+
+## Aside: Volvo admits its self-driving cars are confused by kangaroos
+
+
+
+## Aside: Computers can't tell difference between blueberry muffins and chihuahuas
+
+
+
+## Experiment
+
+
+## Data simulation {#sec:simulation}
+
+
+## Type of relationship
+
+
+
+## Simchoni's analysis
+
+
+## Comparison with human subject experiments
+
+
+
+## Example lineup from experiment 2
+
+
+
+## Timeline
+
+
+## Materials
+
