@@ -125,7 +125,11 @@ grid.arrange(p1, p2, p3, p4, ncol=2)
 
 ## Simchoni's analysis
 
-Explain Simchoni's experiment
+- Simulate data from linear relationship with $\rho=-0.9\ \ to\ \ \rho=0.9$
+- Separate into two groups: significant/insignificant by t-test
+- Train deep learning model with these two groups
+- Test the model on lineup 
+- Successful in detecing linear relationship but fail in non-linear
 
 ## Comparison with human subject experiments
 
