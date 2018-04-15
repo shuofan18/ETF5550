@@ -2,6 +2,7 @@
 title: "notes"
 author: "Shuofan Zhang"
 date: "4/16/2018"
+fontsize: 10pt
 output: 
   beamer_presentation:
     fig_height: 5
@@ -14,11 +15,10 @@ header-includes:
 
 ## Goal
 
-**Teach the computer to read residual plots**
 
-
-The multiple regression model for cross-sectional data is still the most widely used vehicle for empirical analysis in economics and other social sciences". Detecting possible violations of the Gauss-Markov assumptions is crucial to interpret the data properly, especially in the early stage of analysis. There are several distribution tests that are commonly used, for instance, the Breusch-Pagan test and White test for investigating heteroskedasticity. But primarily residual plots are the main diagnostic tool (Gauss-Markov assumption, Uncaptured (non-)linear components, Heteroskedasticity, Clumps of outliers), and these rely on human evaluation. It can be difficult for beginners to learn how to recognize patterns seen could arise by chance and that the model is proper.
-Computer vision has advanced rapidly in recent years, primarily by building deep learning models. Therefore, in this paper, we are going to investigate wether deep learning neural network could be used to teach a computer to do better than a human on reading residual plots. Two of the issues, non-linearity and heteroskedasticity, will be addressed here. After training the model, we will compare its performance with human database.
+The multiple regression model for cross-sectional data is still the most widely used vehicle for empirical analysis in economics and other social sciences". 
+Detecting possible violations of the Gauss-Markov assumptions is crucial to interpret the data properly, especially in the early stage of analysis. There are several distribution tests that are commonly used, for instance, the Breusch-Pagan test and White test for investigating heteroskedasticity. 
+But primarily residual plots are the main diagnostic tool for these problems (refer to slides), and these rely on human evaluation. It can be difficult for beginners to learn how to recognize patterns seen could arise by chance and that the model is proper.
 
 
 ## Why plots? 
@@ -31,41 +31,64 @@ As Anscombe said in 1973,
 
 ## Visual inference
 
-So the graphs are very important, and it replys on human evaluation. How to utilize these information provided by graphs and make valid inference? 
+So the graphs are very important, and it replys on human evaluation. How to utilize these information provided by graphs and more importantly, to make valid inference? Wickham, Di, Hofmann and Buja have developed a protocol named lineup which is validated later on using human experiments in 2013. 
 
+This is an example of lineup. Which plot do you think is the most different? (3) We reject the null hypothesis that the data follows linear relationship.
 
-
+ 
 ## Visual inference
 
-
+"The protocol consists of generating 19 null plots (could be other number), inserting the plot of the real data in a random location among the null plots and asking the human viewer to single out one of the 20 plots as most different from the others". If the real plot is chosen, it means the real data is different from the null hypothesis, so we reject the null hypothesis with 5% chance to be wrong (Type I error). 
 
 ## Deep learning
 
 
+Convolutional neural networks is a type of deep-learning model almost universally used in computer vision applications. For simplicity, we can think of the deep learning neural network as a super complex nonlinear model which could estimate hundreds of thousands parameters with big enough dataset. As usual regression problem, to get the estimates of unknown parameters, we need to provide the model with dependent variable and independent variables. Since we wanna train the deep learning model to read residual plots, the independent variable will be the residual plots simulated from the null distribution and the alternative distribution, and dependent variable will be the labels of that plot indicating the true relationship of the original data. Once we have these estimated parameters, we then can use them to classify unseen residual plots, eg. to perform hypothesis tests. But is machine learning perfect?
+
 
 ## Aside: Volvo admits its self-driving cars are confused by kangaroos
 
-
+However, computers are still not as flexible as human in terms of vision, and is restricted by the presetting of training. In this case, the self-driving cars fails to detect the movement of kangaroos because their unique movement.
 
 ## Aside: Computers can't tell difference between blueberry muffins and chihuahuas
 
+This is another example of computers confused by muffins and chihuahuas. Can you tell which one is muffin and which one is dog? 
 
+So deep learning model does have pitfalls, disadvantages compared to human visions. And we wanna know how it will perform in reading residual plots compared to human.
 
 ## Experiment
 
+1. Simulate data from the different models
+(the first line seems pretty simply and straightforward, isn't it? In fact, this is where I spent most of my time in the last month.)
+2. Fit a linear model to the data, extract standardized residuals and fitted values (we standardize the residuals and fitted value cause nothing will be lost by doing so, and it makes the plots more comparable with each other)
+3. Save residual plots as fixed-sized images (we set all plots as same fix-sized images, it makes the comparison more reasonable and also easier for deep learning model to process)
+4. Train a deep learning classifier to recognise the departures from assumptions 
+5. Test the model's performance on new data and compute the accuracy
 
 ## Data simulation {#sec:simulation}
 
+A lot of decisions have been made in the model design process.
 
 ## Type of relationship
 
-
+Examples of residual plots of these four relationships.
 
 ## Simchoni's analysis
 
+- Simulate data from linear relationship with $\rho=-0.9\ \ to\ \ \rho=0.9$
+- Separate into two groups: significant/insignificant by t-test
+- Train deep learning model with these two groups
+- Test the model on lineup 
+- Successful in detecing linear relationship but fail in non-linear
 
 ## Comparison with human subject experiments
 
+- Majumder et al (2013) conducted a large study to compare the performance of the lineup protocol, assessed by human evaluators, in comaprison to the classical test
+- Experiment 2 examined $H_o: \beta_k=0$ vs $H_a: \beta_k\neq 0$ assessing the importance of including variable $k$ in the linear model, conducted with a $t$-test, and also lineup protocol
+- 70 lineups of size 20 plots
+- 351 evaluations by human subjects
+-
+- Trained deep learning model will be used to classify plots from this study. Accuracy will be compared with results by human subjects.
 
 
 ## Example lineup from experiment 2

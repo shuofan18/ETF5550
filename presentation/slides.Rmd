@@ -47,6 +47,7 @@ $E(x)=54.3, E(y)= 47.8, sd(x) = 16.8, sd(y) = 26.9, r = -0.06$
 ```{r visinf}
 library(nullabor)
 library(broom)
+set.seed(0414)
 x <- runif(100, -1, 1)
 df <- tibble(x, y=2+3*x+x^2-0.5*x^3+rnorm(100)*0.3)
 df_lm <- lm(y~x, data=df)
@@ -130,6 +131,8 @@ grid.arrange(p1, p2, p3, p4, ncol=2)
 - Train deep learning model with these two groups
 - Test the model on lineup 
 - Successful in detecing linear relationship but fail in non-linear
+
+- [Simchoni's blog](http://giorasimchoni.com/2018/02/07/2018-02-07-book-em-danno/)
 
 ## Comparison with human subject experiments
 
