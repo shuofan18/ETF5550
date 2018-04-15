@@ -62,15 +62,20 @@ So deep learning model does have pitfalls, disadvantages compared to human visio
 
 ## Experiment
 
-1. simulation (the first line seems pretty simply and straightforward, isn't it? In fact, this is where I spent most of my time in the last month.) 
+1. simulation (the first line seems pretty simply and straightforward, isn't it? In fact, this is where I spent most of my time in the last one month) Think about it, there are countless possibilities in the residual plots genereated from a non-linear model. We will talk about this in more details later. 
 2. Fit a linear model to the data, extract standardized residuals and fitted values (we standardize the residuals and fitted value cause nothing will be lost by doing so, and it makes the plots more comparable with each other)
-3. Save residual plots as fixed-sized images (we set all plots as same fix-sized images, it makes the comparison more reasonable and also easier for deep learning model to process)
+3. Save residual plots as fixed-sized images to our local drive (we set all plots as same fix-sized images, it makes the comparison more reasonable and also easier for deep learning model to process)
 4. Train a deep learning classifier to recognise the departures from assumptions 
 5. Test the model's performance on new data and compute the accuracy
 
 ## Data simulation {#sec:simulation}
 
-A lot of decisions have been made in the model design process.
+A lot of decisions have been made in the model design process, like sample sizes for each plot, the coefficients variances and a whole lot of other parameters.
+All details are discussed in the paper, here I just listed out several factors as an example. 
+- We generated all explanatory variables from $X \sim N(0,3)$ instead of variance =1, because we want x and y to have more variation.
+- intercept $\beta_0=0$, because we will fit linear model to data, the intercept does not matter in the residual plots anymore, so we simply set it to be 0.
+- Sample size: randomly generated between 20-1500. When sample size is smaller than 20, we can hardly see any systematic patterns. And 1500 is big enough for the data to show all kinds of relationship clearly.
+- Image size: fixed `150x150`, this size is large enough for us to see patterns, and not too cumbersome to be processed.
 
 ## Type of relationship
 
