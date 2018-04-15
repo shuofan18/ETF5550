@@ -14,10 +14,10 @@ header-includes:
 ---
 
 ## Goal
+Hello everyone, I am Shuofan, my research project is about human and computer. Our goal in this paper is to teach the computer to read residual plots. 
 
-
-The multiple regression model for cross-sectional data is still the most widely used vehicle for empirical analysis in economics and other social sciences". 
-Detecting possible violations of the Gauss-Markov assumptions is crucial to interpret the data properly, especially in the early stage of analysis. There are several distribution tests that are commonly used, for instance, the Breusch-Pagan test and White test for investigating heteroskedasticity. 
+Because the multiple regression model for cross-sectional data is still the most widely used vehicle for empirical analysis in economics and other social sciences". 
+And detecting possible violations of the Gauss-Markov assumptions is crucial to interpret the data properly, especially in the early stage of analysis. There are several distribution tests that are commonly used, for instance, the Breusch-Pagan test and White test for investigating heteroskedasticity. 
 But primarily residual plots are the main diagnostic tool for these problems (refer to slides), and these rely on human evaluation. It can be difficult for beginners to learn how to recognize patterns seen could arise by chance and that the model is proper.
 
 
@@ -25,28 +25,31 @@ But primarily residual plots are the main diagnostic tool for these problems (re
 
 The short answer is because plots show a lot more information than a single statistics. 
 A good example here will be Matejka and Fitzmaurice's paper, where they generated this set of interesting plots. The original plot here is the dinasaur, and then they add tiny little bit of changes to this data and only keep the ones when the statistics are still the same, keep doing this, after different number of iterations, they get this set of different plots, but all of them have the same statistics up to two decimal places.
+
 As Anscombe said in 1973,
 "...make both calculations and graphs. Both sorts of output should be studied; each will contribute to understanding."
 
 
 ## Visual inference
 
-So the graphs are very important, and it replys on human evaluation. How to utilize these information provided by graphs and more importantly, to make valid inference? Wickham, Di, Hofmann and Buja have developed a protocol named lineup which is validated later on using human experiments in 2013. 
+So the graphs are very important, and it replys on human evaluation. How to utilize these information provided by graphs and more importantly, to make valid inference? 
+
+Wickham, Di, Hofmann and Buja have developed a protocol named lineup which is validated later on using human experiments in 2013. 
 
 This is an example of lineup. Which plot do you think is the most different? (3) We reject the null hypothesis that the data there is no relationship between the residuals and the fitted values.
 
  
 ## Visual inference
 
-"The protocol consists of generating 19 null plots (could be other number), inserting the plot of the real data in a random location among the null plots and asking the human viewer to single out one of the 20 plots as most different from the others". If the real plot is chosen, it means the real data is different from the null hypothesis, so we reject the null hypothesis with 5% chance to be wrong (Type I error). (then same with slides)
+Here we use this set of plots as our test statistics, and different type of plots can be used for different hypothesis, in this case, the null hypothesis is there is no relationship left in the residuals, while the alternative hypothesis is there are some kind of relationship.
+
+More formally, "The protocol consists of generating 19 null plots (could be other number), inserting the plot of the real data in a random location among the null plots and asking the human viewer to single out one of the 20 plots as most different from the others". If the real plot is chosen, it means the real data is different from the null hypothesis, so we reject the null hypothesis with 5% chance to be wrong (Type I error). (then same with slides)
 
 ## Deep learning
+Although human vision has been proved to be powerful and reliable, it is not realistic to render human experiments for every single hypothesis test. If we can train a computer to read residual plots we can have it process a lot more data, than a human can manage.
 How are we gonna teach computer to read residual plots for us? The answer is deep learning.
-
 - Computer vision has advanced substantially in recent years, you may all heard about self-driving cars, robotics
 - Convolutional neural networks is a type of deep-learning model almost universally used in computer vision applications.
-- If we can train a computer to read residual plots we can have it process a lot more data, than a human can manage.
-
 For simplicity, we can think of the deep learning neural network as a super complex nonlinear model which could estimate hundreds of thousands parameters with big enough dataset. As usual regression problem, to get the estimates of unknown parameters, we need to provide the model with dependent variable and independent variables. Since we wanna train the deep learning model to read residual plots, the independent variable will be the residual plots simulated from the null distribution and the alternative distribution, and dependent variable will be the labels of that plot indicating the true relationship of the original data. Once we have these estimated parameters, we then can use them to classify unseen residual plots, eg. to perform hypothesis tests. But is machine learning perfect?
 
 
