@@ -55,7 +55,7 @@ For simplicity, we can think of the deep learning neural network as a super comp
 
 ## Aside: Volvo admits its self-driving cars are confused by kangaroos
 
-However, computers are still not as flexible as human in terms of vision, and is restricted by the presetting of training. In this case, the self-driving cars fails to detect the movement of kangaroos because their unique movement.
+However, computer has its own disadvantages, and is restricted by the presetting of training. As we can see in this case, the self-driving cars fails to detect the movement of kangaroos because their unique movement. Because the model was trained to detect movement based on the objects moving directions as left or right, forward and backwards but not up and down.
 
 ## Aside: Computers can't tell difference between blueberry muffins and chihuahuas
 
@@ -96,17 +96,17 @@ There are similar studies have been done, for example, Simchoni has rendered an 
 
 ## Comparison with human subject experiments
 
-- Majumder et al (2013) conducted a large study to compare the performance of the lineup protocol, assessed by human evaluators, in comaprison to the classical test
-- Experiment 2 examined $H_o: \beta_k=0$ vs $H_a: \beta_k\neq 0$ assessing the importance of including variable $k$ in the linear model, conducted with a $t$-test, and also lineup protocol
-- 70 lineups of size 20 plots
-- 351 evaluations by human subjects
+- Majumder et al (2013) conducted a large study to compare the performance of the lineup protocol, assessed by human evaluators, in comaprison to the classical test.
+- They have conducted three experiements in their paper, experiment 2 examined $H_o: \beta_k=0$ vs $H_a: \beta_k\neq 0$ assessing the importance of including variable $k$ in the linear model, t-test was also conducted in comparison with the human experiments.
+- The experiment consists 70 lineups of size 20 plots
+- 351 evaluations by human subjects have been done in that experiment
 -
-- Trained deep learning model will be used to classify plots from this study. Accuracy will be compared with results by human subjects.
+- Trained deep learning model will be used to classify plots from this study. Accuracy will be compared with results from human subjects.
 
 
 ## Example lineup from experiment 2
 
-
+This is an example of lineup from experiment 2.
 
 ## Timeline
 
