@@ -1,5 +1,79 @@
+setwd("/Volumes/5550/original data")
 library(tidyverse)
 
+# 00 omitted variable (linear relationship in residuals) ###  first part report
+
+linear<-function(i){
+  
+  n <- sample(c(100, 300), 1)
+  
+  if (n==100) {
+    beta <- sample(c(0.25, 0.5, 0.75, 1.25, 1.5, 1.75, 2.75, 3.5, 4.5, 6) , 1)
+  } else {
+    beta <- sample(c(0.1, 0.4, 0.7, 0.8, 1, 1.5, 1.75, 2.3, 3.5) , 1)
+  }
+  
+  sigma <- sample(c(5,12) , 1)
+  x<-rnorm(n, 0, 1)
+  y<-rnorm(n, beta*x, sigma)
+  
+  res <- y
+  yhat <- x
+  tibble(res, yhat) %>% 
+  ggplot(aes(x = yhat, y=res, alpha = 0.01)) + 
+    geom_point(alpha = 0.4) +
+    theme(axis.line=element_blank(),
+          axis.text.x=element_blank(),
+          axis.text.y=element_blank(),
+          axis.ticks=element_blank(),
+          axis.title.x=element_blank(),
+          axis.title.y=element_blank(),
+          legend.position="none",
+          panel.background=element_blank(),
+          panel.border=element_blank(),
+          panel.grid.major=element_blank(),
+          panel.grid.minor=element_blank(),
+          plot.background=element_blank(),
+          aspect.ratio = 1)
+  ggsave(filename = paste("linear_", i, ".png", sep = ""), height = 2, width = 2, dpi = 150)
+}
+
+mapply(linear, 25665:26000)
+
+# 11 no relationship for 00 ########  first part report
+
+norela<-function(i){
+  
+  n <- sample(c(100, 300), 1)
+  
+  beta <- 0
+  
+  sigma <- sample(c(5,12) , 1)
+  x<-rnorm(n, 0, 1)
+  y<-rnorm(n, beta*x, sigma)
+  
+  res <- y
+  yhat <- x
+  tibble(res, yhat) %>% 
+    ggplot(aes(x = yhat, y=res, alpha = 0.01)) + 
+    geom_point(alpha = 0.4) +
+    theme(axis.line=element_blank(),
+          axis.text.x=element_blank(),
+          axis.text.y=element_blank(),
+          axis.ticks=element_blank(),
+          axis.title.x=element_blank(),
+          axis.title.y=element_blank(),
+          legend.position="none",
+          panel.background=element_blank(),
+          panel.border=element_blank(),
+          panel.grid.major=element_blank(),
+          panel.grid.minor=element_blank(),
+          plot.background=element_blank(),
+          aspect.ratio = 1)
+  ggsave(filename = paste("norela_", i, ".png", sep = ""), height = 2, width = 2, dpi = 150)
+}
+
+mapply(norela, 1:26000)
 
 # 1/4 for classic linear model
 classic<-function(n){
@@ -83,7 +157,7 @@ nonpoly<-function(n){
 #nonpoly(200) %>% 
   #ggplot(aes(x=yhat,y=res))+geom_point()
 
-#generating data from three models
+#generating data from four models
 N <- sample(20:1500, 19, replace = TRUE)
   classic_ <- tibble(N) %>%
   mutate(res = map(N, classic))
@@ -96,6 +170,8 @@ N <- sample(20:1500, 19, replace = TRUE)
   poly_ <- tibble(N) %>%
   mutate(res = map(N, nonpoly))
   poly_<-poly_$res
+
+
 
 names(classic_) <- c(1:19)
 names(heter_) <- c(1:100)
@@ -115,13 +191,14 @@ savepic <- function(pdata, i){
           panel.border=element_blank(),
           panel.grid.major=element_blank(),
           panel.grid.minor=element_blank(),
-          plot.background=element_blank())
+          plot.background=element_blank(),
+          aspect.ratio = 1)
   ggsave(filename = paste(name, i, ".png", sep = ""), height = 2, width = 2, dpi = 150)
 }
 
 #saving all plots to the original data folder
 
-setwd("/Volumes/5550/original data")
+
 
 name <- deparse(substitute(classic_))
 mapply(savepic, classic_, c(1:19))
@@ -134,34 +211,54 @@ mapply(savepic, poly_, c(1:100))
 
 #separate plots to train, test, validation
 
+setwd("/Volumes/5550/thesis")
+
 original_dataset_dir <- "/Volumes/5550/original data"
 base_dir <- "/Volumes/5550/thesis"
 train_dir <- file.path(base_dir,"train")
 validation_dir <- file.path(base_dir,"validation")
 test_dir <- file.path(base_dir,"test")
+
 train_classic_dir <- file.path(train_dir, "classic")
 train_heter_dir <- file.path(train_dir, "heter")
 train_poly_dir <- file.path(train_dir, "poly")
+train_linear_dir <- file.path(train_dir, "linear")
+train_norela_dir <- file.path(train_dir, "norela")
+
 validation_classic_dir <- file.path(validation_dir, "classic")
 validation_heter_dir <- file.path(validation_dir, "heter")
 validation_poly_dir <- file.path(validation_dir, "poly")
+validation_linear_dir <- file.path(validation_dir, "linear")
+validation_norela_dir <- file.path(validation_dir, "norela")
+
 test_classic_dir <- file.path(test_dir, "classic")
 test_heter_dir <- file.path(test_dir, "heter")
 test_poly_dir <- file.path(test_dir, "poly")
-
+test_linear_dir <- file.path(test_dir, "linear")
+test_norela_dir <- file.path(test_dir, "norela")
 
 dir.create(train_dir)
 dir.create(validation_dir)
 dir.create(test_dir)
+
 dir.create(train_classic_dir)
 dir.create(train_heter_dir)
 dir.create(train_poly_dir)
+dir.create(train_linear_dir)
+dir.create(train_norela_dir)
+
 dir.create(validation_classic_dir)
 dir.create(validation_heter_dir)
 dir.create(validation_poly_dir)
+dir.create(validation_linear_dir)
+dir.create(validation_norela_dir)
+
+
 dir.create(test_classic_dir)
 dir.create(test_heter_dir)
 dir.create(test_poly_dir)
+dir.create(test_linear_dir)
+dir.create(test_norela_dir)
 
 
 
@@ -195,6 +292,27 @@ file.copy(file.path(original_dataset_dir,fnames),
 fnames <- paste0("poly_",1:200,".png")
 file.copy(file.path(original_dataset_dir,fnames),
           file.path(test_poly_dir))
+
+fnames <- paste0("linear_",1:20000,".png")
+file.copy(file.path(original_dataset_dir,fnames),
+          file.path(train_linear_dir))
+fnames <- paste0("linear_",20001:23000,".png")
+file.copy(file.path(original_dataset_dir,fnames),
+          file.path(validation_linear_dir))
+fnames <- paste0("linear_",23001:26000,".png")
+file.copy(file.path(original_dataset_dir,fnames),
+          file.path(test_linear_dir))
+
+
+fnames <- paste0("norela_",1:20000,".png")
+file.copy(file.path(original_dataset_dir,fnames),
+          file.path(train_norela_dir))
+fnames <- paste0("norela_",20001:23000,".png")
+file.copy(file.path(original_dataset_dir,fnames),
+          file.path(validation_norela_dir))
+fnames <- paste0("norela_",23001:26000,".png")
+file.copy(file.path(original_dataset_dir,fnames),
+          file.path(test_norela_dir))
 
 
 #################### experiments

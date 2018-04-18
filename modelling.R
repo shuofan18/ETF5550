@@ -20,7 +20,7 @@ train_generator <- flow_images_from_directory(
   target_size = c(150, 150), 
   color_mode = "grayscale",
   batch_size = 20,                                                 
-  class_mode = "categorical"
+  class_mode = "binary"
 )
 
 validation_generator <- flow_images_from_directory(
@@ -29,7 +29,7 @@ validation_generator <- flow_images_from_directory(
   target_size = c(150, 150),
   color_mode = "grayscale",
   batch_size = 20,
-  class_mode = "categorical"
+  class_mode = "binary"
 )
 
 test_generator <- flow_images_from_directory(
@@ -38,7 +38,7 @@ test_generator <- flow_images_from_directory(
   target_size = c(150, 150),
   color_mode = "grayscale",
   batch_size = 20,
-  class_mode = "categorical"
+  class_mode = "binary"
 )
 
 
@@ -57,11 +57,11 @@ model <- keras_model_sequential() %>%
   layer_max_pooling_2d(pool_size = c(2, 2)) %>%
   layer_flatten() %>%
   layer_dense(units = 512, activation = "relu") %>%
-  layer_dense(units = 3, activation = "softmax")
+  layer_dense(units = 1, activation = "sigmoid")
 
 model %>% compile(
-  optimizer = "rmsprop",
-  loss = "categorical_crossentropy",
+  optimizer = optimizer_rmsprop(lr = 1e-4),
+  loss = "binary_crossentropy",
   metrics = c("accuracy")
 )
 
