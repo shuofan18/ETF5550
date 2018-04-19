@@ -61,9 +61,24 @@ savepic2 <- function(i){
   }
   }
   
-
 mapply(savepic2, 1:70)
 
+######### get prediction for each pic
+
+library(keras)
+
+test_datagen <- image_data_generator(rescale = 1/255)
+
+test_generator_compare <- flow_images_from_directory(
+  compare_dir[1],
+  test_datagen,
+  target_size = c(150, 150),
+  color_mode = "grayscale",
+  batch_size = 20,
+  class_mode = "binary"
+)
+
+model %>% predict_generator(test_generator_compare, steps = 1)
 
 
 
