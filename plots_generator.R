@@ -20,7 +20,7 @@ linear<-function(i){
   res <- y
   yhat <- x
   tibble(res, yhat) %>% 
-  ggplot(aes(x = yhat, y=res, alpha = 0.01)) + 
+  ggplot(aes(x = yhat, y=res)) + 
     geom_point(alpha = 0.4) +
     theme(axis.line=element_blank(),
           axis.text.x=element_blank(),
@@ -55,7 +55,7 @@ norela<-function(i){
   res <- y
   yhat <- x
   tibble(res, yhat) %>% 
-    ggplot(aes(x = yhat, y=res, alpha = 0.01)) + 
+    ggplot(aes(x = yhat, y=res)) + 
     geom_point(alpha = 0.4) +
     theme(axis.line=element_blank(),
           axis.text.x=element_blank(),
@@ -178,7 +178,7 @@ names(heter_) <- c(1:100)
 names(poly_) <- c(1:100)
 
 savepic <- function(pdata, i){ 
-  ggplot(as.data.frame(pdata), aes(x = yhat, y=res, alpha = 0.01)) + 
+  ggplot(as.data.frame(pdata), aes(x = yhat, y=res) + 
     geom_point(alpha = 0.4) +
     theme(axis.line=element_blank(),
           axis.text.x=element_blank(),
