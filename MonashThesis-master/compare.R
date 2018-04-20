@@ -107,7 +107,7 @@ model %>% predict_generator(test_generator_compare, steps = 1)
 test_datagen <- image_data_generator(rescale = 1/255)
 test_turk_dir <- "/Volumes/5550/evaluate_turk"
 
-test_generator <- flow_images_from_directory(
+test_generator_turk <- flow_images_from_directory(
   test_turk_dir,
   test_datagen,
   target_size = c(150, 150),
@@ -117,7 +117,7 @@ test_generator <- flow_images_from_directory(
 )
 
 
-acc_wo_lineup <- model %>% evaluate_generator(test_generator, steps = 1)
+acc_wo_lineup <- model %>% evaluate_generator(test_generator_turk, steps = 1)
 pred_wo_lineup <- model %>% predict_generator(test_generator, steps = 1)
 
 stat_df <- as.tibble(cbind(pred_wo_lineup, test_generator$filenames, test_generator$classes)) %>%

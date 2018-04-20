@@ -65,17 +65,20 @@ model %>% compile(
   metrics = c("accuracy")
 )
 
-
+##### changed steps_per_epoch from 100 to 50
 
 history <- model %>% fit_generator(
   train_generator,
-  steps_per_epoch = 100,
+  steps_per_epoch = 50,
   epochs = 30,
   validation_data = validation_generator,
   validation_steps = 50
 )
 
-############################################################
+############################################################ 7:36pm
+
+save(model, file = "model.RData")
+save(history, file="history.RData")
 
 model %>% save_model_hdf5("model_1.h5")
 

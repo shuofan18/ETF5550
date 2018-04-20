@@ -7,13 +7,9 @@ linear<-function(i){
   
   n <- sample(c(100, 300), 1)
   
-  if (n==100) {
-    beta <- sample(c(0.25, 0.5, 0.75, 1.25, 1.5, 1.75, 2.75, 3.5, 4.5, 6) , 1)
-  } else {
-    beta <- sample(c(0.1, 0.4, 0.7, 0.8, 1, 1.5, 1.75, 2.3, 3.5) , 1)
-  }
+  beta <- sample(c((-10:-0.1), (0.1:10)), 1)
   
-  sigma <- sample(c(5,12) , 1)
+  sigma <- sample(1:12 , 1)
   x<-rnorm(n, 0, 1)
   y<-rnorm(n, beta*x, sigma)
   
@@ -38,7 +34,7 @@ linear<-function(i){
   ggsave(filename = paste("linear_", i, ".png", sep = ""), height = 2, width = 2, dpi = 150)
 }
 
-mapply(linear, 25665:26000)
+mapply(linear, 1:20000)
 
 # 11 no relationship for 00 ########  first part report
 
@@ -48,7 +44,7 @@ norela<-function(i){
   
   beta <- 0
   
-  sigma <- sample(c(5,12) , 1)
+  sigma <- sample(1:12 , 1)
   x<-rnorm(n, 0, 1)
   y<-rnorm(n, beta*x, sigma)
   
@@ -73,7 +69,7 @@ norela<-function(i){
   ggsave(filename = paste("norela_", i, ".png", sep = ""), height = 2, width = 2, dpi = 150)
 }
 
-mapply(norela, 1:26000)
+mapply(norela, 1:8000)
 
 # 1/4 for classic linear model
 classic<-function(n){
@@ -177,8 +173,8 @@ names(classic_) <- c(1:19)
 names(heter_) <- c(1:100)
 names(poly_) <- c(1:100)
 
-savepic <- function(pdata, i){ 
-  ggplot(as.data.frame(pdata), aes(x = yhat, y=res) + 
+savepic <- function(pdata, i) { 
+  ggplot(as.data.frame(pdata), aes(x = yhat, y=res)) + 
     geom_point(alpha = 0.4) +
     theme(axis.line=element_blank(),
           axis.text.x=element_blank(),
@@ -293,24 +289,24 @@ fnames <- paste0("poly_",1:200,".png")
 file.copy(file.path(original_dataset_dir,fnames),
           file.path(test_poly_dir))
 
-fnames <- paste0("linear_",1:20000,".png")
+fnames <- paste0("linear_",1:15000,".png")
 file.copy(file.path(original_dataset_dir,fnames),
           file.path(train_linear_dir))
-fnames <- paste0("linear_",20001:23000,".png")
+fnames <- paste0("linear_",15001:18000,".png")
 file.copy(file.path(original_dataset_dir,fnames),
           file.path(validation_linear_dir))
-fnames <- paste0("linear_",23001:26000,".png")
+fnames <- paste0("linear_",18001:20000,".png")
 file.copy(file.path(original_dataset_dir,fnames),
           file.path(test_linear_dir))
 
 
-fnames <- paste0("norela_",1:20000,".png")
+fnames <- paste0("norela_",1:5000,".png")
 file.copy(file.path(original_dataset_dir,fnames),
           file.path(train_norela_dir))
-fnames <- paste0("norela_",20001:23000,".png")
+fnames <- paste0("norela_",5001:6500,".png")
 file.copy(file.path(original_dataset_dir,fnames),
           file.path(validation_norela_dir))
-fnames <- paste0("norela_",23001:26000,".png")
+fnames <- paste0("norela_",6501:8000,".png")
 file.copy(file.path(original_dataset_dir,fnames),
           file.path(test_norela_dir))
 
