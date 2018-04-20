@@ -10,25 +10,15 @@ name <- as.character(file$name)
 no_i <- as.character(file$no_i)
 png_i <- as.character(file$png)
 
-########## read 70 txt files
-#readata <- function(i) {
-#  txt_i <- txt[i]
-#  name_i <- paste(name[i])
-#  data_i <- read.delim(txt_i, header = TRUE, sep = "", dec = ".")
-#  assign(name_i, data_i)
-#  return(name_i)
-#}
 
-# mapply(readata, 1:70)
-
-########## create 70 folders in test_dir
+########## create 70 folders in thesis folder
 
 base_dir <- "/Volumes/5550/thesis"
 
 compare_dir <- vector()
 for (i in 1:70) {
   name_i <- paste(name[i])
-  compare_dir[i] <- file.path(base_dir, name_i)
+  compare_dir[i] <- file.path(base_dir, name[i])
   dir.create(compare_dir[i])
 }
 
@@ -80,7 +70,11 @@ slt <- function(i) {
 }
 
 mapply(slt, 1:70)
+
 test_turk_dir_linear <- "/Volumes/5550/evaluate_turk/linear"
+dir.create(test_turk_dir_linear)
+test_turk_dir_norela <- "/Volumes/5550/evaluate_turk/norela"
+dir.create(test_turk_dir_norela)
 
 realslt <- function(i) {
   fnames <- paste0(png_i[i])
@@ -108,7 +102,7 @@ test_generator_compare <- flow_images_from_directory(
 
 model %>% predict_generator(test_generator_compare, steps = 1)
 
-######## evaluate only on real data (without lineup)
+######## evaluate only on real data (without lineup)   0.4142 acc 
 
 test_datagen <- image_data_generator(rescale = 1/255)
 test_turk_dir <- "/Volumes/5550/evaluate_turk"
@@ -139,6 +133,83 @@ stat_df <- as.tibble(cbind(pred_wo_lineup, test_generator$filenames, test_genera
 stat_df
 
 write.table(stat_df, "stat_df.txt", sep="\t")
+
+############# evaluate on real data with lineup
+############ create "linear" and "norela" for each folder
+
+a_lot_of_dir <- vector()
+
+for (i in 1:70) {
+  nam <- paste0("/Volumes/5550/thesis/", name[i])
+  linear_dir <- file.path(nam, "linear")
+  norela_dir <- file.path(nam, "norela")
+  dir.create(linear_dir)
+  dir.create(norela_dir)
+}
+
+########## copy the real plot into "linear" and the rest to "norela"
+for (i in 1:70) {
+  
+  nam <- paste0("/Volumes/5550/thesis/", name[i])
+  linear_dir <- file.path(nam, "linear")
+  norela_dir <- file.path(nam, "norela")
+  
+fnames <- paste0(png_i[i])
+
+file.copy(file.path(nam, fnames),
+          file.path(linear_dir))
+
+det <- paste0(nam, "/", fnames, sep="")
+unlink(det)
+
+  nana <- paste0(no_i[i], 1:20, ".png", sep="")  
+  nana <- nana [! nana %in% png_i[i]]
+  
+  file.copy(file.path(nam, nana),
+            file.path(norela_dir))
+det2 <- paste0(nam, "/", nana, sep="")
+unlink(det2)
+}
+
+############# evaluate 70 sets of 20 plots one by one, nnnn has the max predicted values 
+#(to be linear)
+
+test_datagen <- image_data_generator(rescale = 1/255)
+pred_max <- vector()
+nnnn <- vector()
+acc <- vector()
+for (i in 1:70) {
+  nam <- paste0("/Volumes/5550/thesis/", name[i])
+  
+  test_generator_i <- flow_images_from_directory(
+    nam,
+    test_datagen,
+    target_size = c(150, 150),
+    color_mode = "grayscale",
+    batch_size = 20,
+    class_mode = "binary"
+  ) 
+  pred_max[i] <- model %>% predict_generator(test_generator_i, steps = 1) %>% which.max() 
+  ll <- pred_max[i]
+  nnnn[i] <- test_generator_i$filenames[ll]
+  acc[i] <- model %>% evaluate_generator(test_generator_i, steps = 1)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
