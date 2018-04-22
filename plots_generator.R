@@ -1,8 +1,8 @@
-setwd("/Volumes/5550/original data")
+
 library(tidyverse)
 
 # 00 omitted variable (linear relationship in residuals) ###  first part report
-
+setwd("/Volumes/5550/thesis/test/linear")
 linear<-function(i){
   
   n <- sample(c(100, 300), 1)
@@ -34,10 +34,10 @@ linear<-function(i){
   ggsave(filename = paste("linear_", i, ".png", sep = ""), height = 2, width = 2, dpi = 150)
 }
 
-mapply(linear, 1:20000)
+mapply(linear, 1:3000)
 
 # 11 no relationship for 00 ########  first part report
-
+setwd("/Volumes/5550/thesis/test/norela")
 norela<-function(i){
   
   n <- sample(c(100, 300), 1)
@@ -69,7 +69,7 @@ norela<-function(i){
   ggsave(filename = paste("norela_", i, ".png", sep = ""), height = 2, width = 2, dpi = 150)
 }
 
-mapply(norela, 1:8000)
+mapply(norela, 1:3000)
 
 # 1/4 for classic linear model
 classic<-function(n){

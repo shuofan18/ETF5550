@@ -22,10 +22,11 @@ The trained deep learning model will be applied to the data from this experiment
 
 ## Classify samples using our model
 
-After first training attempt with 40,000 observations (20,000 of each class), the model's performance is shown below. The accuracy tested on unseen data is roughly 80.5%, where the test data is generated from the same specification with training data.
+After first training attempt with 20,000 observations (15,000 linear and 5,000 no-relationship), the model's performance is shown below. The accuracy tested on unseen data is roughly 89.7%, where the test data is generated from the same specification with training data.
 
 ```{r history, echo=FALSE}
-load("/Users/stanza/Documents/GitHub/ETF5550/MonashThesis-master/data/history2.RData")
+
+load("/Users/stanza/Documents/GitHub/ETF5550/MonashThesis-master/data/new_history.RData")
 plot(history)
 
 ```
@@ -36,8 +37,6 @@ plot(history)
 We first try to use the model classify the real plots directly. The accuracy is roughly 42% for the 70 real data plots. We think this result is reasonable since the averaged power of the conventional t-test of these 70 plots is calculated as 0.4567.
 
 Next we will let the model select the highest probability of being linear within each 20 plots, as the same with what human do in the experiment 2.
-
--->
 
 
 
