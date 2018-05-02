@@ -19,7 +19,7 @@ train_generator <- flow_images_from_directory(
   train_datagen,                                                   
   target_size = c(150, 150), 
   color_mode = "grayscale",
-  batch_size = 20,                                                 
+  batch_size = 200,                                                 
   class_mode = "binary"
 )
 
@@ -28,7 +28,7 @@ validation_generator <- flow_images_from_directory(
   validation_datagen,
   target_size = c(150, 150),
   color_mode = "grayscale",
-  batch_size = 20,
+  batch_size = 100,
   class_mode = "binary"
 )
 
@@ -37,7 +37,7 @@ test_generator <- flow_images_from_directory(
   test_datagen,
   target_size = c(150, 150),
   color_mode = "grayscale",
-  batch_size = 20,
+  batch_size = 100,
   class_mode = "binary"
 )
 
@@ -77,13 +77,11 @@ history <- model %>% fit_generator(
 
 ############################################################ 7:36pm
 
-save(model, file = "model.RData")
-save(history, file="history.RData")
+saveRDS(model, file = "new_model.rds")
+save(history, file="new_history.RData")
 
-model %>% save_model_hdf5("model_1.h5")
 
-model %>% evaluate_generator(test_generator, steps = 20)
-modelfile <- h5file("model_1.h5", 'a')
+model %>% evaluate_generator(test_generator, steps = 30)
 
 
 ####### test for one image
