@@ -1,18 +1,17 @@
+
 library(tidyverse)
 library(keras)
 
 linear<-function(i){
-  
+
   n <- sample(c(100, 300), 1)
-  
   beta <- sample(c((-10:-0.1), (0.1:10)), 1)
-  
   sigma <- sample(1:12 , 1)
   x<-rnorm(n, 0, 1)
   y<-rnorm(n, beta*x, sigma)
-  
   res <- y
   yhat <- x
+  
   tibble(res, yhat) %>% 
     ggplot(aes(x = yhat, y=res)) + 
     geom_point(alpha = 0.4) +
@@ -30,21 +29,22 @@ linear<-function(i){
           plot.background=element_blank(),
           aspect.ratio = 1)
   ggsave(filename = paste("linear_", i, ".png", sep = ""), height = 2, width = 2, dpi = 150)
+  
+  ct <- cor.test(res, yhat)
+  return(ct$p.value)
 }
 
 
 norela<-function(i){
   
   n <- sample(c(100, 300), 1)
-  
   beta <- 0
-  
   sigma <- sample(1:12 , 1)
   x<-rnorm(n, 0, 1)
   y<-rnorm(n, beta*x, sigma)
-  
   res <- y
   yhat <- x
+  
   tibble(res, yhat) %>% 
     ggplot(aes(x = yhat, y=res)) + 
     geom_point(alpha = 0.4) +
@@ -62,23 +62,28 @@ norela<-function(i){
           plot.background=element_blank(),
           aspect.ratio = 1)
   ggsave(filename = paste("norela_", i, ".png", sep = ""), height = 2, width = 2, dpi = 150)
+  
+  ct <- cor.test(res, yhat)
+  return(ct$p.value)
 }
 
+
 setwd("~/p2016030007/szha0004/no_lineup/train/linear")
-mapply(linear, 1:100000)
+accuracy_cortest_linear_train <- (sapply(1:100000, linear) < 0.05) %>% mean()
 setwd("~/p2016030007/szha0004/no_lineup/train/norela")
-mapply(norela, 1:100000)
+accuracy_cortest_norela_train <- (sapply(1:100000, norela) > 0.05) %>% mean()
+
 
 setwd("~/p2016030007/szha0004/no_lineup/test/linear")
-mapply(linear, 1:50000)
+accuracy_cortest_linear_test <- (sapply(1:50000, linear) < 0.05) %>% mean()
 setwd("~/p2016030007/szha0004/no_lineup/test/norela")
-mapply(norela, 1:50000)
+accuracy_cortest_norela_test <- (sapply(1:50000, norela) > 0.05) %>% mean()
 
 setwd("~/p2016030007/szha0004/no_lineup/validation/linear")
-mapply(linear, 1:50000)
+accuracy_cortest_linear_validation <- (sapply(1:50000, linear) < 0.05) %>% mean()
 setwd("~/p2016030007/szha0004/no_lineup/validation/norela")
-mapply(norela, 1:50000)
-
+accuracy_cortest_norela_validation <- (sapply(1:50000, norela) > 0.05) %>% mean()
+  
 ######## image generating finish, start training ###########
 
 base_dir <- "~/p2016030007/szha0004/no_lineup"
@@ -95,7 +100,7 @@ train_generator <- flow_images_from_directory(
   train_datagen,                                                   
   target_size = c(150, 150), 
   color_mode = "grayscale",
-  batch_size = 500,                                                 
+  batch_size = 1000,                                                 
   class_mode = "binary"
 )
 
@@ -104,7 +109,7 @@ validation_generator <- flow_images_from_directory(
   validation_datagen,
   target_size = c(150, 150),
   color_mode = "grayscale",
-  batch_size = 200,
+  batch_size = 500,
   class_mode = "binary"
 )
 
@@ -113,7 +118,7 @@ test_generator <- flow_images_from_directory(
   test_datagen,
   target_size = c(150, 150),
   color_mode = "grayscale",
-  batch_size = 200,
+  batch_size = 500,
   class_mode = "binary"
 )
 
@@ -139,27 +144,32 @@ model %>% compile(
   metrics = c("accuracy")
 )
 
-##### changed steps_per_epoch from 100 to 50
-
+#train
 history <- model %>% fit_generator(
   train_generator,
-  steps_per_epoch = 1000,
+  steps_per_epoch = 100,
   epochs = 100,
   validation_data = validation_generator,
   validation_steps = 500
 )
 
+plot(history)
+
+model %>% save_model_hdf5("nolu_100k_each.h5")
+
+# evaluate convnets on test set
 model %>% evaluate_generator(test_generator, steps = 500)
 
-### how to save the trained model after training? (so it can be used directly in the future)
+# overall accuracy of cor.test on test set
+accuracy_cortest_test <- mean(c(accuracy_cortest_linear_test, accuracy_cortest_norela_test))
 
-
-
-
-
-
-
-
+# all cor.test performance
+accuracy_cortest_linear_train 
+accuracy_cortest_norela_train 
+accuracy_cortest_linear_test 
+accuracy_cortest_norela_test 
+accuracy_cortest_linear_validation 
+accuracy_cortest_norela_validation 
 
 
 
