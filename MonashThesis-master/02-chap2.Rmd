@@ -227,6 +227,11 @@ grid.arrange(p1,p2,p3,p4, nrow=2)
 
 ```
 
+<!--
+Since we do not have existing data from human experiments, to provide a reference to evaluate how computer perform in detecing heteroskedasticity issues, a special case of the White test will be used. Each image in test set will be evaluated using this test and the associated accuracy will be compared to computers' accuracy on the same set.
+
+-->
+
 #### Non-linear model {#sec:poly}
 
 This data set will be representative of non-linear relationship between X and Y, keep all other factors being the same with the classic linear model.

@@ -77,8 +77,7 @@ history <- model %>% fit_generator(
 
 ############################################################ 7:36pm
 
-saveRDS(model, file = "new_model.rds")
-save(history, file="new_history.RData")
+
 
 
 model %>% evaluate_generator(test_generator, steps = 30)
