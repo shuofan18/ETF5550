@@ -9,13 +9,13 @@ white_test <- function(res, yhat, n){
   yhat2 <- yhat^2
   model <- lm(res2 ~ yhat + yhat2)
   sss <- summary(model)$r.squared
-  test_stat <- n*sss
-  if (test_stat > crit_value){
-    wt_conclusion <- 1 #1=heter
-  } else {
-    wt_conclusion <- 0 #0=norela
-  }
-  return(wt_conclusion)
+  wt_stat <- n*sss
+#  if (wt_stat > crit_value){
+#    wt_conclusion <- 1 #1=heter
+#  } else {
+#    wt_conclusion <- 0 #0=norela
+# }
+  return(wt_stat)
 }
 ################ function for generate lineup for human experiment #########
 
@@ -56,7 +56,12 @@ heter<-function(i){
   #yhat<-(yhat-mean(yhat))/sd(yhat)
   fit <- augment(model, df)
   sample_sd <- sd(fit$.resid)
-  wt_conclusion <- white_test(fit$.resid, fit$.fitted, n)
+  wt_stat <- white_test(fit$.resid, fit$.fitted, n)
+  if (wt_stat > crit_value){
+    wt_conclusion <- 1 #1=heter
+  } else {
+    wt_conclusion <- 0 #0=norela
+  }
   ##generate lineup 
   pos <- sample(1:20, 1)
   lineup_data <- fit %>% select(x, .std.resid) %>% mutate(.sample = pos)
@@ -97,22 +102,62 @@ heter<-function(i){
     }
   }
     
-ggplot(lineup_data, aes(x, .std.resid))+geom_point(alpha = 0.4)+facet_wrap(~.sample, ncol=5) 
-setwd("/volumes/5550/panda2/lineup")  
+ggplot(lineup_data, aes(x, .std.resid))+geom_point(alpha = 0.4)+theme(axis.text.x=element_blank(),
+      axis.text.y=element_blank(),
+      axis.title.x=element_blank(),
+      axis.title.y=element_blank(),
+      legend.position="none",
+      aspect.ratio = 1) +facet_wrap(~.sample, ncol=5) 
+
 ggsave(filename = 
-         paste("(", i, ")real(", pos,")a(" , round(a,digits = 2), 
-               ")sdsd(", round(sdsd, digits = 2),")n(", n,
-               ")wt(", wt_conclusion ,").png", sep = ""))
-  
+         paste(i, "_real(", pos,")a(" , round(a,digits = 2), ")n(", n,
+               ")wtst(", wt_stat ,")wt(" , wt_conclusion,").png", sep = ""))
   return(wt_conclusion)
 }
 
 set.seed(0517)
 setwd("/volumes/5550/panda2/lineup")
-accuracy_wtest_heter_train <- sapply(1:100,  heter) %>% sum()/100
+accuracy_wtest_heter_train <- sapply(1:10,  heter) %>% sum()/10
 accuracy_wtest_heter_train
 
-######################################################################
+############################## generate data for training ######################
+
+heter<-function(i){
+  n=sample(20:1500, 1)
+  x<-runif(n, -1, 1)
+  beta<-runif(1,0.5,1)
+  
+  a <- runif(1,0.05,5)
+  index <- sample(0:1,1)
+  if (index ==1) {
+    a <- -a
+  }
+  
+  sd <- a*x+rnorm(n, 0, 1)
+  sdsd <- sd(sd)
+  
+  min <- min(sd)
+  if (min<0){
+    sd <- sd-min
+  }
+ 
+  y<-rnorm(n, beta*x, sd)
+  
+  df <- tibble(x, y)
+  model<-lm(y ~ x, data=df)
+  
+  fit <- augment(model, df)
+  sample_sd <- sd(fit$.resid)
+  wt_conclusion <- white_test(fit$.resid, fit$.fitted, n)
+  
+  ggplot(lineup_data, aes(x, .std.resid))+geom_point(alpha = 0.4)+facet_wrap(~.sample, ncol=5) 
+  ggsave(filename = 
+           paste("(", i, ")real(", pos,")a(" , round(a,digits = 2), 
+                 ")sdsd(", round(sdsd, digits = 2),")n(", n,
+                 ")wt(", wt_conclusion ,").png", sep = ""))
+  
+  return(wt_conclusion)
+}
 
 setwd("/volumes/5550/panda2/x&y")
 accuracy_wtest_heter_train <- sapply(1:100,  heter) %>% sum()/100
