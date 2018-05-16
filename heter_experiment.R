@@ -1,9 +1,8 @@
 
 library(tidyverse)
 library(keras)
-
+################### function for white-test ###########
 crit_value <- qchisq(0.95, df=2)
-
 white_test <- function(res, yhat, n){
   res2 <- res^2
   yhat2 <- yhat^2
@@ -17,8 +16,9 @@ white_test <- function(res, yhat, n){
   }
   return(wt_conclusion)
 }
-
+################ function for generate heteroskedasticity plots ######
 heter<-function(i){
+  n=sample(20:1500, 1)
   x<-rnorm(n, 0, 3)
   beta<-runif(1,0.5,1)
   a <- runif(1,0,2)*rbinom(1,1,0.5)
@@ -26,7 +26,7 @@ heter<-function(i){
   c <- rnorm(1,0,2)
   variance <- 0.25*(a*x^2+b*x+c)+rnorm(n,0,0.25)
   index <- sample(0:1,1)
-  if (index==1) {
+ if (index==1) {
     variance <- -variance
   }
   min <- min(variance)
@@ -46,7 +46,8 @@ heter<-function(i){
   res<-(res-mean(res))/sd(res)
   yhat<-(yhat-mean(yhat))/sd(yhat)
   
-  tibble(res, yhat) %>% 
+  tibble(res, yhat) %>%
+  #tibble(x, y) %>%  
     ggplot(aes(x = yhat, y=res)) + 
     geom_point(alpha = 0.4) +
     theme(axis.line=element_blank(),
@@ -62,15 +63,19 @@ heter<-function(i){
           panel.grid.minor=element_blank(),
           plot.background=element_blank(),
           aspect.ratio = 1)
-  ggsave(filename = paste("linear_", i, ".png", sep = ""), height = 2, width = 2, dpi = 150)
+  ggsave(filename = paste("heter_", i, ".png", sep = ""), height = 2, width = 2, dpi = 150)
   wt_conclusion <- white_test(res, yhat, n)
   return(wt_conclusion)
 }
 
 
-setwd("/Users/shuofanzhang/documents/monarch/train/linear")
-accuracy_cortest_linear_train_part2 <- (sapply(50001:100000, linear) < 0.05) %>% mean()
-accuracy_cortest_linear_train_part2
+setwd("/volumes/5550/panda2/res&yhat")
+accuracy_wtest_heter_train <- sapply(1:100,  heter) %>% sum()/100
+accuracy_wtest_heter_train
+setwd("/volumes/5550/panda2/x&y")
+accuracy_wtest_heter_train <- sapply(1:100,  heter) %>% sum()/100
+accuracy_wtest_heter_train
+
 setwd("/Users/shuofanzhang/documents/monarch/train/norela")
 accuracy_cortest_norela_train_part2 <- (sapply(50001:100000, norela) > 0.05) %>% mean()
 accuracy_cortest_norela_train_part2
