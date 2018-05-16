@@ -1,6 +1,7 @@
 
 library(tidyverse)
 library(keras)
+library(broom)
 ################### function for white-test ###########
 crit_value <- qchisq(0.95, df=2)
 white_test <- function(res, yhat, n){
@@ -16,62 +17,103 @@ white_test <- function(res, yhat, n){
   }
   return(wt_conclusion)
 }
-################ function for generate heteroskedasticity plots ######
+################ function for generate lineup for human experiment #########
+
 heter<-function(i){
   n=sample(20:1500, 1)
-  x<-rnorm(n, 0, 3)
+  x<-runif(n, -1, 1)
   beta<-runif(1,0.5,1)
-  a <- runif(1,0,2)*rbinom(1,1,0.5)
-  b <- runif(1,-4,4)
-  c <- rnorm(1,0,2)
-  variance <- 0.25*(a*x^2+b*x+c)+rnorm(n,0,0.25)
-  index <- sample(0:1,1)
- if (index==1) {
-    variance <- -variance
-  }
-  min <- min(variance)
-  if (min<0){
-    variance <- variance-min
-  }
-  max <- max(variance)
-  while (max>5) {
-    variance <- 0.8* variance
-    max <- max(variance)
-  }
-  y<-rnorm(n, beta*x, variance)
-  tibble(x, y)
-  model<-lm(y ~ x)
-  res<-residuals(model)
-  yhat<-predict(model)
-  res<-(res-mean(res))/sd(res)
-  yhat<-(yhat-mean(yhat))/sd(yhat)
   
-  tibble(res, yhat) %>%
-  #tibble(x, y) %>%  
-    ggplot(aes(x = yhat, y=res)) + 
-    geom_point(alpha = 0.4) +
-    theme(axis.line=element_blank(),
-          axis.text.x=element_blank(),
-          axis.text.y=element_blank(),
-          axis.ticks=element_blank(),
-          axis.title.x=element_blank(),
-          axis.title.y=element_blank(),
-          legend.position="none",
-          panel.background=element_blank(),
-          panel.border=element_blank(),
-          panel.grid.major=element_blank(),
-          panel.grid.minor=element_blank(),
-          plot.background=element_blank(),
-          aspect.ratio = 1)
-  ggsave(filename = paste("heter_", i, ".png", sep = ""), height = 2, width = 2, dpi = 150)
-  wt_conclusion <- white_test(res, yhat, n)
+  a <- runif(1,0.05,5)
+  index <- sample(0:1,1)
+  if (index ==1) {
+    a <- -a
+  }
+  #b <- 0.5*runif(1,-4,4)
+  #c <- rnorm(1,0,2)
+ # sd <- a*x^2+b*x+rnorm(n,0,0.25)
+  sd <- a*x+rnorm(n, 0, 1)
+  sdsd <- sd(sd)
+# if (index==1) {
+#    sd <- -sd
+#  }
+  min <- min(sd)
+  if (min<0){
+    sd <- sd-min
+  }
+#  max <- max(sd)
+#  while (max>5) {
+#    sd <- 0.8* sd
+#    max <- max(sd)
+#  }
+  y<-rnorm(n, beta*x, sd)
+
+  df <- tibble(x, y)
+  model<-lm(y ~ x, data=df)
+  #res<-residuals(model)
+  #yhat<-predict(model)
+  #res<-(res-mean(res))/sd(res)
+  #yhat<-(yhat-mean(yhat))/sd(yhat)
+  fit <- augment(model, df)
+  sample_sd <- sd(fit$.resid)
+  wt_conclusion <- white_test(fit$.resid, fit$.fitted, n)
+  ##generate lineup 
+  pos <- sample(1:20, 1)
+  lineup_data <- fit %>% select(x, .std.resid) %>% mutate(.sample = pos)
+  if (pos == 1) {
+    for (i2 in 2:20) {
+      null_y <- rnorm(n, beta*x, sample_sd)
+      null_df <- tibble(null_y, x)
+      null_model<-lm(null_y ~ x, data=null_df)
+      null_fit <- augment(null_model, null_df)
+      tmp <- null_fit %>% select(x, .std.resid) %>% mutate(.sample = i2)
+      lineup_data <- bind_rows(lineup_data, tmp)
+    }
+  } else if (pos == 20) {
+  for (i2 in 1:19) {
+    null_y <- rnorm(n, beta*x, sample_sd)
+    null_df <- tibble(null_y, x)
+    null_model<-lm(null_y ~ x, data=null_df)
+    null_fit <- augment(null_model, null_df)
+    tmp <- null_fit %>% select(x, .std.resid) %>% mutate(.sample = i2)
+    lineup_data <- bind_rows(tmp , lineup_data)
+   }
+  } else {
+    for (i2 in 1:(pos-1)) {
+      null_y <- rnorm(n, beta*x, sample_sd)
+      null_df <- tibble(null_y, x)
+      null_model<-lm(null_y ~ x, data=null_df)
+      null_fit <- augment(null_model, null_df)
+      tmp <- null_fit %>% select(x, .std.resid) %>% mutate(.sample = i2)
+      lineup_data <- bind_rows(tmp , lineup_data)
+    }
+    for (i2 in (pos+1):20) {
+      null_y <- rnorm(n, beta*x, sample_sd)
+      null_df <- tibble(null_y, x)
+      null_model<-lm(null_y ~ x, data=null_df)
+      null_fit <- augment(null_model, null_df)
+      tmp <- null_fit %>% select(x, .std.resid) %>% mutate(.sample = i2)
+      lineup_data <- bind_rows(lineup_data, tmp)
+    }
+  }
+    
+ggplot(lineup_data, aes(x, .std.resid))+geom_point(alpha = 0.4)+facet_wrap(~.sample, ncol=5) 
+setwd("/volumes/5550/panda2/lineup")  
+ggsave(filename = 
+         paste("(", i, ")real(", pos,")a(" , round(a,digits = 2), 
+               ")sdsd(", round(sdsd, digits = 2),")n(", n,
+               ")wt(", wt_conclusion ,").png", sep = ""))
+  
   return(wt_conclusion)
 }
 
-
-setwd("/volumes/5550/panda2/res&yhat")
+set.seed(0517)
+setwd("/volumes/5550/panda2/lineup")
 accuracy_wtest_heter_train <- sapply(1:100,  heter) %>% sum()/100
 accuracy_wtest_heter_train
+
+######################################################################
+
 setwd("/volumes/5550/panda2/x&y")
 accuracy_wtest_heter_train <- sapply(1:100,  heter) %>% sum()/100
 accuracy_wtest_heter_train
