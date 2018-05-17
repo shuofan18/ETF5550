@@ -2,7 +2,7 @@
 library(tidyverse)
 library(keras)
 library(broom)
-################### function for white-test ###########
+################### function for white-test statistic ###########
 crit_value <- qchisq(0.95, df=2)
 white_test <- function(res, yhat, n){
   res2 <- res^2
@@ -10,50 +10,28 @@ white_test <- function(res, yhat, n){
   model <- lm(res2 ~ yhat + yhat2)
   sss <- summary(model)$r.squared
   wt_stat <- n*sss
-#  if (wt_stat > crit_value){
-#    wt_conclusion <- 1 #1=heter
-#  } else {
-#    wt_conclusion <- 0 #0=norela
-# }
   return(wt_stat)
 }
 ################ function for generate lineup for human experiment #########
 
 heter<-function(i){
-  n=sample(20:1500, 1)
-  x<-runif(n, -1, 1)
-  beta<-runif(1,0.5,1)
   
-  a <- runif(1,0.05,5)
-  index <- sample(0:1,1)
-  if (index ==1) {
-    a <- -a
-  }
-  #b <- 0.5*runif(1,-4,4)
-  #c <- rnorm(1,0,2)
- # sd <- a*x^2+b*x+rnorm(n,0,0.25)
+  n = sample(20:1500, 1)
+  x <- runif(n, -1, 1)
+  beta <- runif(1,0.5,1)
+  a <- runif(1,0.05,5)*(-1)^(rbinom(1, 1, 0.5))
   sd <- a*x+rnorm(n, 0, 1)
-  sdsd <- sd(sd)
-# if (index==1) {
-#    sd <- -sd
-#  }
+  
   min <- min(sd)
   if (min<0){
     sd <- sd-min
   }
-#  max <- max(sd)
-#  while (max>5) {
-#    sd <- 0.8* sd
-#    max <- max(sd)
-#  }
+  
   y<-rnorm(n, beta*x, sd)
 
   df <- tibble(x, y)
   model<-lm(y ~ x, data=df)
-  #res<-residuals(model)
-  #yhat<-predict(model)
-  #res<-(res-mean(res))/sd(res)
-  #yhat<-(yhat-mean(yhat))/sd(yhat)
+  
   fit <- augment(model, df)
   sample_sd <- sd(fit$.resid)
   wt_stat <- white_test(fit$.resid, fit$.fitted, n)
@@ -102,66 +80,29 @@ heter<-function(i){
     }
   }
     
-ggplot(lineup_data, aes(x, .std.resid))+geom_point(alpha = 0.4)+theme(axis.text.x=element_blank(),
+ggplot(lineup_data, aes(x, .std.resid))+geom_point(alpha = 0.4)+
+  theme(axis.text.x=element_blank(),
       axis.text.y=element_blank(),
       axis.title.x=element_blank(),
       axis.title.y=element_blank(),
-      legend.position="none",
+      axis.ticks=element_blank(),
       aspect.ratio = 1) +facet_wrap(~.sample, ncol=5) 
 
 ggsave(filename = 
          paste(i, "_real(", pos,")a(" , round(a,digits = 2), ")n(", n,
-               ")wtst(", wt_stat ,")wt(" , wt_conclusion,").png", sep = ""))
+               ")wtst(", round(wt_stat, digits = 2) ,")wt(" , wt_conclusion,").png", 
+               sep = ""), height = 8, width = 10, dpi = 200)
   return(wt_conclusion)
 }
 
 set.seed(0517)
 setwd("/volumes/5550/panda2/lineup")
-accuracy_wtest_heter_train <- sapply(1:10,  heter) %>% sum()/10
+accuracy_wtest_heter_train <- sapply(101:200, heter) %>% sum()/100
 accuracy_wtest_heter_train
 
 ############################## generate data for training ######################
 
-heter<-function(i){
-  n=sample(20:1500, 1)
-  x<-runif(n, -1, 1)
-  beta<-runif(1,0.5,1)
-  
-  a <- runif(1,0.05,5)
-  index <- sample(0:1,1)
-  if (index ==1) {
-    a <- -a
-  }
-  
-  sd <- a*x+rnorm(n, 0, 1)
-  sdsd <- sd(sd)
-  
-  min <- min(sd)
-  if (min<0){
-    sd <- sd-min
-  }
- 
-  y<-rnorm(n, beta*x, sd)
-  
-  df <- tibble(x, y)
-  model<-lm(y ~ x, data=df)
-  
-  fit <- augment(model, df)
-  sample_sd <- sd(fit$.resid)
-  wt_conclusion <- white_test(fit$.resid, fit$.fitted, n)
-  
-  ggplot(lineup_data, aes(x, .std.resid))+geom_point(alpha = 0.4)+facet_wrap(~.sample, ncol=5) 
-  ggsave(filename = 
-           paste("(", i, ")real(", pos,")a(" , round(a,digits = 2), 
-                 ")sdsd(", round(sdsd, digits = 2),")n(", n,
-                 ")wt(", wt_conclusion ,").png", sep = ""))
-  
-  return(wt_conclusion)
-}
 
-setwd("/volumes/5550/panda2/x&y")
-accuracy_wtest_heter_train <- sapply(1:100,  heter) %>% sum()/100
-accuracy_wtest_heter_train
 
 setwd("/Users/shuofanzhang/documents/monarch/train/norela")
 accuracy_cortest_norela_train_part2 <- (sapply(50001:100000, norela) > 0.05) %>% mean()
