@@ -28,17 +28,11 @@ After first training attempt with 20,000 observations (15,000 linear and 5,000 n
 
 ```{r history, echo=FALSE}
 
-load("/Users/stanza/Documents/GitHub/ETF5550/MonashThesis-master/data/new_history.RData")
-plot(history)
+#load png
 
 ```
 
-```{r dl_ct, echo=FALSE}
 
-ctacc <- read.csv("/Users/stanza/Documents/GitHub/ETF5550/cortest_table.csv")
-acc_ct_test <- mean(c(ctacc$accuracy_cortest_linear_test, ctacc$accuracy_cortest_norela_test))
-acc_dl_test <- 
-```
 
 
 

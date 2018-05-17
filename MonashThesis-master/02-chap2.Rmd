@@ -5,26 +5,27 @@ knit: "bookdown::render_book"
 
 # Experimental design {#ch:modesign}
 
-Steps in the experiment are:
+Three experiments associated with the three hypothesis tests will be processed in this paper.
 
-1. Simulate data from the different models
-2. Fit a linear model to the data, extract standardized residuals and fitted values
-3. Save residual plots as fixed-sized images
-4. Train a deep learning classifier to recognise the departures from assumptions
+1. Linear relationship vs. no relationship
+2. Linear relationship vs. heteroskedastic linear relationship
+3. Linear relationship vs. non-linear relationship
+
+Main steps in the experiments are:
+
+1. Simulate data from both the null distribution and the alternative distribution of each hypothesis test
+2. Generate corresponding data plots for the simulated data
+3. Save data plots as fixed-sized images with labels indicating which distribution they are from 
+4. Train a deep learning classifier to recognize different labels
 5. Test the model's performance and compute the accuracy
+6. Compare the model's performance with human's (exclusive for the first and second experiment)
 
-## Data simulation {#sec:simulation}
 
-These factors are being controlled in the data simulation
 
-- Type of relationship: linear, nonlinear or heteroskedasticity
-- Explanatory variables: $X \sim N(0,3)$ and intercept $\beta_0=0$
-- Sample size: randomly generated between 20-1500
-- Image size: fixed `150x150`
 
 <!--
 **ADD: explanations of choices** 
--->
+
 
 Three groups of models are included in the two hypothesis tests, linear, nonlinear and heteroskedasticity. So our target is to train the computer to distinguish the residual plots from these three models. 
 
@@ -37,7 +38,7 @@ The sample sizes will be 900 random numbers generated from 20 to 1500. These sam
 
 
 We set image size to be 150 $\times$ 150 pixels, because this size is able to show the plots clearly and also reasonably small so the images can be saved and processed easily.
-
+-->
 
 ### Models for relationship
 
@@ -275,7 +276,6 @@ p4 <-   ggplot(pl[[4]], aes(x=yhat, y=res)) +geom_point(alpha = 0.4) + theme(asp
 
 grid.arrange(p1,p2,p3,p4,nrow=2, heights=c(0.6,0.6)) 
 ```
-
 
 
 

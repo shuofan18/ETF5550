@@ -7,6 +7,7 @@ knit: "bookdown::render_book"
 knitr::opts_chunk$set(echo = FALSE, message=FALSE, cache=TRUE)
 library(tidyverse)
 library(nullabor)
+library(keras)
 ```
 
 # Introduction and literature review {#ch:intro}
@@ -14,7 +15,7 @@ library(nullabor)
 <!--
 Problem statement
 -->
-"The multiple regression model for cross-sectional data is still the most widely used vehicle for empirical analysis in economics and other social sciences" [@IE17]. Detecting possible violations of the Gauss-Markov assumptions is crucial to interpret the data properly, especially in the early stage of analysis. There are several distribution tests that are commonly used, for instance, the Pearson correlation test for detecting linear relationship; the Breusch-Pagan test and White test for investigating heteroskedasticity. But primarily residual plots are the main diagnostic tool and these rely on human evaluation. Because plots show a lot more information than a single statistics. A good example here would be Anscome’s Quartet. "It is a set of four distinct datasets each consisting of 11 (x,y) pairs where each dataset produces the same summary statistics (mean, standard deviation, and correlation) while producing vastly different plots" [@ANS73]. Matejka and Fitzmaurice also did an interesting study on this issue, they used 'datasaurus' data from @DS16 and generated a series of data with same statistics but very different plots [@JM17].
+"The multiple regression model for cross-sectional data is still the most widely used vehicle for empirical analysis in economics and other social sciences" [@IE17]. Detecting possible violations of the Gauss-Markov assumptions is crucial to interpret the data properly, especially in the early stage of analysis. There are several distribution tests that are commonly used, for instance, the Pearson correlation test for detecting linear relationship; the Breusch-Pagan test and White test for investigating heteroskedasticity. But primarily <!--scatter plot/data visualization--> residual plots are the main diagnostic tool and these rely on human evaluation. Because data plots show a lot more information than a single statistics. A good example here would be Anscome’s Quartet. "It is a set of four distinct datasets each consisting of 11 (x,y) pairs where each dataset produces the same summary statistics (mean, standard deviation, and correlation) while producing vastly different plots" [@ANS73]. Matejka and Fitzmaurice also did an interesting study on this issue, they used 'datasaurus' data from @DS16 and generated a series of data with same statistics but very different plots [@JM17].
 
 ```{r saurus, fig.cap="Each dataset has the same summary statistics to two decimal places: (E(x)=54.26, E(y)= 47.83, sd(x) = 16.76, sd(y) = 26.93, Pearson’s r = -0.06)."}
 library(datasauRus)
@@ -42,7 +43,7 @@ ggplot(lineup_data_mtcars, aes(disp, hp)) +
 ```
 
 
-The question that arises today is whether we can train a computer to read residual plots, particularly with a computer vision approach such as deep learning. 
+The question that arises today is whether we can train a computer to read scatter plots, particularly with a computer vision approach such as deep learning. 
 
 <!--
 Motivation based on Simchoni's blog post
@@ -59,11 +60,19 @@ $H_1$: There is linear relationship between the two variables where the variance
 $H_0$: There is linear relationship between the two variables where all Gauss-Markov assumptions are met.
 $H_1$: There is non-linear relationship between the two variables where all other Gauss-Markov assumptions are met.
 
+To facilitate our study, we focus on the regression model with only one explanatory variable. The associated results can be extended and employed to multiple regression cases with modifications to the data in practice. 
+
 <!--
 Explain deep learning models 
 -->
 
-The model we will use is the convolutional neural networks, also known as convnets, a type of deep-learning model almost universally used in computer vision applications [@DLR18]. For simplicity, we can think of the deep learning neural network as a super complex nonlinear model which could estimate hundreds of thousands parameters with big enough dataset. As usual regression problem, to get the estimates of unknown parameters, we need to provide the model with dependent variable and independent variables. In this case, the independent variable will be the residual plots simulated from the null distribution and the alternative distribution, and dependent variable will be the labels of that plot indicating the true relationship of the original data. Once we have these estimated parameters, we then can use them to classify unseen residual plots, eg. to perform hypothesis tests. 
+The model we will use is the convolutional neural networks, also known as convnets, a type of deep-learning model almost universally used in computer vision applications [@DLR18]. Unlike the classical programming where human input rules, in deep learning paradigm, we provide data and the answers associated with the data. Deep learning algorithm will output the rules, and these rules can then be used on new data to make predictions.
+We can also think of the deep learning neural network as a complex nonlinear model which could estimate millions of parameters with big enough dataset. As usual regression problem, to get the estimates of unknown parameters, we need to provide the model with dependent variable and independent variables. In this case, the independent variable will be the images of residual plots simulated from the null distribution and the alternative distribution, and dependent variable will be the labels of that plot indicating the true relationship of the original data. Once we have these estimated parameters, we then can use them to classify unseen residual plots, eg. to perform hypothesis tests. 
+
+```{r dl_model, echo=FALSE, fig.cap="The deep learning model structure used in this thesis"}
+model_loaded <- load_model_hdf5("~/documents/github/etf5550/10epoch_m/weights.06-0.22.hdf5")
+model_loaded
+```
 
 
 
