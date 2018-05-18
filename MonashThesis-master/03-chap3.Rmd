@@ -3,7 +3,6 @@ chapter: 3
 knit: "bookdown::render_book"
 ---
 
-
 # Comparison with Turk studies
 
 A large database of results from a human subjects test conducted to validate the lineup protocol relative to a classical tests is going to be used for this part of the work. This data was collected as part of the work presented in @MM13. Experiment 2 examined the performance of humans in recognising linear association between two variables, in direct comparison to conducting a $t$-test of $H_o: \beta_k=0$ vs $H_a: \beta_k\neq 0$ assessing the importance of including variable $k$ in the linear model. An example lineup is shown in Figure \ref{expt2}. For this lineup, 63 of the 65 people who examined it selected the data plot (position 20) from the null plots. There is clear evidence that the data displayed in plot 20 is not from $H_o: \beta_k=0$. 
@@ -25,16 +24,6 @@ The trained deep learning model will be applied to the data from this experiment
 <!--
 After first training attempt with 20,000 observations (15,000 linear and 5,000 no-relationship), the model's performance is shown below. The accuracy tested on unseen data is roughly 89.7%, where the test data is generated from the same specification with training data.
 -->
-
-```{r history, echo=FALSE}
-
-#load png
-
-```
-
-
-
-
 
 ## Compare accuracy of computer vs human reading
 

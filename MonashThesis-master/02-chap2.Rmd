@@ -251,12 +251,19 @@ model_loaded
 
 \begin{figure*}[h]
 \centerline{\includegraphics[width=15cm]{figures/new_plot.png}}
-\caption{Training history of the deep learning model for the first experiment.}
+\caption{Plot of the training history of the deep learning model for the first experiment.}
 \label{expt2}
 \end{figure*}
 
-From the plot of the traning history, we can see the fourth specification gives the overall best performance with lowest loss and highest accuracy on validation set.
-
+From the plot of the traning history, we can see the fourth specification gives the overall best performance with lowest loss and highest accuracy on validation set. Its accuracy on the unseen test set is also the best among other models. After the fourth checkpoint, the model starts to overfit.
+<!--
+\begin{tabular}{lp{10cm}}
+Model & Power & (1-alpha) \\\hline
+epoch 4 & 0.878975 & 0.97565 \\
+epoch 6 & 0.890975 & 0.95685\\
+epoch 10 & 0.8826 & 0.968725\\
+\end{tabular}
+-->
 ### Second experiment - Classic linear model vs. heteroskedastic 
 
 
