@@ -3,28 +3,25 @@ chapter: 2
 knit: "bookdown::render_book"
 ---
 
-# Experimental design {#ch:modesign}
+# Comparing computer performance against database of human evaluation
 
-Three experiments associated with the three hypothesis tests will be processed in this paper.
+## Turk study explanation
 
-First experiment - Independent variables vs. Classic linear model
-Second experiment - Classic linear model vs. Linear model with Heteroskedasticity
-Third experiment - Classic linear model vs. Non-linear model
+A large database of results from a human subjects test conducted to validate the lineup protocol relative to a classical tests is going to be used for this part of the work. This data was collected as part of the work presented in @MM13. Experiment 2 examined the performance of humans in recognising linear association between two variables, in direct comparison to conducting a $t$-test of $H_o: \beta_k=0$ vs $H_a: \beta_k\neq 0$ assessing the importance of including variable $k$ in the linear model. An example lineup is shown in Figure \ref{expt2}. For this lineup, 63 of the 65 people who examined it selected the data plot (position 20) from the null plots. There is clear evidence that the data displayed in plot 20 is not from $H_o: \beta_k=0$. 
 
-Main steps in the experiments are:
+\begin{figure*}[h]
+\centerline{\includegraphics[width=15cm]{figures/plot_turk2_300_350_12_3.png}}
+\caption{One of 70 lineups used in experiment 2 Majumder et al (2012). Of the 65 people who examined the lineup,  63 selected the data plot, which is in position 20.}
+\label{expt2}
+\end{figure*}
 
-1. Simulate data from both the null distribution and the alternative distribution of each hypothesis test
-2. Generate corresponding data plots for the simulated data
-3. Save data plots as fixed-sized images with labels indicating which distribution they are from 
-4. Train a deep learning classifier to recognize different labels
-5. Test the model's performance and compute the accuracy
-6. Compare the model's performance with human's (exclusive for the first and second experiment)
+This experiment utilised 70 lineups of size 20 plot, with varying degrees of departure from the $H_o: \beta_k=0$. There were 351 evaluations by human subjects. These results will be used for comparison with the deep learning model. 
 
-## Data simulation and model design
+The trained deep learning model will be applied to the data from this experiment. The model will be asked to classify the 70 data plots. We will calculate how frequently the data plot is selected as not a null plot, and compare this to the frequencies obtained by human evaluation. 
 
-### Classic linear model
+## Linear relationship simulation
 
-This is the model implied in the alternative hypothesis of the first experiment and the null hypothesis of the second and third experiment in this paper. The design for this model is similar to what @SIM18 did in his blog but is tailored to perform the comparison with human performance later on. After the deep learning model is trained on data generated in this section, it will be tested on the 70 data plots from the second experiment in @MM13. This model's accuracy will then be compared to the human's performance as well as the Pearson's correlation test.
+The design for this model is similar to what @SIM18 did in his blog but is tailored to perform the comparison with human performance later on.
 
 The model is designed as:
 $$Y_i = \beta_0 + \beta_1 X_{i}  + \varepsilon_i, ~~i=1, \dots , n$$
@@ -73,113 +70,7 @@ p4 <- linear(n4)
 grid.arrange(p1,p2,p3,p4,nrow=2, heights=c(1,1)) 
 ```
 
-### Linear model with Heteroskedasticity
-
-This is the model implied in the alternative hypothesis of the second experiment in this paper, where the constant variance assumption of the linear model is violated while all other conditions are met. 
-By the definition given in @IE17, "The homoskedasticity states that the variance of the unobserved error, u, conditional on the explanatory variables, is constant. Homoskedasticity fails whenver the variance of the unobserved factors changes across different segments of the population, where the segments are determined by the different values of the explanatory variables."
-There are countless types of heteroskedasticity since the "change of the variance" could be related to "the explanatory variables" in various ways. It is not feasible to list out all kinds of heteroskedasticity by a single function. For simplicity, we will focus on one example of them, a linear correlation between the explanatory variable X and the standard deviation of the error term. The conclusion from this experiment though can be generalized to more complicated cases.  
-A new human experiment will be rendered to produce the human's performance on detecting heteroskedasticity by reading residual plots. After the deep learning model is trained on the data generated from this section, it will be tested on the same data set that is used for the human experiment. And the accuracy of the model will be compared to the human's performance from this new human experiment. To provide a reference to evaluate how computer perform in detecing heteroskedasticity issues, a special case of the White test will be used. Each image in test set will be evaluated using White test. The associated accuracy of White test will be compared to computers' accuracy on the same set.
-
-The model structure is the same with the classic linear model:
-$$Y_i = \beta_0 + \beta_1 X_{i}  + \varepsilon_i, ~~i=1, \dots , n$$
-with elements of the model generated by the following processes
-
-- $X\sim U[-1,\ 1]$
-To better present the heteroskedasticity in the data, a uniform distribution of X is used instead of normal distribution. The range is set to be small (from -1 to 1) in order to produce the data with weak heteroskedasticity more frequently.
-- $\beta_0 = 0$
-Intercept is set to be zero for the same reason stated above.
-- $\beta_1\sim U[0.5,\ 1]$
-$\beta_1$ has little impact in this case so it is set to be uniformly generated from 0.5 to 1. Because the residual plot but not data plot will be used here, therefore, the information contained in $\beta_1$ will be extracted by the linear regression we fit to the data.
-- $\varepsilon\sim N(0,\ (aX+v)^2)$
-The variance of the error term is a quadratic function of the explanatory variable which controls the magnitude of heteroskedasticity in the model.
-- $a\sim U(-5,\ -0.05)\bigcup(0.05,\ 5)$
-The parameter a here, following uniform distribution from -5 to 5 (excluding -0.05 to 0.05), is the correlation coefficient between X and the standard deviation. Larger a gives stronger heteroskedasticity. This range is wide enough for our purpose.
-- $v \sim N(0,\ 1)$
-This new error term is added to the variance of $\varepsilon$ so the relationship between the data can be more flexible.
-- $n\sim U[20,\ 1500]$
-The sample sizes will be randomly generated from 20 to 1500. We choose 20 to 1500, because when the sample size is smaller than 20, there is hardly any systematic patterns to see. And 1500 is large enough to give a good description about the true relationship within the data, and is light enough to be processed. Since we make the transparency of the points to be 0.4, more points being added to the plot will just make the plot looks darker. 
-
-In general, the choice of the parameters is an empirical work. Primarily, we want the residual plots to show more variation; on the other hand, we need to limit the range of these parameters in order to keep the key features in the data. 
-
-```{r heter_plot, message=FALSE, cache=TRUE, fig.cap="Four examples of residual plots generated from linear model with heteroskedasticity"}
-heter<-function(i){
-  
-  n = sample(20:1500, 1)
-  x <- runif(n, -1, 1)
-  beta <- runif(1,0.5,1)
-  a <- runif(1,0.05,4)*(-1)^(rbinom(1, 1, 0.5))
-  sd <- a*x+rnorm(n, 0, 1)
-  
-  min <- min(sd)
-  if (min<0){
-    sd <- sd-min
-  }
-  
-  y<-rnorm(n, beta*x, sd)
-  df <- tibble(x, y)
-  model<-lm(y ~ x, data=df)
-  fit <- augment(model, df)
-  heter_data <- fit %>% select(x, .std.resid)
-  pic <- ggplot(heter_data, aes(x=x, y=.std.resid))+geom_point(alpha=0.4) + theme(aspect.ratio = 1)
-  
-}
-set.seed(0518)
-p1 <- heter(1)
-p2 <- heter(2)
-p3 <- heter(3)
-p4 <- heter(4)
-grid.arrange(p1,p2,p3,p4, nrow=2) 
-
-```
-
-<!--
-### Non-linear model 
-
-This data set will be representative of non-linear relationship between X and Y, keep all other factors being the same with the classic linear model.
-
-Obviously we cannot write down all different non-linear relationships between X and Y. Luckily, we do not need to actually do that. Because our purpose is for the model to tell if there is any kind of non-linear patterns, but not to specify which type it is. As long as the relationship between residual plots is curved, we do not worry about if it is from a logarithm function or squared root. Therefore all we want is for the model to "see" varied patterns, we just need to find a way to show different curvature. Hence, at this stage, we only include a polynomial of X to the order of five with each parameter being randomly generated. I chose five because normally the order of the non-linear relationship of data from Economics world do not exceed four. What's more, we find this design is good enough to vary the pattern of our plots. Also, since order four and five are not as common as lower orders, we attach a bernoulli term with 0.5 success rate to them respectively. 
-
-So the Y will be a normal distribution with mean
-$\beta_1x+\beta_2x^2+\beta_3x^3+\beta_4x^4+\beta_5x^5$, and variance $\beta_1^2+\beta_2^2+\beta_3^2+2\beta_4^2+2\beta_5^2$. We adjust the variance to be increase for higher orders so the data could has more variation. Below are four examples generated from this model.
-
-```{r poly_plot, message=FALSE, cache=TRUE}
-nonpoly<-function(n){
-  
-  p1<-rnorm(1,0,2)
-  p2<-rnorm(1,0,2)
-  p3<-rnorm(1,0,2)*rbinom(1,1,0.5)
-  p4<-rnorm(1,0,2)*rbinom(1,1,0.3)
-  p5<-rnorm(1,0,1)*rbinom(1,1,0.2)
-  
-  x<-runif(n,-3,3)
-  y<-rnorm(n, p1*x+p2*x^2+p3*x^3+p4*x^4+p5*x^5, p1^2+2*p2^2+2*p3^2+2*p4^2+2*p5^2)
-  
-  tibble(x, y)
-  model<-lm(y ~ x)
-  res<-residuals(model)
-  yhat<-predict(model)
-  res<-(res-mean(res))/sd(res)
-  yhat<-(yhat-mean(yhat))/sd(yhat)
-  return(tibble(res, yhat))
-}
-
-set.seed(0002)
-N <- sample(20:800, 4, replace=TRUE)
-pl <- tibble(N) %>% 
-  mutate(res=map(N, nonpoly))
-pl <- pl$res
-
-p1 <-   ggplot(pl[[1]], aes(x=yhat, y=res)) +geom_point(alpha = 0.4) + theme(aspect.ratio = 1)
-p2 <-   ggplot(pl[[2]], aes(x=yhat, y=res)) +geom_point(alpha = 0.4) + theme(aspect.ratio = 1)
-p3 <-   ggplot(pl[[3]], aes(x=yhat, y=res)) +geom_point(alpha = 0.4) + theme(aspect.ratio = 1)
-p4 <-   ggplot(pl[[4]], aes(x=yhat, y=res)) +geom_point(alpha = 0.4) + theme(aspect.ratio = 1)
-
-grid.arrange(p1,p2,p3,p4,nrow=2, heights=c(0.6,0.6)) 
-```
-
--->
-
-### Independent variables
+## Null plots simulation
 
 This is the null scenario in the first experiment, eg. the two variables under tested are independent of each other. If the data arises from this situation, then the data plots will not show any systematic patterns theoretically. 
 
@@ -193,7 +84,7 @@ with elements of the model generated by the following processes
 - $\varepsilon\sim N(0, \sigma^2) \ where\ \sigma \sim U(1,12)$  
 - $n=100, 300$  
 
-The specification of this model is the same with the classic linear model, the only difference is the correlation coefficient equals to zero in this case.
+The specification of this model is the same with the linear relationship, the only difference is the correlation coefficient equals to zero in this case.
 
 ```{r norela, echo=F, fig.cap="Four examples of data plots generated with two independent variables"}
 norela<-function(i){
@@ -216,38 +107,18 @@ grid.arrange(p1,p2,p3,p4, nrow=2)
 
 ```
 
-## Generate corresponding plots for the simulated data
+## Deep learning model setup
 
-### First experiment - Independent variables vs. Classic linear model
+The plot used for training and testing in this section is the scatter plot between the dependent variable Y and the independent variable X. "ggplot2" package in R is used to generate the plots and to save all plots to our local drive. All plots will be resized to be squared images with same width and height. This helps us to see better the patterns in the scatter plot and also is easier for the deep learning model to process. As for the labels given the each image, we will use the true population as the samples' identification directly. It is true that there will be some undesired patterns formed out of randomness, especially when the sample size is small. Unlike what Simchoni did in his post, no conventional tests will be used to sort out the "significant" observations. Because the answer to the question that if the deep learning model can distinguish from patterns formed by chance and by nature is also interested. 
 
-The plot used for training and testing in the first experiment is the scatter plot between the dependent variable Y and the independent variable X. 
-
-### Second experiment - Classic linear model vs. heteroskedastic 
-
-For the second experiment, a linear model will be fit to the data firstly. Residuals from the fitted model will be standardized and extracted. The residual plot will be made of standardized residuals against X.
-
-### Third experiment - Classic linear model vs. Non-linear model
-
-The plot in the third experiment will be the same with the second experiment. 
-
-## Save data plots as fixed-sized images with labels
-
-We will use ggplot2 package in R to generate relevant data plots and use ggsave funtion to resize and save all plots to our local drive. So all plots will be a squared image with same width and height. This helps us to see better the patterns in the scatter plot and also is easier for the deep learning model to process.
-
-As for the labels given the each image, we will use the true population as the samples' identification directly. It is true that there will be some undesired patterns formed out of randomness, especially when the sample size is small. Unlike what Simchoni did in his post, no conventional tests will be used to sort out the "significant" observations. Because the answer to the question that if the deep learning model can distinguish from patterns formed by chance and by nature is also interested. 
-
-##Train a deep learning classifier to recognize different labels
-
-All convolutional neural network related work will be done by Keras package in R. Three training processes will be done for the three hypothesis tests respectively. The structure of the deep learning model will be the same across three experiments.
+All convolutional neural network related work will be done by Keras package in R.
 
 ```{r dl_model, echo=FALSE, fig.cap="The deep learning model structure used in this thesis"}
 model_loaded <- load_model_hdf5("data/weights.06-0.22.hdf5")
 model_loaded
 ```
 
-### First experiment - Independent variables vs. Classic linear model
-
-180,000 samples are generated for each of the two groups in the first experiment where 100,000 of them is used for training; 40,000 of them is used for validation and 40,000 for testing. 10 epoches (1 epoch = 1 iteration over all samples) will be done by the model. The model specification given by each epoch will be saved, the one gives the highest test power is chosen to represent the computers. 
+180,000 data sets are generated for each of the two groups in the first experiment where 100,000 of them is used for training; 40,000 of them is used for validation and 40,000 for testing. 10 epoches (1 epoch = 1 iteration over all samples) will be done for training. The model specification given by each epoch will be saved, the one gives the highest test power is chosen to represent the computers. 
 
 \begin{figure*}[h]
 \centerline{\includegraphics[width=15cm]{figures/new_plot.png}}
@@ -256,45 +127,28 @@ model_loaded
 \end{figure*}
 
 From the plot of the traning history, we can see the fourth specification gives the overall best performance with lowest loss and highest accuracy on validation set. Its accuracy on the unseen test set is also the best among other models. After the fourth checkpoint, the model starts to overfit.
-<!--
-\begin{tabular}{lp{10cm}}
-Model & Power & (1-alpha) \\\hline
-epoch 4 & 0.878975 & 0.97565 \\
-epoch 6 & 0.890975 & 0.95685\\
-epoch 10 & 0.8826 & 0.968725\\
-\end{tabular}
--->
-### Second experiment - Classic linear model vs. heteroskedastic 
 
+```{r checkpoints, echo=F}
+checkpoints <- c("4 epoch", "6 epoch", "10 epoch", "T-test")
+powers <- c(0.8790, 0.8910, 0.8826, 0.9003)
+alpha_1 <- c(0.9757, 0.9569, 0.9687, 0.9487) 
+accuracy <- c(0.9273, 0.9239, 0.9257, 0.9245)
+tibble(checkpoints, powers, alpha_1, accuracy) %>% kable(col.names = c("Tests", "Power", "1-Alpha", "Overall accuracy"), caption = "Performance of three checkpoints of the deep learning model on the unseen test set, where the power means the accuracy on the linear ones, (1-alpha) is the accuracy on the no-relationship ones. All numbers have been rounded to four decimal places.")
+```
 
+However, since the majority of the data plots in Turk's experiment have been generated with linear relationship, we will choose the sixth model here because it has the highest test power which provides the deep learning model a better chance. What's more, the $\alpha$ of the sixth model, which is the probability of Type I error, is the closest to 0.05. We can see the sixth model's performance is quite close to the conventional T-test.
 
-### Third experiment - Classic linear model vs. Non-linear model
+## Comparing results
 
+```{r linearresults, echo=F}
+tests <- c("human", "computer", "t-test")
+correct <- c(47, 44, 43)
+accuracy <- c(0.6714, 0.6286, 0.6143)
+tibble(tests, correct, accuracy) %>% kable(col.names = c("Tests", "No. of correct", "Accuracy"), caption = "Accuracy of testing the 70 data plots evaluated by human computer and the conventional t-test.")
+```
 
-## Test the model's performance and compute the accuracy
+The conclusion of human evaluation is calculated using the p-value calculation introduced in section 2 of @MM13, the null hypothesis is rejected if the calculated p-value is smaller than 0.05. 
 
-After 30 iterations, the accuracy of the training set has reached 99.25%, 93.3% for validation set, and 94% for test set. This performance is consistent with our expectation of the deep learning model. 
+The $\alpha$ of the conventional t-test we used in this comparison is 0.05. 
 
-## Compare the model's performance with human's
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+From this table, we can see human evaluation achieves the best accuracy on the Turk's experiment data set. Deep learning model and the conventional t-test perform similarly. 

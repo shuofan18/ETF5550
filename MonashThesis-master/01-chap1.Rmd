@@ -9,6 +9,7 @@ library(tidyverse)
 library(nullabor)
 library(keras)
 library(broom)
+library(knitr)
 ```
 
 # Introduction and literature review {#ch:intro}
