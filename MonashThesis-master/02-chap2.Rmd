@@ -241,7 +241,7 @@ As for the labels given the each image, we will use the true population as the s
 All convolutional neural network related work will be done by Keras package in R. Three training processes will be done for the three hypothesis tests respectively. The structure of the deep learning model will be the same across three experiments.
 
 ```{r dl_model, echo=FALSE, fig.cap="The deep learning model structure used in this thesis"}
-model_loaded <- load_model_hdf5("~/documents/github/etf5550/10epoch_m/weights.06-0.22.hdf5")
+model_loaded <- load_model_hdf5("data/weights.06-0.22.hdf5")
 model_loaded
 ```
 
