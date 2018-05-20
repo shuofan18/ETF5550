@@ -78,4 +78,3 @@ We can also think of the deep learning neural network as a complex nonlinear mod
 
 
 
-
