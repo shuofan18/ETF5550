@@ -16,10 +16,11 @@ white_test <- function(res, yhat, n){
 
 heter_lineup<-function(i){
   
-  n = sample(100:500, 1)
+  n = sample(100:300, 1)
   x <- runif(n, -1, 1)
   beta <- runif(1,0.5,1)
-  a <- runif(1, 0.05, 5)*(-1)^(rbinom(1, 1, 0.5))
+  a <- runif(1, 0.05, 5)  #*(-1)^(rbinom(1, 1, 0.5))
+  #a<-0
   sd <- a*x+rnorm(n, 0, 1)
   
   min <- min(sd)
@@ -42,14 +43,14 @@ heter_lineup<-function(i){
   }
   ##generate lineup 
   pos <- sample(1:20, 1)
-  lineup_data <- fit %>% select(x, .std.resid) %>% mutate(.sample = pos)
+  lineup_data <- dplyr::select(fit, x, .std.resid) %>% mutate(.sample = pos)
   if (pos == 1) {
     for (i2 in 2:20) {
       null_y <- rnorm(n, beta*x, sample_sd)
       null_df <- tibble(null_y, x)
       null_model<-lm(null_y ~ x, data=null_df)
       null_fit <- augment(null_model, null_df)
-      tmp <- null_fit %>% select(x, .std.resid) %>% mutate(.sample = i2)
+      tmp <- null_fit %>% dplyr::select(x, .std.resid) %>% mutate(.sample = i2)
       lineup_data <- bind_rows(lineup_data, tmp)
     }
   } else if (pos == 20) {
@@ -58,7 +59,7 @@ heter_lineup<-function(i){
     null_df <- tibble(null_y, x)
     null_model<-lm(null_y ~ x, data=null_df)
     null_fit <- augment(null_model, null_df)
-    tmp <- null_fit %>% select(x, .std.resid) %>% mutate(.sample = i2)
+    tmp <- null_fit %>% dplyr::select(x, .std.resid) %>% mutate(.sample = i2)
     lineup_data <- bind_rows(tmp , lineup_data)
    }
   } else {
@@ -67,7 +68,7 @@ heter_lineup<-function(i){
       null_df <- tibble(null_y, x)
       null_model<-lm(null_y ~ x, data=null_df)
       null_fit <- augment(null_model, null_df)
-      tmp <- null_fit %>% select(x, .std.resid) %>% mutate(.sample = i2)
+      tmp <- null_fit %>% dplyr::select(x, .std.resid) %>% mutate(.sample = i2)
       lineup_data <- bind_rows(tmp , lineup_data)
     }
     for (i2 in (pos+1):20) {
@@ -75,7 +76,7 @@ heter_lineup<-function(i){
       null_df <- tibble(null_y, x)
       null_model<-lm(null_y ~ x, data=null_df)
       null_fit <- augment(null_model, null_df)
-      tmp <- null_fit %>% select(x, .std.resid) %>% mutate(.sample = i2)
+      tmp <- null_fit %>% dplyr::select(x, .std.resid) %>% mutate(.sample = i2)
       lineup_data <- bind_rows(lineup_data, tmp)
     }
   }
@@ -92,13 +93,18 @@ ggsave(filename =
          paste(i, "_real(", pos,")a(" , round(a,digits = 2), ")n(", n,
                ")wtst(", round(wt_stat, digits = 2) ,")wt(" , wt_conclusion,").png", 
                sep = ""), height = 8, width = 10, dpi = 200)
+
+write.csv(lineup_data, file=paste(i, "_real(", pos,")a(" , round(a,digits = 2), ")n(", n,
+                                  ")wtst(", round(wt_stat, digits = 2) ,")wt(" , wt_conclusion,").csv", sep = ""))
   return(wt_conclusion)
 }
 
 set.seed(0517)
-setwd("/volumes/5550/panda2/lineup")
-accuracy_wtest_heter_train <- sapply(1:10, heter) %>% sum()/10
-accuracy_wtest_heter_train
+setwd("/volumes/5550/heter_lineup/pos_100_300_0.5_5")
+sapply(1:10, heter_lineup) 
+
+
+
 
 ############################## generate data for training ######################
 
