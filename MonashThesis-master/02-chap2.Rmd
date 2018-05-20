@@ -112,17 +112,21 @@ grid.arrange(p1,p2,p3,p4, nrow=2)
 The plot used for training and testing in this section is the scatter plot between the dependent variable Y and the independent variable X. "ggplot2" package in R is used to generate the plots and to save all plots to our local drive. All plots will be resized to be squared images with same width and height. This helps us to see better the patterns in the scatter plot and also is easier for the deep learning model to process. As for the labels given the each image, we will use the true population as the samples' identification directly. It is true that there will be some undesired patterns formed out of randomness, especially when the sample size is small. Unlike what Simchoni did in his post, no conventional tests will be used to sort out the "significant" observations. Because the answer to the question that if the deep learning model can distinguish from patterns formed by chance and by nature is also interested. 
 
 All convolutional neural network related work will be done by Keras package in R.
-
+<!--
 ```{r dl_model, echo=FALSE, fig.cap="The deep learning model structure used in this thesis"}
 model_loaded <- load_model_hdf5("data/weights.06-0.22.hdf5")
 model_loaded
 ```
+-->
+"A convnet takes as input tensors of shape (image height, image width, image channels)."[@DLR18] In this case, the format of all the images is $150\times150$ pixels, the convnet will be configured to process inputs of size (150, 150, 1).
 
 180,000 data sets are generated for each of the two groups in the first experiment where 100,000 of them is used for training; 40,000 of them is used for validation and 40,000 for testing. 10 epoches (1 epoch = 1 iteration over all samples) will be done for training. The model specification given by each epoch will be saved, the one gives the highest test power is chosen to represent the computers. 
 
+
+
 \begin{figure*}[h]
 \centerline{\includegraphics[width=15cm]{figures/new_plot.png}}
-\caption{Plot of the training history of the deep learning model for the first experiment.}
+\caption{Training and validation metrics of the first experiment}
 \label{expt2}
 \end{figure*}
 
