@@ -109,8 +109,6 @@ grid.arrange(p1,p2,p3,p4, nrow=2)
 
 ## Deep learning model setup
 
-In this experiment, the deep learning model is expected to complete a binary classification task, eg. tell "linearly correlated" variables from "independent" variables. As introduced in Chapter 1, a form of loss function will be chosen for each specific task. According to many textbooks and papers, "crossentropy is usually the best choice when you’re dealing with models that output probabilities" [@DLR18]. Originated from Information Theory, Crossentropy is a quantity measuring the distance between probability distributions. In deep learning world, it measures the distance between the true distribution and the predictions.
-
 The plot used for training and testing in this section is the scatter plot between the dependent variable Y and the independent variable X. "ggplot2" package in R is used to generate the plots and to save all plots to our local drive. All plots will be resized to be squared images with same width and height. This helps us to see better the patterns in the scatter plot and also is easier for the deep learning model to process. As for the labels given the each image, we will use the true population as the samples' identification directly. It is true that there will be some undesired patterns formed out of randomness, especially when the sample size is small. Unlike what Simchoni did in his post, no conventional tests will be used to sort out the "significant" observations. Because the answer to the question that if the deep learning model can distinguish from patterns formed by chance and by nature is also interested. 
 
 All convolutional neural network related work will be done by Keras package in R.
@@ -160,7 +158,9 @@ The $\alpha$ of the conventional t-test we used in this comparison is 0.05.
 From this table, we can see human evaluation achieves the best accuracy on the Turk's experiment data set. Deep learning model and the conventional t-test perform similarly. 
 
 ## Aside discussion related to the comparing results
-As we can see from the table, t-test and deep learning model behave quite similarly. 
+As we can see from the table, t-test and deep learning model behave quite similarly on both the test data set and Turk's experiment data. It is possible that the "Backpropagation algorithm" used in deep learning model is equivalent to maximum likelihood estimation in terms of linear regression problem in this case. Because all the error terms are following normal distribution as designed, they are also equivalent to the ordinary least square estimation. 
+Since the fourth-epoch model behaves the best in all 10 models, and its estimated Type I error ($\alpha$) is not 0.05. We think the deep learning model may be in fact just finding the "best" $\alpha$ for t-test in this experiment, where "best" means giving the highest expected accuracy of the null and alternative hypothesis. 
+To confirm this idea, a small simulation experiment was conducted to search for the "best" $\alpha$ for t-test. The data was simulated using the same specification as in the section "Linear relationship simulation" and "null plots simulation". The range of the $\alpha$ is from $(0.005,\ 0.010,\ 0.015,\ \dots,\ 0.100)$, with 200,000 iterations, the "best" $\alpha$ is found to be $\alpha=0.02$ which is very close to the one suggested by the fourth-epoch model $0.02435$.
 
 
 
