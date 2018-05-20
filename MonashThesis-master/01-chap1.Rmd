@@ -54,12 +54,15 @@ Motivation based on Simchoni's blog post
 Motivation for the task is provided in a blog post by Giora Simchoni [@SIM18]. He has designed a deep learning model to test the significance of linear relationship between two variables for samples of size 50. The model reached over 93% accuracy on unseen test data. He also mentioned that the computer fails to pick up a strong non-linear relationship even though the Pearson'r is as high as -0.84 [@SIM18]. So the short conclusion is the computer vision is not perfect, in that it is not as flexible as human vision. As Simchoni explained in his article, the model can only distinguish linear relationship from no-relationship as trained. However, we think this fact is just another example reflecting the importance of visualization as we discussed above. Strong correlation does not necessarily mean linear relationship. We should always refer to the plot before making any statement. What's more, if we want the model to be more flexible, we could simply adjust our design of training accordingly. Therefore, in this article, we are trying to further Simchoni's study. More specifically, the deep learning model will be trained to perform three hypothesis tests as following. 
 
 $H_0$: There are no relationships between the two variables.
+
 $H_1$: There is linear relationship between the two variables where all Gauss-Markov assumptions are met.
 
 $H_0$: There is linear relationship between the two variables where all Gauss-Markov assumptions are met.
+
 $H_1$: There is linear relationship between the two variables where the variance of the error term is not a constant while all other Gauss-Markov assumptions are met.
 
 $H_0$: There is linear relationship between the two variables where all Gauss-Markov assumptions are met.
+
 $H_1$: There is non-linear relationship between the two variables where all other Gauss-Markov assumptions are met.
 
 For ease of exposition, only regression model with one explanatory variable will be considered in this paper, but many of the results can be generalized to other cases including multiple regression model. Because the "statistics" we will use is the data plot or the residual plot, in terms of teaching the computer of reading these plots, one variable is enough for us to generate different patterns in that plot for convnets to learn. And this makes the design process much simpler. 
