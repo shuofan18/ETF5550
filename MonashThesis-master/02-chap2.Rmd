@@ -117,13 +117,22 @@ As introduced in Chapter 1, the convolutional neural networks will be used to bu
 
 10 epoches (1 epoch = 1 iteration over all samples) will be done for training. The model specification given by each epoch will be saved, the one gives the highest test power is chosen to represent the computers.
 
+All convolutional neural network related work will be done by Keras package in R.
+
 \begin{figure*}[h]
 \centerline{\includegraphics[width=15cm]{figures/whole_sample_plots.png}}
-\caption{This graph shows the histogram of simulated n, histogram of simulated sigma, histogram of estimated p.value of t-test and the scatter plot of sigma against n. It shows the number of simulation is large enough to give good coverage.}
+\caption{This graph shows the histogram of simulated n, histogram of simulated sigma, histogram of estimated p.value of t-test and the scatter plot of sigma against n. It shows the number of simulation (360,000) is large enough to give good coverage.}
 \label{expt2}
 \end{figure*}
 
-All convolutional neural network related work will be done by Keras package in R.
+
+\begin{figure*}[h]
+\centerline{\includegraphics[width=15cm]{figures/linear_group_plots.png}}
+\caption{This graph shows the histogram of simulated beta,and the scatter plot of beta against n for the linear group. It shows the number of simulation (180,000) is large enough to give good coverage.}
+\label{expt2}
+\end{figure*}
+
+
 <!--
 ```{r dl_model, echo=FALSE, fig.cap="The deep learning model structure used in this thesis"}
 model_loaded <- load_model_hdf5("data/weights.06-0.22.hdf5")
