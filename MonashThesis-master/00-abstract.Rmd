@@ -8,14 +8,7 @@ When we fit a linear regression model, with one continuous dependent variable an
 
 Computer vision has advanced rapidly in recent years, primarily by building deep learning models.
 
-Therefore, in this paper, we are going to investigate wether deep learning neural network could be used to teach a computer to do better than a human on reading residual plots. Two of the issues, non-linearity and heteroskedasticity, will be addressed here. After training the model, we will compare its performance with human database.
-
- 
-
-
-
-
-
+Therefore, in this paper, we are going to investigate whether deep learning neural network could be used to teach a computer to do better than a human on reading residual plots. Two of the issues, non-linearity and heteroskedasticity, will be addressed here. After training the model, we will compare its performance with human database.
 
 
 <!-- 

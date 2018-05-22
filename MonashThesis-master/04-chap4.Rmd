@@ -3,22 +3,14 @@ chapter: 4
 knit: "bookdown::render_book"
 ---
 
+# Conclusion
 
-# Software
+Based on the results from the two experiments,
 
-- The thesis, code and data is available on the github repository [https://github.com/shuofan18/ETF5550](https://github.com/shuofan18/ETF5550)
-- Software used to conduct this research is @R, @Tensorflow, @keras, @tidyverse
 
-# Timeline
 
-\begin{tabular}{lp{10cm}}
-Date & Component \\\hline
-Apr 27 & Deep learning model trained \\
-May 4  & Classification of new residual plots with model and results summarised\\
-May 18 & Comparison with Turk studies\\
-May 24 & Refinements made, final summaries written\\
-May 31 & Thesis finalised\\
-\end{tabular}
+
+
 
 
 

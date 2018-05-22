@@ -39,8 +39,8 @@ $\beta_1$ is designed to be uniformly generated from -10 to 10 (excluding -0.1 t
 - $\varepsilon\sim N(0, \sigma^2) \ where\ \sigma \sim U(1,12)$  
 $\varepsilon$ is designed to be uniformly generated from 1 to 12 in order to cover the range used in the second experiment in @MM13.
 
-- $n=100, 300$  
-Number of observations are the same with the the second experiment in @MM13.
+- $n=U(50,500)$  
+Number of observations is a random integer from 50 to 500 to cover all the sample sizes in the second experiment in @MM13.
 
 ```{r linear, echo=FALSE, fig.cap="Four examples of data plots generated from the classic linear model"}
 library(gridExtra)
@@ -107,9 +107,21 @@ grid.arrange(p1,p2,p3,p4, nrow=2)
 
 ```
 
-## Deep learning model setup
+## Computer model
 
-The plot used for training and testing in this section is the scatter plot between the dependent variable Y and the independent variable X. "ggplot2" package in R is used to generate the plots and to save all plots to our local drive. All plots will be resized to be squared images with same width and height. This helps us to see better the patterns in the scatter plot and also is easier for the deep learning model to process. As for the labels given the each image, we will use the true population as the samples' identification directly. It is true that there will be some undesired patterns formed out of randomness, especially when the sample size is small. Unlike what Simchoni did in his post, no conventional tests will be used to sort out the "significant" observations. Because the answer to the question that if the deep learning model can distinguish from patterns formed by chance and by nature is also interested. 
+As introduced in Chapter 1, the convolutional neural networks will be used to build the computer model. The plots used for training and testing in this section is the scatter plot between the dependent variable Y and the independent variable X. "ggplot2" package in R is used to generate the plots and to save all plots to our local drive. All plots will be resized to be squared images with same width and height. This helps us to see better the patterns in the scatter plot and also is easier for the deep learning model to process. As for the labels given the each image, we will use the true population as the samples' identification directly. It is true that there will be some undesired patterns formed out of randomness, especially when the sample size is small. Unlike what Simchoni did in his post, no conventional tests will be used to sort out the "significant" observations. Because the answer to the question that if the deep learning model can distinguish from patterns formed by chance and by nature is also interested. 
+
+"A convnet takes as input tensors of shape (image height, image width, image channels)."[@DLR18] In this case, the format of all the images is $150\times150$ pixels, the convnet will be configured to process inputs of size (150, 150, 1).
+
+180,000 data sets are generated for each of the two groups in the first experiment. 100,000 of them will be set apart as train set. In order to monitor during training the accuracy of the model on data it has never seen before, 40,000 of the rest of the data set will be used as the validation set. And the last 40,000 will become the unseen test set. 
+
+10 epoches (1 epoch = 1 iteration over all samples) will be done for training. The model specification given by each epoch will be saved, the one gives the highest test power is chosen to represent the computers.
+
+\begin{figure*}[h]
+\centerline{\includegraphics[width=15cm]{figures/whole_sample_plots.png}}
+\caption{This graph shows the histogram of simulated n, histogram of simulated sigma, histogram of estimated p.value of t-test and the scatter plot of sigma against n. It shows the number of simulation is large enough to give good coverage.}
+\label{expt2}
+\end{figure*}
 
 All convolutional neural network related work will be done by Keras package in R.
 <!--
@@ -118,11 +130,6 @@ model_loaded <- load_model_hdf5("data/weights.06-0.22.hdf5")
 model_loaded
 ```
 -->
-"A convnet takes as input tensors of shape (image height, image width, image channels)."[@DLR18] In this case, the format of all the images is $150\times150$ pixels, the convnet will be configured to process inputs of size (150, 150, 1).
-
-180,000 data sets are generated for each of the two groups in the first experiment. 100,000 of them will be set apart as train set. In order to monitor during training the accuracy of the model on data it has never seen before, 40,000 of the rest of the data set will be used as the validation set. And the last 40,000 will become the unseen test set. 
-
-10 epoches (1 epoch = 1 iteration over all samples) will be done for training. The model specification given by each epoch will be saved, the one gives the highest test power is chosen to represent the computers. 
 
 \begin{figure*}[h]
 \centerline{\includegraphics[width=15cm]{figures/new_plot.png}}
@@ -132,7 +139,7 @@ model_loaded
 
 From the plot of the traning history, we can see the fourth specification gives the overall best performance with lowest loss and highest accuracy on validation set. Its accuracy on the unseen test set is also the best among other models. After the fourth checkpoint, the model starts to overfit.
 
-```{r checkpoints, echo=F}
+```{r checkpoints, echo=F, paged.print=FALSE, results='asis'}
 checkpoints <- c("4 epoch", "6 epoch", "10 epoch", "T-test")
 powers <- c(0.8790, 0.8910, 0.8826, 0.9003)
 alpha_1 <- c(0.9757, 0.9569, 0.9687, 0.9487) 
@@ -144,7 +151,7 @@ However, since the majority of the data plots in Turk's experiment have been gen
 
 ## Comparing results
 
-```{r linearresults, echo=F}
+```{r linearresults, echo=F, paged.print=FALSE, results='asis'}
 tests <- c("human", "computer", "t-test")
 correct <- c(47, 44, 43)
 accuracy <- c(0.6714, 0.6286, 0.6143)

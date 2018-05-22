@@ -5,3 +5,10 @@ knit: "bookdown::render_book"
 # Acknowledgements {-}
 
 I would like to thank my supervisor, Di, for being patient with me as always.
+
+
+The thesis, code and data is available on the github repository [https://github.com/shuofan18/ETF5550](https://github.com/shuofan18/ETF5550)
+
+
+Software used to conduct this research is @R, @Tensorflow, @keras, @tidyverse
+
