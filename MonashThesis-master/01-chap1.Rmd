@@ -14,10 +14,7 @@ library(knitr)
 
 # Introduction and literature review {#ch:intro}
 
-<!--
-Problem statement
--->
-"The multiple regression model for cross-sectional data is still the most widely used vehicle for empirical analysis in economics and other social sciences" [@IE17]. Detecting possible violations of the Gauss-Markov assumptions is crucial to interpret the data properly, especially in the early stage of analysis. There are several distribution tests that are commonly used, for instance, the Pearson correlation test for detecting linear relationship; the Breusch-Pagan test and White test for investigating heteroskedasticity. But primarily <!--scatter plot/data visualization--> residual plots are the main diagnostic tool and these rely on human evaluation. Because data plots show a lot more information than a single statistic. A good example here would be Anscome’s Quartet. "It is a set of four distinct datasets each consisting of 11 (x,y) pairs where each dataset produces the same summary statistics (mean, standard deviation, and correlation) while producing vastly different plots" [@ANS73]. Matejka and Fitzmaurice also did an interesting study on this issue, they used 'datasaurus' data from @DS16 and generated a series of data with same statistics but very different plots [@JM17].
+"The multiple regression model for cross-sectional data is still the most widely used vehicle for empirical analysis in economics and other social sciences" [@IE17]. Detecting possible violations of the Gauss-Markov assumptions is crucial to interpret the data properly, especially in the early stage of analysis. There are several distribution tests that are commonly used, for instance, the Pearson correlation test for detecting linear relationship; the Breusch-Pagan test and White test for investigating heteroskedasticity. But primarily residual plots are the main diagnostic tool and these rely on human evaluation. Because data plots show a lot more information than a single statistic. A good example here would be Anscome’s Quartet. "It is a set of four distinct datasets each consisting of 11 (x,y) pairs where each dataset produces the same summary statistics (mean, standard deviation, and correlation) while producing vastly different plots" [@ANS73]. Matejka and Fitzmaurice also did an interesting study on this issue, they used 'datasaurus' data from @DS16 and generated a series of data with same statistics but very different plots [@JM17].
 
 ```{r saurus, fig.cap="Each dataset has the same summary statistics to two decimal places: (E(x)=54.26, E(y)= 47.83, sd(x) = 16.76, sd(y) = 26.93, Pearson’s r = -0.06)."}
 library(datasauRus)
@@ -25,13 +22,11 @@ ggplot(datasaurus_dozen, aes(x = x, y = y, colour = dataset)) +
   geom_point() +
   theme_void() +
   theme(legend.position = "none") +
-  #theme(aspect.ratio = 1) +
+  theme(aspect.ratio = 1) +
   facet_wrap( ~ dataset, ncol = 3)
 ```
 
-<!--
-Visual inference literature explanation - framework for assessing detection of difference from a null
--->
+## Lineup protocol  
 
 Former studies have shown that human eyes are sensitive to the systematic patterns in data plots. With proper manipulation, visualized plots can be used as test statistics and perform valid hypothesis test. One example of these protocols that provides inferential validity is lineup which is introduced by @HW10. "The protocol consists of generating 19 null plots (could be other number), inserting the plot of the real data in a random location among the null plots and asking the human viewer to single out one of the 20 plots as most different from the others" [@HW10]. If the real plot is chosen, it means the real data is different from the null hypothesis, so we reject the null hypothesis with 5% chance to be wrong (Type I error). Figure 1.2 is an example of lineup. Which plot do you think is the most different? If you choose one, we are 95% confident to reject the no-relationship assumption between the two variables, hp and disp [@SIM18]. This protocol has proved valid and powerful theoretically as well as practically through human experiments, especially when the assumptions for doing conventional tests are violated [@MM13].
 
@@ -40,31 +35,24 @@ lineup_data_mtcars <- lineup(null_permute("hp"), mtcars, pos = 1)
 
 ggplot(lineup_data_mtcars, aes(disp, hp)) +
   geom_point() +
-  #theme(aspect.ratio = 1) +
+  theme(aspect.ratio = 1) +
   facet_wrap(~ .sample)
 ```
 
 The question that arises today is whether we can train a computer to read scatter plots, particularly with a computer vision approach such as deep learning. 
 
-<!--
-Motivation based on Simchoni's blog post
--->
+## Computer vision  
 
 Motivation for the task is provided in a blog post by Giora Simchoni [@SIM18]. He has designed a deep learning model to test the significance of linear relationship between two variables for samples of size 50. The model reached over 93% accuracy on unseen test data. He also mentioned that the computer fails to pick up a strong non-linear relationship even though the Pearson'r is as high as -0.84 [@SIM18]. So the short conclusion is the computer vision is not perfect, in that it is not as flexible as human vision. As Simchoni explained in his article, the model can only distinguish linear relationship from no-relationship as trained. However, we think this fact is just another example reflecting the importance of visualization as we discussed above. Strong correlation does not necessarily mean linear relationship. We should always refer to the plot before making any statement. What's more, if we want the model to be more flexible, we could simply adjust our design of training accordingly. Therefore, in this article, we are trying to further Simchoni's study. More specifically, the deep learning model will be trained to perform three hypothesis tests as following. 
 
 $H_0$: There are no relationships between the two variables.
-
 $H_1$: There is linear relationship between the two variables where all Gauss-Markov assumptions are met.
 
-$H_0$: There is linear relationship between the two variables where all Gauss-Markov assumptions are met.
 
+$H_0$: There is linear relationship between the two variables where all Gauss-Markov assumptions are met.
 $H_1$: There is linear relationship between the two variables where the variance of the error term is not a constant while all other Gauss-Markov assumptions are met.
 
 For ease of exposition, only regression model with one explanatory variable will be considered in this paper, but many of the results can be generalized to other cases including multiple regression model. Because the "statistics" we will use is the data plot or the residual plot, in terms of teaching the computer of reading these plots, one variable is enough for us to generate different patterns in that plot for convnets to learn. And this makes the design process much simpler. 
-
-<!--
-Explain deep learning models 
--->
 
 The model we will use is the convolutional neural networks, also known as convnets, a type of deep-learning model almost universally used in computer vision applications [@DLR18]. Unlike the classical programming where human input rules, in deep learning paradigm, we provide data and the answers associated with the data. Deep learning algorithm will output the rules, and these rules can then be used on new data to make predictions.
 We can also think of the deep learning neural network as a complex nonlinear model which could estimate millions of parameters ($\textbf{w}$) with big enough dataset. As usual regression problem, to get the estimates of unknown parameters ($\textbf{w}$), we need to provide the model with dependent variable ($y_i$) and independent variables ($\textbf{x}_i$). In this case, the independent variable will be the images of data plots (in forms of matrices) simulated from the null distribution and the alternative distribution, and dependent variable will be the labels of that plot indicating the true relationship of the original data. Once we have the estimated parameters ($\hat{\textbf{w}}$), we then can use them to classify unseen data plots, eg. to perform hypothesis tests.
@@ -77,7 +65,9 @@ $$J(\textbf{w})=- \frac{1}{N}\sum_{i=1}^N\left(
 \right)$$
 where $\hat{y_i}  =  g(\textbf{w} \times \textbf{x}_i)  = \frac{1}{1+e^{-\textbf{w} \times \textbf{x}_i}}$ and $g(z)$ is the logistic function.
 
+## Comparing human vs. computer  
 
+Chapter 2 will compare computer performanace against database of human evaluation in reading linear relationship. Steps of constructing computer experiment will be discussed, Turk's study will be explained, the comparison results will be given. Chapter 3 will compare computer performance against the results from the new human subject study. Details of this new human subject study will be provided. The results will also be presented.
 
 
 
