@@ -16,7 +16,9 @@ library(knitr)
 
 "The multiple regression model for cross-sectional data is still the most widely used vehicle for empirical analysis in economics and other social sciences" [@IE17]. Detecting possible violations of the Gauss-Markov assumptions is crucial to interpret the data properly, especially in the early stage of analysis. There are several distribution tests that are commonly used, for instance, the Pearson correlation test for detecting linear relationship; the Breusch-Pagan test and White test for investigating heteroskedasticity. But primarily residual plots are the main diagnostic tool and these rely on human evaluation. Because data plots show a lot more information than a single statistic. A good example here would be Anscome’s Quartet. "It is a set of four distinct datasets each consisting of 11 (x,y) pairs where each dataset produces the same summary statistics (mean, standard deviation, and correlation) while producing vastly different plots" [@ANS73]. Matejka and Fitzmaurice also did an interesting study on this issue, they used 'datasaurus' data from @DS16 and generated a series of data with same statistics but very different plots [@JM17].
 
-```{r saurus, fig.cap="Each dataset has the same summary statistics to two decimal places: (E(x)=54.26, E(y)= 47.83, sd(x) = 16.76, sd(y) = 26.93, Pearson’s r = -0.06)."}
+<!-- cannot fix weird figure display -->
+
+```{r saurus, fig.width=30, fig.cap="Each dataset has the same summary statistics to two decimal places: (E(x)=54.26, E(y)=47.83, Pearson’s r=, sd(x)=16.76, sd(y)=26.93"}
 library(datasauRus)
 ggplot(datasaurus_dozen, aes(x = x, y = y, colour = dataset)) +
   geom_point() +
