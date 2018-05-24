@@ -5,11 +5,11 @@ knit: "bookdown::render_book"
 
 # Comparing computer performance against database of human evaluation
 
-In this chapter, we will first explain the Turk's experiment. Then our computer experiment design will be discussed in details. The evaluation performance of the two will be compared in the end of this chapter.
+A database of human evaluations of scatterplots of residuals against fitted is available from prior studies. This is used to compare the performance of the computer model. The computer model is trained on a broader parameter simulation framework, and tested on the same data as the human evaluations. 
 
 ## Turk study explanation
 
-A large database of results from a human subjects test conducted to validate the lineup protocol relative to a classical tests is going to be used for this part of the work. This data was collected as part of the work presented in @MM13. 
+A large database of results from a human subjects was collected examine the performance of the lineup protocol relative to a classical tests. The work is published in @MM13. This database forms the basis of the test set used to examine the computer model performance. 
 
 In @MM13, "three experiments were conducted to evaluate the effectiveness of the lineup protocol relative to the equivalent test statistic used in the regression setting." In each experiment, they simulated data from a controlled setting and then generated associated lineup for human to evaluate.
 
