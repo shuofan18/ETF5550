@@ -105,6 +105,9 @@ grid.arrange(p1,p2,p3,p4,nrow=2, heights=c(1,1))
 \caption{This graph shows the histogram of simulated n, histogram of simulated sigma, histogram of estimated p.value of t-test and the scatter plot of sigma against n. It shows the number of simulation (360,000) is large enough to give good coverage.}
 \label{simb}
 \end{figure*}
+```{r}
+
+```
 
 ## Null plot simulation
 
