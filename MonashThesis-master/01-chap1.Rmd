@@ -18,13 +18,13 @@ library(knitr)
 
 <!-- cannot fix weird figure display -->
 
-```{r saurus, fig.width=30, fig.cap="Each dataset has the same summary statistics to two decimal places: (E(x)=54.26, E(y)=47.83, Pearson’s r=, sd(x)=16.76, sd(y)=26.93"}
+```{r saurus, fig.width=6, fig.height=6, fig.cap="Each dataset has the same summary statistics to two decimal places: (E(x)=54.26, E(y)=47.83, Pearson’s r=, sd(x)=16.76, sd(y)=26.93"}
 library(datasauRus)
 ggplot(datasaurus_dozen, aes(x = x, y = y, colour = dataset)) +
   geom_point() +
   theme_void() +
   theme(legend.position = "none") +
-  theme(aspect.ratio = 1) +
+  #theme(aspect.ratio = 1) +
   facet_wrap( ~ dataset, ncol = 3)
 ```
 
