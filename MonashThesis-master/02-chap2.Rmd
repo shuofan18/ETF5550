@@ -70,9 +70,9 @@ $\varepsilon$ is designed to be uniformly generated from 1 to 12.
 - $n=U[50,500]$  
 The sample sizes of each data set vary from 50 to 500.
 
-Under this controlled structure, a total number of 240,000 data sets are simulated. The histograms of the simulated $n, \beta, \sigma$ and the estimated p value of test in \ref{simb} show good coverage over all the values.
+Figure \ref{fig:linear} shows four example plots generated using the specifications above. Under this controlled structure, a total number of 240,000 data sets are simulated. The histograms of the simulated $n, \beta, \sigma$, the estimated p value and the scatter plots of $\beta$ against n, $\sigma$ against n in figure \ref{fig:simplot} show good coverage over all the values.
 
-```{r linear, echo=FALSE, fig.cap="Four examples of data plots generated from the classic linear model"}
+```{r linear, fig.height=6, fig.width=6, echo=FALSE, fig.cap="Four examples of data plots generated from the classic linear model."}
 library(gridExtra)
 linear<-function(n){
    beta <- sample(c((-10:-0.1),(0.1:10)), 1)
@@ -98,15 +98,25 @@ p3 <- linear(n3)
 p4 <- linear(n4)
 
 grid.arrange(p1,p2,p3,p4,nrow=2, heights=c(1,1)) 
+
 ```
 
-\begin{figure*}[h]
-\centerline{\includegraphics[width=15cm]{figures/hist_b_plots.png}}
-\caption{This graph shows the histogram of simulated n, histogram of simulated sigma, histogram of estimated p.value of t-test and the scatter plot of sigma against n. It shows the number of simulation (360,000) is large enough to give good coverage.}
-\label{simb}
-\end{figure*}
-```{r}
 
+```{r simplot, fig.height=6, fig.width=6, fig.cap="The histograms and scatter plots of simulated variables show good coverage over all the values."}
+parameters_b <- read.csv("data/parameters_b.csv")
+hist_n_l <- ggplot(data = parameters_b, aes(n)) + geom_histogram(binwidth = 1) + theme(plot.title = element_text(size = 10)) + ggtitle("Histogram of simulated n")
+
+hist_b_l <- ggplot(data = parameters_b, aes(beta)) + geom_histogram(binwidth = 0.1) + theme(plot.title = element_text(size = 10)) + ggtitle("Histogram of simulated beta from linear model")
+
+hist_p_l <- ggplot(data = parameters_b, aes(ct.p.value)) + geom_histogram(binwidth = 0.01) + theme(plot.title = element_text(size = 10)) + ggtitle("Histogram of estimated p value of t-test from linear model")
+
+hist_s_l <- ggplot(data = parameters_b, aes(sigma)) + geom_histogram(binwidth = 0.1) + theme(plot.title = element_text(size = 10)) + ggtitle("Histogram of simulated sigma from linear model")
+
+scap_beta_n <- ggplot(data = parameters_b, aes(x=n, y=beta)) + geom_point(shape=".") + ggtitle("Scatter plot of simulated n and beta from linear model") + theme(plot.title = element_text(size = 10))
+
+scap_sigma_n <- ggplot(data = parameters_b, aes(x=n,y=sigma)) + geom_point(shape=".") + ggtitle("Scatter plot of simulated n and sigma from linear model") + theme(plot.title = element_text(size = 10))
+
+grid.arrange(hist_n_l, hist_b_l, hist_s_l, hist_p_l, scap_beta_n, scap_sigma_n, ncol=2)
 ```
 
 ## Null plot simulation
@@ -115,12 +125,14 @@ This is the null scenario in our first experiment, eg. the two variables under t
 
 The model is designed the same as the linear model:
 $$Y_i = \beta_0 + \beta_1 X_{i}  + \varepsilon_i, ~~i=1, \dots , n$$
-with elements of the model generated using the same specification as the linear model, except
-
+with elements of the model generated using the same specification as the linear model, except  
 - $\beta_1 = 0$  
+
 The coefficient of $X_i$ is always zero. So $X_i$ and $Y_i$ are independent variables.
 
-```{r norela, echo=F, fig.cap="Four examples of data plots generated with two independent variables"}
+Figure \ref{fig:norela} are four example plots generated using the specifications above. Similar to the linear model simulation, another total number of 240,000 data sets are simulated under this structure. The histograms of the simulated $n, \beta, \sigma$, the estimated p value and the scatter plots of $\beta$ against n, $\sigma$ against n in figure \ref{fig:simplot2} show good coverage over all the values.
+
+```{r norela, echo=F, fig.height=6, fig.width=6, fig.cap="Four examples of data plots generated with two independent variables"}
 norela<-function(i){
   n <- sample(c(100, 300), 1)
   beta <- 0
@@ -140,7 +152,18 @@ p4 <- norela(4)
 grid.arrange(p1,p2,p3,p4, nrow=2)
 ```
 
+```{r simplot2, fig.height=6, fig.width=6, fig.cap="The histograms and scatter plots of simulated variables show good coverage over all the values."}
+parameters_0 <- read.csv("data/parameters_0.csv")
+hist_n_0 <- ggplot(data = parameters_0, aes(n)) + geom_histogram(binwidth = 1) + theme(plot.title = element_text(size = 10)) + ggtitle("Histogram of simulated n from null model")
 
+hist_p_0 <- ggplot(data = parameters_0, aes(ct.p.value)) + geom_histogram(binwidth = 0.01) + theme(plot.title = element_text(size = 10)) + ggtitle("Histogram of estimated p value of t-test from null model")
+
+hist_s_0 <- ggplot(data = parameters_0, aes(sigma)) + geom_histogram(binwidth = 0.1) + theme(plot.title = element_text(size = 10)) + ggtitle("Histogram of simulated sigma from null model")
+
+scap_sigma_n0 <- ggplot(data = parameters_0, aes(x=n,y=sigma)) + geom_point(shape=".") + ggtitle("Scatter plot of simulated n and sigma from null model") + theme(plot.title = element_text(size = 10))
+
+grid.arrange(hist_n_0, hist_s_0, hist_p_0, scap_sigma_n0, ncol=2)
+```
 
 ## Computer model
 
