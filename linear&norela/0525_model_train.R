@@ -85,17 +85,18 @@ history2 <- model %>% fit_generator(
   validation_steps = 800
 )
 
-history12 <- rbind(as.data.frame(history), as.data.frame(history2))
-history12$epoch[21:40] <- rep(6:10, 4)
+#history12 <- rbind(as.data.frame(history), as.data.frame(history2))
+#history12$epoch[21:40] <- rep(6:10, 4)
+
+history12 <- read.csv("~/documents/etf5550/linear&norela/history_10_epoch.csv")
 
 linear_history_plot <- ggplot(history12, aes(x=epoch, y=value, group=data, color=data))+
   geom_point()+
   geom_smooth(level=0)+
-  facet_wrap(~metric, nrow = 2, strip.position = "left", scales = "free_y")  +
-  geom_hline(yintercept = 0.93476)
-linear_history_plot
+  facet_wrap(~metric, nrow = 2, strip.position = "left", scales = "free_y") 
 
-ggsave(plot_history10, filename = "history.png")
+setwd("~/documents/etf5550/monashthesis-master/figures")
+ggsave(linear_history_plot, filename = "linear_history_plot.png")
 
 
 ################################################# evaluate convnets on test set##############################

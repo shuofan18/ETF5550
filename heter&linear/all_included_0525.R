@@ -353,9 +353,10 @@ write.csv(history_heter12, file = "history_heter12.csv")
 heter_history_plot <- ggplot(history_heter12, aes(x=epoch, y=value, group=data, color=data))+
   geom_point()+
   geom_smooth(level=0)+
-  facet_wrap(~metric, nrow = 2, strip.position = "left", scales = "free")  
+  facet_wrap(~metric, nrow = 2, strip.position = "left", scales = "free_y")  
 heter_history_plot
-ggsave(heter_history12, filename = "heter_history12.png")
+setwd("~/documents/etf5550/monashthesis-master/figures")
+ggsave(heter_history_plot, filename = "heter_history_plot.png")
 
 ################################################# evaluate convnets on test set##############################
 dlacc_test_hat_heter_linear <- model_heter %>% evaluate_generator(test_generator, steps = 2000)
