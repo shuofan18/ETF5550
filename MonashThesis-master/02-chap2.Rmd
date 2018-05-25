@@ -198,7 +198,7 @@ model <- keras_model_sequential() %>%
 model
 ```
 
-As shown in figure \ref{fig:modelstructure} and the R code, the "conv" and "pooling" working together slided the data from $150 \times 150 \times 1$ to $7 \times 7 \times 128$ (3D output). The figure from @DLR18 decribes this transformation. 
+As shown in figure \ref{fig:modelstructure} and the R code, the "conv" and "pooling" working together slided the data from $150 \times 150 \times 1$ to $7 \times 7 \times 128$ (3D output). The figure \ref{conv} from @DLR18 decribes this transformation. 
 
 \begin{figure*}[h]
 \centerline{\includegraphics[width=15cm]{figures/conv.png}}
@@ -208,9 +208,13 @@ As shown in figure \ref{fig:modelstructure} and the R code, the "conv" and "pool
 
 Then we need to flatten these 3D tensor into 1D tensor so that they can be processed by the "sigmoid" function in the end. The "sigmoid" is in fact a special case of logistic function. $S(x)=\frac{1}{1+e^{-x}}$. This function is the same one used to predict $\hat{y_i}$ and to calculate the cost function.
 
-From the model structrue we can see that a total number of 3,452,545 parameters need to be estimated, this is done by gradient descent. 10 epoches (1 epoch = 1 iteration over all samples) are done for training. The model specification given by each epoch is saved, the one gives the overall best performance is chosen to represent the computers.
+From the model structrue we can see that a total number of 3,452,545 parameters need to be estimated, this is done by gradient descent. 10 epoches (1 epoch = 1 iteration over all samples) are done for training. The model specification given by each epoch is saved, the one gives the overall best performance is chosen to represent the computers. Because the plot of the training history (figure \ref{histlinear}) shows overfitting starts from the fourth epoch, the accuracy and loss of validation set are close
 
-
+\begin{figure*}[h]
+\centerline{\includegraphics[width=15cm]{figures/linear_history_plot.png}}
+\caption{Training and validation metrics of linear vs. null model in our first experiment}
+\label{histlinear}
+\end{figure*}
 
 
 

@@ -5,7 +5,7 @@ library(tidyverse)
 
 setwd("/Users/shuofanzhang/documents/linear&norela")
 
-base_dir <- "/Users/shuofanzhang/documents/linear&norela"
+base_dir <- "~/documents/linear&norela"
 train_dir <- file.path(base_dir,"train")
 validation_dir <- file.path(base_dir,"validation")
 test_dir <- file.path(base_dir,"test")
@@ -111,6 +111,9 @@ linear8power <- linear8model %>% evaluate_generator(test_generator, steps=1000) 
 
 linear6model <- load_model_hdf5("~/documents/linear&norela/new10epoches/weights.06-0.18.hdf5")
 linear6alpha <- linear6model %>% evaluate_generator(test_generator, steps=1000)  ##### remember to re-do test-generator
+
+linear4model <- load_model_hdf5("~/documents/etf5550/linear&norela/checkpoints/weights.04-0.18.hdf5")
+linear4alpha <- linear4model %>% evaluate_generator(test_generator, steps=1000)  ##### remember to re-do test-generator
 
 ################# evaluate convnets on turk data (70 real plots only) ###### 0523 up to here
 
