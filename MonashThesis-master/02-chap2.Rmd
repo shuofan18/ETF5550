@@ -27,7 +27,7 @@ $$Y_i=
   \end{cases}
 $$ where $\epsilon_i \sim N(0,\sigma), \eta_i \sim N(0,\sigma/3), \ \mu=-1.75, \ \beta\in(0.1, 0.4, 0.75, 1.25, 1.5, 2.25)$. And $n=100, n_c=15, alpha=0, \lambda=10, \sigma=3.5$. The null plots were generated from $N(0,\hat{\sigma}^2)$.
 
-Other parameters in the "actual data sets" of experiment one and two are shown in table 2.1. 
+Other parameters in the "actual data sets" of experiment one and two are shown in the table below. 
 
 ```{r turktable,ref.label='turktable', echo=F, results='asis'}
 c1 <- c(100,100,300,300)
@@ -102,19 +102,19 @@ grid.arrange(p1,p2,p3,p4,nrow=2, heights=c(1,1))
 ```
 
 
-```{r simplot, fig.height=6, fig.width=6, fig.cap="The histograms and scatter plots of simulated variables show good coverage over all the values."}
+```{r simplot, fig.height=8, fig.width=6, fig.cap="The histograms and scatter plots of simulated variables show good coverage over all the values."}
 parameters_b <- read.csv("data/parameters_b.csv")
-hist_n_l <- ggplot(data = parameters_b, aes(n)) + geom_histogram(binwidth = 1) + theme(plot.title = element_text(size = 10)) + ggtitle("Histogram of simulated n")
+hist_n_l <- ggplot(data = parameters_b, aes(n)) + geom_histogram(binwidth = 1) + theme(plot.title = element_text(size = 8)) + ggtitle("Histogram of simulated n")
 
-hist_b_l <- ggplot(data = parameters_b, aes(beta)) + geom_histogram(binwidth = 0.1) + theme(plot.title = element_text(size = 10)) + ggtitle("Histogram of simulated beta from linear model")
+hist_b_l <- ggplot(data = parameters_b, aes(beta)) + geom_histogram(binwidth = 0.1) + theme(plot.title = element_text(size = 8)) + ggtitle("Histogram of simulated beta from linear model")
 
-hist_p_l <- ggplot(data = parameters_b, aes(ct.p.value)) + geom_histogram(binwidth = 0.01) + theme(plot.title = element_text(size = 10)) + ggtitle("Histogram of estimated p value of t-test from linear model")
+hist_p_l <- ggplot(data = parameters_b, aes(ct.p.value)) + geom_histogram(binwidth = 0.01) + theme(plot.title = element_text(size = 8)) + ggtitle("Histogram of estimated p value of t-test from linear model")
 
-hist_s_l <- ggplot(data = parameters_b, aes(sigma)) + geom_histogram(binwidth = 0.1) + theme(plot.title = element_text(size = 10)) + ggtitle("Histogram of simulated sigma from linear model")
+hist_s_l <- ggplot(data = parameters_b, aes(sigma)) + geom_histogram(binwidth = 0.1) + theme(plot.title = element_text(size = 8)) + ggtitle("Histogram of simulated sigma from linear model")
 
-scap_beta_n <- ggplot(data = parameters_b, aes(x=n, y=beta)) + geom_point(shape=".") + ggtitle("Scatter plot of simulated n and beta from linear model") + theme(plot.title = element_text(size = 10))
+scap_beta_n <- ggplot(data = parameters_b, aes(x=n, y=beta)) + geom_point(shape=".") + ggtitle("Scatter plot of simulated n and beta from linear model") + theme(plot.title = element_text(size = 8))
 
-scap_sigma_n <- ggplot(data = parameters_b, aes(x=n,y=sigma)) + geom_point(shape=".") + ggtitle("Scatter plot of simulated n and sigma from linear model") + theme(plot.title = element_text(size = 10))
+scap_sigma_n <- ggplot(data = parameters_b, aes(x=n,y=sigma)) + geom_point(shape=".") + ggtitle("Scatter plot of simulated n and sigma from linear model") + theme(plot.title = element_text(size = 8))
 
 grid.arrange(hist_n_l, hist_b_l, hist_s_l, hist_p_l, scap_beta_n, scap_sigma_n, ncol=2)
 ```
@@ -126,11 +126,12 @@ This is the null scenario in our first experiment, eg. the two variables under t
 The model is designed the same as the linear model:
 $$Y_i = \beta_0 + \beta_1 X_{i}  + \varepsilon_i, ~~i=1, \dots , n$$
 with elements of the model generated using the same specification as the linear model, except  
+
 - $\beta_1 = 0$  
 
-The coefficient of $X_i$ is always zero. So $X_i$ and $Y_i$ are independent variables.
+The coefficient of $X_i$ is always zero. So $X_i$ and $Y_i$ are uncorrelated of each other.
 
-Figure \ref{fig:norela} are four example plots generated using the specifications above. Similar to the linear model simulation, another total number of 240,000 data sets are simulated under this structure. The histograms of the simulated $n, \beta, \sigma$, the estimated p value and the scatter plots of $\beta$ against n, $\sigma$ against n in figure \ref{fig:simplot2} show good coverage over all the values.
+Figure \ref{fig:norela} are four example plots generated using the specifications above. Same as the linear model simulation, a total number of 240,000 data sets are simulated under this structure. The histograms of the simulated $n, \beta, \sigma$, the estimated p value and the scatter plots of $\beta$ against n, $\sigma$ against n in figure \ref{fig:simplot2} show good coverage over all the values.
 
 ```{r norela, echo=F, fig.height=6, fig.width=6, fig.cap="Four examples of data plots generated with two independent variables"}
 norela<-function(i){
@@ -154,49 +155,50 @@ grid.arrange(p1,p2,p3,p4, nrow=2)
 
 ```{r simplot2, fig.height=6, fig.width=6, fig.cap="The histograms and scatter plots of simulated variables show good coverage over all the values."}
 parameters_0 <- read.csv("data/parameters_0.csv")
-hist_n_0 <- ggplot(data = parameters_0, aes(n)) + geom_histogram(binwidth = 1) + theme(plot.title = element_text(size = 10)) + ggtitle("Histogram of simulated n from null model")
+hist_n_0 <- ggplot(data = parameters_0, aes(n)) + geom_histogram(binwidth = 1) + theme(plot.title = element_text(size = 8)) + ggtitle("Histogram of simulated n from null model")
 
-hist_p_0 <- ggplot(data = parameters_0, aes(ct.p.value)) + geom_histogram(binwidth = 0.01) + theme(plot.title = element_text(size = 10)) + ggtitle("Histogram of estimated p value of t-test from null model")
+hist_p_0 <- ggplot(data = parameters_0, aes(ct.p.value)) + geom_histogram(binwidth = 0.01) + theme(plot.title = element_text(size = 8)) + ggtitle("Histogram of estimated p value of t-test from null model")
 
-hist_s_0 <- ggplot(data = parameters_0, aes(sigma)) + geom_histogram(binwidth = 0.1) + theme(plot.title = element_text(size = 10)) + ggtitle("Histogram of simulated sigma from null model")
+hist_s_0 <- ggplot(data = parameters_0, aes(sigma)) + geom_histogram(binwidth = 0.1) + theme(plot.title = element_text(size = 8)) + ggtitle("Histogram of simulated sigma from null model")
 
-scap_sigma_n0 <- ggplot(data = parameters_0, aes(x=n,y=sigma)) + geom_point(shape=".") + ggtitle("Scatter plot of simulated n and sigma from null model") + theme(plot.title = element_text(size = 10))
+scap_sigma_n0 <- ggplot(data = parameters_0, aes(x=n,y=sigma)) + geom_point(shape=".") + ggtitle("Scatter plot of simulated n and sigma from null model") + theme(plot.title = element_text(size = 8))
 
 grid.arrange(hist_n_0, hist_s_0, hist_p_0, scap_sigma_n0, ncol=2)
 ```
 
 ## Computer model
 
-The trained deep learning model will be applied to the data from this experiment. The model will be asked to classify the 70 data plots. We will calculate how frequently the data plot is selected as not a null plot, and compare this to the frequencies obtained by human evaluation. 
+A convolutional neural network will be used to build the computer model because it proves powerful in all kinds of computer vision applications. The plots used for training and testing in this section is the scatter plot between the dependent variable Y and the independent variable X. The R package @ggplot2 is used to generate the plots. All plots are saved as png and will be resized to have width and height both equal to 150 pixels. This size is similar to the plot size used in the lineup for human evaluation. As for the labels given to each image, we use the true population as the samples' identification directly. It is true that there will be some undesired patterns formed out of randomness, especially when the sample size is small. Unlike what Simchoni did in his post, no conventional tests will be used to sort out the "significant" observations. Because the answer to the question that if the deep learning model can distinguish from patterns formed by chance and by nature is also interested. 
 
-As introduced in Chapter 1, the convolutional neural networks will be used to build the computer model. The plots used for training and testing in this section is the scatter plot between the dependent variable Y and the independent variable X. "ggplot2" package in R is used to generate the plots and to save all plots to our local drive. All plots will be resized to be squared images with same width and height. This helps us to see better the patterns in the scatter plot and also is easier for the deep learning model to process. As for the labels given the each image, we will use the true population as the samples' identification directly. It is true that there will be some undesired patterns formed out of randomness, especially when the sample size is small. Unlike what Simchoni did in his post, no conventional tests will be used to sort out the "significant" observations. Because the answer to the question that if the deep learning model can distinguish from patterns formed by chance and by nature is also interested. 
+As mentioned above, 240,000 data sets are generated for each of the two groups in the first experiment. 100,000 of them are set apart for training. Another 40,000 of the data sets are set apart as validation set in order to monitor during training the accuracy of the model on data it has never seen before. And the leftover (100,000 data sets) become the unseen test set. We make the test set so large that we can compare the performance of the convnet with the conventional t-test properly.
 
-"A convnet takes as input tensors of shape (image height, image width, image channels)."[@DLR18] In this case, the format of all the images is $150\times150$ pixels, the convnet will be configured to process inputs of size (150, 150, 1).
+"A convnet takes as input tensors of shape (image height, image width, image channels)."[@DLR18] In this case, the input tensors are of shape $150 \times 150 \times 1$ because they are grayscale images. Therefore the convnet will be configured to process inputs of size (150, 150, 1). We’ll do this by passing the argument input_shape = c(28, 28, 1) to the first layer.
 
-180,000 data sets are generated for each of the two groups in the first experiment. 100,000 of them will be set apart as train set. In order to monitor during training the accuracy of the model on data it has never seen before, 40,000 of the rest of the data set will be used as the validation set. And the last 40,000 will become the unseen test set. 
+```{r modelstructure, echo=TRUE, fig.height=6, warning=FALSE, paged.print=TRUE}
+library(keras)
+model <- keras_model_sequential() %>%
+  layer_conv_2d(filters = 32, kernel_size = c(3, 3), activation = "relu",
+                input_shape = c(150, 150, 1)) %>%
+  layer_max_pooling_2d(pool_size = c(2, 2)) %>%
+  layer_conv_2d(filters = 64, kernel_size = c(3, 3), activation = "relu") %>%
+  layer_max_pooling_2d(pool_size = c(2, 2)) %>%
+  layer_conv_2d(filters = 128, kernel_size = c(3, 3), activation = "relu") %>%
+  layer_max_pooling_2d(pool_size = c(2, 2)) %>%
+  layer_conv_2d(filters = 128, kernel_size = c(3, 3), activation = "relu") %>%
+  layer_max_pooling_2d(pool_size = c(2, 2)) %>%
+  layer_flatten() %>%
+  layer_dense(units = 512, activation = "relu") %>%
+  layer_dense(units = 1, activation = "sigmoid")
+model
+```
+
 
 10 epoches (1 epoch = 1 iteration over all samples) will be done for training. The model specification given by each epoch will be saved, the one gives the highest test power is chosen to represent the computers.
 
 "target_size: Tuple of integers (height, width), default: (256, 256). The dimensions to which all images found will be resized." @keras 
 
-All convolutional neural network related work will be done by Keras package in R.
-<!--
+All convolutional neural network related work will be done by Keras [@keras] package in R.
 
-
-
-\begin{figure*}[h]
-\centerline{\includegraphics[width=15cm]{figures/linear_group_plots.png}}
-\caption{This graph shows the histogram of simulated beta,and the scatter plot of beta against n for the linear group. It shows the number of simulation (180,000) is large enough to give good coverage.}
-\label{sim0}
-\end{figure*}
--->
-
-<!--
-```{r dl_model, echo=FALSE, fig.cap="The deep learning model structure used in this thesis"}
-model_loaded <- load_model_hdf5("data/weights.06-0.22.hdf5")
-model_loaded
-```
--->
 
 \begin{figure*}[h]
 \centerline{\includegraphics[width=15cm]{figures/new_plot.png}}
