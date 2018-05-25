@@ -208,7 +208,7 @@ As shown in figure \ref{fig:modelstructure} and the R code, the "conv" and "pool
 
 Then we need to flatten these 3D tensor into 1D tensor so that they can be processed by the "sigmoid" function in the end. The "sigmoid" is in fact a special case of logistic function. $S(x)=\frac{1}{1+e^{-x}}$. This function is the same one used to predict $\hat{y_i}$ and to calculate the cost function.
 
-From the model structrue we can see that a total number of 3,452,545 parameters need to be estimated, this will be done by gradient descent. 10 epoches (1 epoch = 1 iteration over all samples) will be done for training. The model specification given by each epoch is saved, the one gives the overall best performance is chosen to represent the computers.
+From the model structrue we can see that a total number of 3,452,545 parameters need to be estimated, this is done by gradient descent. 10 epoches (1 epoch = 1 iteration over all samples) are done for training. The model specification given by each epoch is saved, the one gives the overall best performance is chosen to represent the computers.
 
 
 
