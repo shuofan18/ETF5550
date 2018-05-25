@@ -208,7 +208,7 @@ As shown in figure \ref{fig:modelstructure} and the R code, the "conv" and "pool
 
 Then we need to flatten these 3D tensor into 1D tensor so that they can be processed by the "sigmoid" function in the end. The "sigmoid" is in fact a special case of logistic function. $S(x)=\frac{1}{1+e^{-x}}$. This function is the same one used to predict $\hat{y_i}$ and to calculate the cost function.
 
-From the model structrue we can see that a total number of 3,452,545 parameters need to be estimated, this is done by gradient descent. 10 epoches (1 epoch = 1 iteration over all samples) are done for training. The model specification given by each epoch is saved, the one gives the overall best performance is chosen to represent the computers. Because the plot of the training history (figure \ref{histlinear}) shows overfitting starts from the fourth epoch, the accuracy and loss of validation set are close
+From the model structrue we can see that a total number of 3,452,545 parameters need to be estimated, this is done by gradient descent. 10 epoches (1 epoch = 1 iteration over all samples) are done for training. The model specification given by each epoch is saved, the one gives the overall best performance is chosen to represent the computers. Because the plot of the training history (figure \ref{histlinear}) shows overfitting starts from the fourth epoch, the values of accuracy and loss from validation set are very close after the fourth epoch.
 
 \begin{figure*}[h]
 \centerline{\includegraphics[width=15cm]{figures/linear_history_plot.png}}
@@ -216,23 +216,14 @@ From the model structrue we can see that a total number of 3,452,545 parameters 
 \label{histlinear}
 \end{figure*}
 
-
-
-
-\begin{figure*}[h]
-\centerline{\includegraphics[width=15cm]{figures/new_plot.png}}
-\caption{Training and validation metrics of the first experiment}
-\label{expt2}
-\end{figure*}
-
-From the plot of the traning history, we can see the fourth specification gives the overall best performance with lowest loss and highest accuracy on validation set. Its accuracy on the unseen test set is also the best among other models. After the fourth checkpoint, the model starts to overfit.
+Hence, we selected the fourth, sixth, eighth and the tenth model to have them tested on the unseen test set. And the results are shown in the table below. <!--graph-->
 
 ```{r checkpoints, echo=F, paged.print=FALSE, results='asis'}
-checkpoints <- c("4 epoch", "6 epoch", "10 epoch", "T-test")
-powers <- c(0.8790, 0.8910, 0.8826, 0.9003)
-alpha_1 <- c(0.9757, 0.9569, 0.9687, 0.9487) 
-accuracy <- c(0.9273, 0.9239, 0.9257, 0.9245)
-tibble(checkpoints, powers, alpha_1, accuracy) %>% kable(col.names = c("Tests", "Power", "1-Alpha", "Overall accuracy"), caption = "Performance of three checkpoints of the deep learning model on the unseen test set, where the power means the accuracy on the linear ones, (1-alpha) is the accuracy on the no-relationship ones. All numbers have been rounded to four decimal places.")
+checkpoints <- c("4 epoch", "6 epoch", "8 epoch", "10 epoch","5% T-test")
+powers <- c( , 0.8885, 0.8958, 0.9042, 0.9206)
+alpha_1 <- c(0.9842, 0.9858, 0.9812, 0.9712, 0.9489) 
+accuracy <- c( , 0.9372, 0.9385, 0.9377, 0.9348)
+tibble(checkpoints, powers, alpha_1, accuracy) %>% kable(col.names = c("Tests", "Power", "1-Alpha", "Overall accuracy"), caption = "Performance of four checkpoints from the convnets as well as 5% significant t-test tested on the unseen test set, where the power means the accuracy on the linear ones, (1-alpha) is the accuracy on the no-relationship ones. All numbers have been rounded to four decimal places.")
 ```
 
 However, since the majority of the data plots in Turk's experiment have been generated with linear relationship, we will choose the sixth model here because it has the highest test power which provides the deep learning model a better chance. What's more, the $\alpha$ of the sixth model, which is the probability of Type I error, is the closest to 0.05. We can see the sixth model's performance is quite close to the conventional T-test.
