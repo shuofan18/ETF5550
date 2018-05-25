@@ -168,23 +168,29 @@ grid.arrange(hist_n_0, hist_s_0, hist_p_0, scap_sigma_n0, ncol=2)
 
 ## Computer model
 
-A convolutional neural network will be used to build the computer model because it proves powerful in all kinds of computer vision applications. The plots used for training and testing in this section is the scatter plot between the dependent variable Y and the independent variable X. The R package @ggplot2 is used to generate the plots. All plots are saved as png and will be resized to have width and height both equal to 150 pixels. This size is similar to the plot size used in the lineup for human evaluation. As for the labels given to each image, we use the true population as the samples' identification directly. It is true that there will be some undesired patterns formed out of randomness, especially when the sample size is small. Unlike what Simchoni did in his post, no conventional tests will be used to sort out the "significant" observations. Because the answer to the question that if the deep learning model can distinguish from patterns formed by chance and by nature is also interested. 
+A convolutional neural network will be used to build the computer model because it proves powerful in all kinds of computer vision applications. And it has two interesting properties: "the patterns they learn are translation invariant", and "they can learn spatial hierarchies of patterns" [@DLR18]. Given the first one, once it learn how to recognize the linear pattern, they can detect it regardless of the direction of that patter. Thus it can handle different slopes. As to the second one, it allows the convnets to learn complicated visual concepts. 
+
+All convolutional neural network related work will be done by Keras [@keras] package in R. The plots used for training and testing in this section is the scatter plot between the dependent variable Y and the independent variable X. The R package @ggplot2 is used to generate the plots. All plots are saved as png and will be resized to have width and height both equal to 150 pixels. This size is similar to the plot size used in the lineup for human evaluation. As for the labels given to each image, we use the true population as the samples' identification directly. It is true that there will be some undesired patterns formed out of randomness, especially when the sample size is small. Unlike what Simchoni did in his post, no conventional tests will be used to sort out the "significant" observations. Because the answer to the question that if the deep learning model can distinguish from patterns formed by chance and by nature is also interested. 
 
 As mentioned above, 240,000 data sets are generated for each of the two groups in the first experiment. 100,000 of them are set apart for training. Another 40,000 of the data sets are set apart as validation set in order to monitor during training the accuracy of the model on data it has never seen before. And the leftover (100,000 data sets) become the unseen test set. We make the test set so large that we can compare the performance of the convnet with the conventional t-test properly.
 
-"A convnet takes as input tensors of shape (image height, image width, image channels)."[@DLR18] In this case, the input tensors are of shape $150 \times 150 \times 1$ because they are grayscale images. Therefore the convnet will be configured to process inputs of size (150, 150, 1). We’ll do this by passing the argument input_shape = c(28, 28, 1) to the first layer.
+"A convnet takes as input tensors of shape (image height, image width, image channels)."[@DLR18] The channels are normally equal to three for RGB. In our case, the input tensors are of shape $150 \times 150 \times 1$ because they are grayscale images. Therefore the convnet will be configured to process inputs of size (150, 150, 1). We’ll do this by passing the argument input_shape = c(28, 28, 1) to the first layer.
 
-```{r modelstructure, echo=TRUE, fig.height=6, warning=FALSE, paged.print=TRUE}
+```{r modelstructure, echo=TRUE, fig.height=6, results='asis' ,warning=FALSE}
 library(keras)
 model <- keras_model_sequential() %>%
-  layer_conv_2d(filters = 32, kernel_size = c(3, 3), activation = "relu",
+  layer_conv_2d(filters = 32, kernel_size = c(3, 3), 
+                activation = "relu",
                 input_shape = c(150, 150, 1)) %>%
   layer_max_pooling_2d(pool_size = c(2, 2)) %>%
-  layer_conv_2d(filters = 64, kernel_size = c(3, 3), activation = "relu") %>%
+  layer_conv_2d(filters = 64, kernel_size = c(3, 3), 
+                activation = "relu") %>%
   layer_max_pooling_2d(pool_size = c(2, 2)) %>%
-  layer_conv_2d(filters = 128, kernel_size = c(3, 3), activation = "relu") %>%
+  layer_conv_2d(filters = 128, kernel_size = c(3, 3), 
+                activation = "relu") %>%
   layer_max_pooling_2d(pool_size = c(2, 2)) %>%
-  layer_conv_2d(filters = 128, kernel_size = c(3, 3), activation = "relu") %>%
+  layer_conv_2d(filters = 128, kernel_size = c(3, 3), 
+                activation = "relu") %>%
   layer_max_pooling_2d(pool_size = c(2, 2)) %>%
   layer_flatten() %>%
   layer_dense(units = 512, activation = "relu") %>%
@@ -192,12 +198,21 @@ model <- keras_model_sequential() %>%
 model
 ```
 
+As shown in figure \ref{fig:modelstructure} and the R code, the "conv" and "pooling" working together slided the data from $150 \times 150 \times 1$ to $7 \times 7 \times 128$ (3D output). The figure from @DLR18 decribes this transformation. 
 
-10 epoches (1 epoch = 1 iteration over all samples) will be done for training. The model specification given by each epoch will be saved, the one gives the highest test power is chosen to represent the computers.
+\begin{figure*}[h]
+\centerline{\includegraphics[width=15cm]{figures/conv.png}}
+\caption{How convolution works (Figure is from 'Deep Learning with R' by Allaire, JJ)}
+\label{conv}
+\end{figure*}
 
-"target_size: Tuple of integers (height, width), default: (256, 256). The dimensions to which all images found will be resized." @keras 
+Then we need to flatten these 3D tensor into 1D tensor so that they can be processed by the "sigmoid" function in the end. The "sigmoid" is in fact a special case of logistic function. $S(x)=\frac{1}{1+e^{-x}}$. This function is the same one used to predict $\hat{y_i}$ and to calculate the cost function.
 
-All convolutional neural network related work will be done by Keras [@keras] package in R.
+From the model structrue we can see that a total number of 3,452,545 parameters need to be estimated, this will be done by gradient descent. 10 epoches (1 epoch = 1 iteration over all samples) will be done for training. The model specification given by each epoch is saved, the one gives the overall best performance is chosen to represent the computers.
+
+
+
+
 
 
 \begin{figure*}[h]
