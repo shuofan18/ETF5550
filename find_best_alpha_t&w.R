@@ -1,8 +1,8 @@
 
 ####################### to find the best alpha for t-test for the "test set" in 1st experiment ######################
 
-ttest_power <- read.csv("~/documents/linear&norela/parameters/parameters3.csv")
-ttest_alpha <- read.csv("~/documents/linear&norela/parameters/parameters4.csv")
+ttest_power <- read.csv("~/documents/github/etf5550/linear&norela/parameters/parameters3.csv")
+ttest_alpha <- read.csv("~/documents//github/etf5550/linear&norela/parameters/parameters4.csv")
 
 library(tidyverse)
 datf<-NULL

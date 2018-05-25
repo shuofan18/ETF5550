@@ -216,30 +216,36 @@ From the model structrue we can see that a total number of 3,452,545 parameters 
 \label{histlinear}
 \end{figure*}
 
-Hence, we selected the fourth, sixth, eighth and the tenth model to have them tested on the unseen test set. And the results are shown in the table below. <!--graph-->
+Hence, we select the fourth, sixth, eighth and the tenth model to have them tested on the unseen test set. And the results are shown in the table below. The "$1-\alpha$" is the accuracy of each computer model tested on the "null data" in test set only. $\alpha$ here is an analogy to the Type I error in the conventional hypothesis test. Similarly, the "power" is the accuracy of each computer model tested on the "linear data" in the test set only. The t-test performance is calculated under 5% significance level. 
 
 ```{r checkpoints, echo=F, paged.print=FALSE, results='asis'}
 checkpoints <- c("4 epoch", "6 epoch", "8 epoch", "10 epoch","5% T-test")
-powers <- c( , 0.8885, 0.8958, 0.9042, 0.9206)
+powers <- c(0.8916, 0.8885, 0.8958, 0.9042, 0.9206)
 alpha_1 <- c(0.9842, 0.9858, 0.9812, 0.9712, 0.9489) 
-accuracy <- c( , 0.9372, 0.9385, 0.9377, 0.9348)
+accuracy <- c(0.9379, 0.9372, 0.9385, 0.9377, 0.9348)
 tibble(checkpoints, powers, alpha_1, accuracy) %>% kable(col.names = c("Tests", "Power", "1-Alpha", "Overall accuracy"), caption = "Performance of four checkpoints from the convnets as well as 5% significant t-test tested on the unseen test set, where the power means the accuracy on the linear ones, (1-alpha) is the accuracy on the no-relationship ones. All numbers have been rounded to four decimal places.")
 ```
 
-However, since the majority of the data plots in Turk's experiment have been generated with linear relationship, we will choose the sixth model here because it has the highest test power which provides the deep learning model a better chance. What's more, the $\alpha$ of the sixth model, which is the probability of Type I error, is the closest to 0.05. We can see the sixth model's performance is quite close to the conventional T-test.
+Since the test set is large enough (200,000 in total) to provide reliable reference. We will choose the computer model according to their accuracy on the test set. The 8th model is chosen in this case. However, we should note that the majority of the data plots in Turk's experiment have been generated with linear relationship, this may be a disadvantage for the computer comparing to the 5% significant t-test. Because of the difference in $\alpha$ of this two tests, the later has higher power than the former even though their overall accuracy are very close to each other.
 
 ## Comparing results
 
+<!-- results needs to be updated -->
+
 ```{r linearresults, echo=F, paged.print=FALSE, results='asis'}
-tests <- c("human", "computer", "t-test")
+tests <- c("Human", "Computer", "T-test")
 correct <- c(47, 44, 43)
 accuracy <- c(0.6714, 0.6286, 0.6143)
 tibble(tests, correct, accuracy) %>% kable(col.names = c("Tests", "No. of correct", "Accuracy"), caption = "Accuracy of testing the 70 data plots evaluated by human computer and the conventional t-test.")
 ```
 
-The conclusion of human evaluation is calculated using the p-value calculation introduced in section 2 of @MM13, the null hypothesis is rejected if the calculated p-value is smaller than 0.05. 
+\begin{figure*}[h]
+\centerline{\includegraphics[width=15cm]{figures/diagram.png}}
+\caption{Process of computer model training and selection}
+\label{dgc}
+\end{figure*}
 
-The $\alpha$ of the conventional t-test we used in this comparison is 0.05. 
+The conclusion of human evaluation is calculated using the p-value calculation introduced in section 2 of @MM13, the null hypothesis is rejected if the calculated p-value is smaller than 0.05. 
 
 From this table, we can see human evaluation achieves the best accuracy on the Turk's experiment data set. Deep learning model and the conventional t-test perform similarly. 
 
