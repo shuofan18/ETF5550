@@ -118,7 +118,13 @@ In this experiment, a linear model is fit to the data firstly. Residuals from th
 ## Comparing results  
 
 
-
+```{r heteresults, echo=F, paged.print=FALSE, results='asis'}
+tests <- c("Computer 2%", "Human 5%", "White-test 5%", "White-test 2%", "Human 2%")
+rank <- c(1,2,2,3,4)
+correct <- c(25, 17, 17, 16, 15)
+accuracy <- c("92.59%","62.96%", "62.96%","59.26%","55.56%")
+tibble(rank, tests, correct, accuracy) %>% kable(col.names = c("Rank","Tests", "No. of correct", "Accuracy"), caption = "Accuracy of testing the 27 data plots evaluated by human computer and the conventional white-test.")
+```
 
 
 
