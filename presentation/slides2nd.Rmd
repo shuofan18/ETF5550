@@ -2,6 +2,7 @@
 title: "Human vs. Computer"
 author: "Shuofan Zhang"
 date: "5/28/2018"
+fontsize: 12pt
 output: 
   beamer_presentation:
     fig_height: 5
@@ -63,66 +64,11 @@ ggplot(lineup(null_permute(".std.resid"), df_mod), aes(x=x, y=.std.resid)) + geo
 - If data plot is "identified" as different from null, $H_o$ is rejected
 - Combining results from multiple observers enables $p$-value calculation
 
-## Deep learning  
-
-- Computer vision has advanced substantially
-- Computer vision underlying self-driving cars, robotics
-- Computer vision is being build on deep learning models
-
-- If we can train a computer to read residual plots we can have it process a lot more data, than a human can manage.
-
 ## Aside: Computers can't tell difference between blueberry muffins and chihuahuas  
 
 ![Computers can't tell difference between blueberry muffins and chihuahuas](figures/choc_chip_muffins.jpg)
 
-## First Experiment  
-
-$$H_0$$: There are no relationships between the two variables.
-$$H_1$$: There is linear relationship between the two variables where all Gauss-Markov assumptions are met.
-
-Steps:
-1. Simulate data (X, Y) from the null and the alternative models
-2. Generate scatter plots of X and Y
-3. Save scatter plots as $150\times150$ pixels images
-4. Train a deep learning classifier to recognise the patterns from two groups
-5. Test the model's performance on new data and compute the accuracy
-
-## First Experiment: Data simulation {#sec:simulation}  
-
-These factors are being controlled in the data simulation
-
-- Type of relationship: none, linear, nonlinear or heteroskedasticity
-- Explanatory variables: $X \sim N(0,3)$ and intercept $\beta_0=0$
-- Sample size: randomly generated between 20-1500
-- Image size: fixed `150x150`
-
-## Type of relationship  
-
-```{r levels}
-library(gridExtra)
-x <- runif(100, -1, 1)
-xx <- runif(100, 0, 1)
-none <- rnorm(100)
-linear <- 2*x - 5*xx + rnorm(100)*0.5
-nonlin <- 5*x + x^2 + rnorm(100)*0.2
-heter <- 2*x + (x+1)*rnorm(100)*0.5
-df <- tibble(x, none, linear, nonlin, heter)
-df_lm1 <- lm(none~x, data=df)
-df_lm2 <- lm(linear~xx, data=df)
-df_lm3 <- lm(nonlin~x, data=df)
-df_lm4 <- lm(heter~x, data=df)
-lm1 <- augment(df_lm1, df)
-lm2 <- augment(df_lm2, df)
-lm3 <- augment(df_lm3, df)
-lm4 <- augment(df_lm4, df)
-p1 <- ggplot(lm1, aes(x=x, y=.std.resid)) + geom_point() + ggtitle("None")
-p2 <- ggplot(lm2, aes(x=x, y=.std.resid)) + geom_point() + ggtitle("Linear")
-p3 <- ggplot(lm3, aes(x=x, y=.std.resid)) + geom_point() + ggtitle("Non-linear")
-p4 <- ggplot(lm4, aes(x=x, y=.std.resid)) + geom_point() + ggtitle("Heteroskedastic")
-grid.arrange(p1, p2, p3, p4, ncol=2)
-```
-
-## Comparison with human subject experiments  
+## Amazon Turk study
 
 - Majumder et al (2013) conducted a large study to compare the performance of the lineup protocol, assessed by human evaluators, in comaprison to the classical test
 - Experiment 2 examined $H_o: \beta_k=0$ vs $H_a: \beta_k\neq 0$ assessing the importance of including variable $k$ in the linear model, conducted with a $t$-test, and also lineup protocol
@@ -135,16 +81,97 @@ grid.arrange(p1, p2, p3, p4, ncol=2)
 
 ![63 of 65 identified the data plot in this lineup](figures/plot_turk2_300_350_12_3.png)
 
-## Timeline
+## Convolutional neural network (convnets)
 
-\begin{tabular}{lp{10cm}}
-Date & Component \\\hline
-Apr 27 & Deep learning model trained \\
-May 4  & Classification of new residual plots with model and results summarised\\
-May 18 & Comparison with Turk studies\\
-May 24 & Refinements made, final summaries written\\
-May 31 & Thesis finalised\\
-\end{tabular}
+- Computer vision has advanced substantially
+- If we can train a computer to read residual plots we can have it process a lot more data, than a human can manage.
+
+## How convnets works: Diagram of regression
+
+![How regression works](figures/diagreg.png)
+
+## How convnets works: R code
+
+<!-- adjust the fontsize of R code --> 
+<!-- removed one layer for display-->
+
+```{r modelstructure, echo=TRUE, message=FALSE, warning=FALSE, results='none'}
+library(keras)
+model <- keras_model_sequential() %>%
+  layer_conv_2d(filters = 32, kernel_size = c(3, 3), 
+                activation = "relu",
+                input_shape = c(150, 150, 1)) %>%
+  layer_max_pooling_2d(pool_size = c(2, 2)) %>%
+  layer_conv_2d(filters = 64, kernel_size = c(3, 3), 
+                activation = "relu") %>%
+  layer_max_pooling_2d(pool_size = c(2, 2)) %>%
+  layer_conv_2d(filters = 128, kernel_size = c(3, 3), 
+                activation = "relu") %>%
+  layer_max_pooling_2d(pool_size = c(2, 2)) %>%
+  layer_flatten() %>%
+  layer_dense(units = 512, activation = "relu") %>%
+  layer_dense(units = 1, activation = "sigmoid")
+```
+
+## How convnets works: Diagram of convolution and max pooling
+
+![How convolution works](figures/diagconv.png)
+
+## First Experiment: Linear vs. Null
+
+$H_0$: There are no relationships between the two variables. (Null)
+$H_1$: There is linear relationship between the two variables where all Gauss-Markov assumptions are met. (Linear)
+
+Steps:
+1. Simulate data (X, Y) from the null and the alternative models
+2. Generate scatter plots of X and Y
+3. Save scatter plots as $150\times150$ pixels images
+4. Train a deep learning classifier to recognise the patterns from two groups
+5. Test the model's performance on new data and compute the accuracy
+
+## First Experiment: Data simulation {#sec:simulation}  
+
+The model:
+$$Y_i = \beta_0 + \beta_1 X_{i}  + \varepsilon_i, ~~i=1, \dots , n$$
+- $X \sim N[0,\ 1]$  
+- $\beta_0 = 0$  
+- $\beta_1\sim U[-10, -0.1] \bigcup [0.1, 10]$  
+- $\varepsilon\sim N(0, \sigma^2) \ where\ \sigma \sim U[1,12]$  
+- $n=U[50,500]$  
+
+## First Experiment: Examples of scatter plots
+
+```{r levels}
+library(gridExtra)
+linear<-function(n){
+   beta <- sample(c((-10:-0.1),(0.1:10)), 1)
+  
+  sigma <- sample(1:12 , 1)
+  x<-rnorm(n, 0, 1)
+  y<-rnorm(n, beta*x, sigma)
+  
+  tibble(x, y) %>% 
+  ggplot(aes(x = x, y = y)) + 
+    geom_point(alpha = 0.4) +
+    theme(aspect.ratio = 1)
+}
+set.seed(0420)
+n1 <- sample(c(100, 300), 1)
+n2 <- sample(c(100, 300), 1)
+n3 <- sample(c(100, 300), 1)
+n4 <- sample(c(100, 300), 1)
+
+p1 <- linear(n1)
+p2 <- linear(n2)
+p3 <- linear(n3)
+p4 <- linear(n4)
+
+grid.arrange(p1,p2,p3,p4,nrow=2, heights=c(1,1)) 
+```
+
+
+
+
 
 ## Materials
 
