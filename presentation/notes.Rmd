@@ -13,8 +13,8 @@ header-includes:
   - \usepackage{MonashBlue}
 ---
 
-## Goal
-Hello everyone, I am Shuofan, my research project is about human and computer. Our goal in this paper is to teach the computer to read residual plots. 
+## Reminder of the first presentation
+Hello everyone, I am Shuofan, my research project is about a comparison between human and computer. Now let's briefly remind ourselves of what the goal and the motivations are in this study.
 
 Because the multiple regression model for cross-sectional data is still the most widely used vehicle for empirical analysis in economics and other social sciences". 
 And detecting possible violations of the Gauss-Markov assumptions is crucial to interpret the data properly, especially in the early stage of analysis. There are several distribution tests that are commonly used, for instance, the Breusch-Pagan test and White test for investigating heteroskedasticity. 
