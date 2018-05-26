@@ -5,6 +5,14 @@ knit: "bookdown::render_book"
 
 # New experiment comparing human vs. computer on reading heteroskedasticity
 
+Turk's experiment mainly considers linear data, in this paper, we extend their study by including heteroscedasticity. A new database of human evaluations is created by a small experiment. This new database is used to compare the performance of the computer model. The computer is trained on the same parameter simulation framework, and tested on the same data as the human evaluations.
+
+## Human experiment explanation
+
+The experiment is rendered at Monash University, Melbourne Australia. The participants are all students or lecturers in this university.
+
+Four survey (including three formal ones and an extra one) are randomly sent to 84 people by email, each survey consists of 10 lineup questions (the extra one has 4 lineup questions). Only one lineup question repeatly appears in two survey, thus, we have 33 distinct questions in total. A total number of 22 people have participated. Five people evaluated two surveys including the extra one. 
+
 ## Heteroskedasticity simulation
 
 Linear model with heteroskedasticity is the model implied in the alternative hypothesis of the second experiment in this paper, where the constant variance assumption of the linear model is violated while all other conditions are met. 
@@ -64,13 +72,13 @@ grid.arrange(p1,p2,p3,p4, nrow=2)
 
 ```
 
-## Human subject experiment
+## Null plot simulation
 
-## Deep learning model training
+## Computer model
 
 For the second experiment, a linear model will be fit to the data firstly. Residuals from the fitted model will be standardized and extracted. The residual plot will be made of standardized residuals against X.
 
-## Results
+## Comparing results  
 
 
 
