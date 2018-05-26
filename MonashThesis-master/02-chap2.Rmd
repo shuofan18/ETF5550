@@ -70,7 +70,7 @@ $\varepsilon$ is designed to be uniformly generated from 1 to 12.
 - $n=U[50,500]$  
 The sample sizes of each data set vary from 50 to 500.
 
-Figure \ref{fig:linear} shows four example plots generated using the specifications above. Under this controlled structure, a total number of 240,000 data sets are simulated. All simulated parameters and data are saved and is used later on for calculating the performance of conventional t-test. The histograms of the simulated $n, \beta, \sigma$, the estimated p value and the scatter plots of $\beta$ against n, $\sigma$ against n in figure \ref{fig:simplot} show good coverage over all the values.
+Figure \ref{fig:linear} shows four example plots generated using the specifications above. Under this controlled structure, a total number of 240,000 data sets are simulated. The histograms of the simulated $n, \beta, \sigma$, the estimated p value and the scatter plots of $\beta$ against n, $\sigma$ against n in figure \ref{fig:simplot} show good coverage over all the values.
 
 ```{r linear, fig.height=6, fig.width=6, echo=FALSE, fig.cap="Four examples of data plots generated from the classic linear model."}
 library(gridExtra)
@@ -172,6 +172,8 @@ scap_sigma_n0 <- ggplot(data = parameters_0, aes(x=n,y=sigma)) + geom_point(shap
 grid.arrange(hist_n_0, hist_s_0, hist_p_0, scap_sigma_n0, ncol=2)
 ```
 
+All simulated data and associated parameters including estimated sample p-values of t-test are saved and are used later on for calculating the performance of conventional t-test. 
+
 ## Computer model  
 
 A convolutional neural network will be used to build the computer model because it proves powerful in all kinds of computer vision applications. And it has two interesting properties: "the patterns they learn are translation invariant", and "they can learn spatial hierarchies of patterns" [@DLR18]. Given the first one, once it learn how to recognize the linear pattern, they can detect it regardless of the direction of that patter. Thus it can handle different slopes. As to the second one, it allows the convnets to learn complicated visual concepts. 
@@ -256,7 +258,7 @@ We should note that since the majority of the data plots in Turk's experiment ha
 
 ## Comparing results  
 
-First compare the experiment process for human and computer respectively by two diagrams figure \ref{dgpc} and figure \ref{dfhm}.
+First compare the experiment process for human and computer respectively by two diagrams figure \ref{dgpc} and figure \ref{dghm}.
 
 \begin{figure*}[h]
 \centerline{\includegraphics[width=15cm]{figures/diagpc.png}}
@@ -271,15 +273,23 @@ First compare the experiment process for human and computer respectively by two 
 \end{figure*}
 
 The performance of the computer model for the Turk study data is tested in three steps:
+
 - Re-generate the 70 "real plots" using the same data in Turk study (without null plots);
+
 - Create a seperate test directory for the 70 "real plots" exclusively;
+
 - The computer model's predicted accuracy over the 70 "real plots" are recorded as the model's performance.
 
-The conclusion of human evaluation is obtained differently from the computer's. Because human evaluated "lineup", not only the "real plots". The performance is tested in ? steps:
+The conclusion of human evaluation is obtained differently from the computer's. Because human evaluated "lineup", not only the "real plots". The performance is tested in five steps:
+
 - Count total number of evaluations made by human for one lineup (N) and the number of correct answers for that lineup (k);
+
 - Obtain N and k for all 70 lineup;
+
 - Calculate p-value associated with each real plot using the formula introduced in section 2 of @MM13;
+
 - Draw conclusion: reject the null when the calculated p-value is smaller than $\alpha$.
+
 - The accuracy of the conclusions the 70 real plots is presenting for the human performance.
 
 For a fair competition, the Type I error ($\alpha$) should be held the same for all test methods. However, we do not have direct control over the $\alpha$ of the computer model. Therefore, 2% significant t-test and 2% significant human conclusion is also included to give a complete picture of the comparison. 
@@ -298,10 +308,33 @@ The comparing result is interesting. Human achieves the highest accuracy, and th
 
 As we can see from the two performance tables above, t-test and convnets behave quite similarly on both the test data set and Turk's experiment data. 
 
-<!-- graph -->
+```{r ttdl, echo=FALSE, fig.cap="Comparison between computer model and t-test for alpha in (0.01, 0.04), they perform very similarly, but t-test has overall better performance."}
 
-It is possible that the convnets is in fact doing the same thing as t-test in this case. 
-To confirm this idea, a small simulation experiment was conducted to search for the "best" $\alpha$ for t-test. The data was simulated using the same specification as in the section "Linear relationship simulation" and "null plots simulation". The range of the $\alpha$ is from $(0.005,\ 0.010,\ 0.015,\ \dots,\ 0.100)$, with 200,000 iterations, the "best" $\alpha$ is found to be $\alpha=0.02$ which is very close to the one suggested by the fourth-epoch model $0.02435$.
+tt <- read.csv("~/documents/github/etf5550/linear&norela/ttest_test_set.csv")
+tt <- select(tt, alpha, power, accuracy)
+tt <- filter(tt, alpha<0.04)
+tt <- filter(tt, alpha>0.01)
+colnames(tt) <- c("alpha", "power", "accuracy")
+tt <- tt %>% mutate(model="T-test")
+dl <- read.csv("~/documents/github/etf5550/linear&norela/test_acc_10epoches.csv")
+dl <- dl %>% mutate(alpha=1-alphas)
+dl <- select(dl, alpha, powers, accuracy) 
+colnames(dl) <- c("alpha", "power", "accuracy")
+dl <- dl %>% mutate(model="Deep learning model")
+
+tt_dl <- rbind(tt,dl)
+
+library(reshape2)
+tt_dl <- tt_dl %>% melt(id=c("model","alpha"))
+
+ggplot(tt_dl, aes(x=alpha, y=value, group=variable, color=model))+
+  geom_point(size=4)+
+  geom_smooth(method = lm, formula = y ~ splines::bs(x, 3), se = FALSE)
+```
+
+It is possible that the convnets is in fact doing the same thing as t-test in this case. Or the strategy it learned in this case turns out to be t-test. 
+
+To confirm this idea, we calculated the accuracy of t-test again, with different $\alpha$ (from 0.005 to 0.1 with 0.005 increments) on all 200,000 test sets. The estimated power and overall accuracy were recorded. When $\alpha=0.015$, the overall accuracy reaches its maximum. This value approximately coincide with the $\alpha$ chosen by the convnets. And since the $\alpha$ of convnets is from 0.0142 to 0.0347 in this case, we truncated the t-test data as well for figure \ref{fig:ttdl}. From this graph, we can see the two tests perform very similarly, but t-test has overall better performance.
 
 
 

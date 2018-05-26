@@ -15,7 +15,7 @@ for (alpha in seq(0.005,0.1, 0.005)) {
 }
 
 colnames(datf) <- c("power", "alpha_1", "accuracy", "alpha")
-write.csv(datf, file = "~/documents//github/etf5550/linear&norela/ttest_test_set.csv")
+#write.csv(datf, file = "~/documents//github/etf5550/linear&norela/ttest_test_set.csv")
 
 datf[which.max(datf[,3]),]
 

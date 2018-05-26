@@ -5,48 +5,55 @@ knit: "bookdown::render_book"
 
 # New experiment comparing human vs. computer on reading heteroskedasticity
 
-Turk's experiment mainly considers linear data, in this paper, we extend their study by including heteroscedasticity. A new database of human evaluations is created by a small experiment. This new database is used to compare the performance of the computer model. The computer is trained on the same parameter simulation framework, and tested on the same data as the human evaluations.
+Turk experiment mainly considers linear data, in this paper, we extend their study by including heteroscedasticity. A new database of human evaluations is created by a small experiment. This new database is used to compare the performance of the computer model. The computer is trained on the same parameter simulation framework, and tested on the same data as the human evaluations.
 
 ## Human experiment explanation
 
-The experiment is rendered at Monash University, Melbourne Australia. The participants are all students or lecturers in this university.
+The experiment is to evaluate the human ability of reading heteroskedasticity from residual plots. It is rendered at Monash University, Melbourne Australia. The participants are all students or lecturers in this university.
 
-Four survey (including three formal ones and an extra one) are randomly sent to 84 people by email, each survey consists of 10 lineup questions (the extra one has 4 lineup questions). Only one lineup question repeatly appears in two survey, thus, we have 33 distinct questions in total. A total number of 22 people have participated. Five people evaluated two surveys including the extra one. <!-- number of evaluations -->
+Four survey are randomly sent to 84 people by email, three of the survey consist of ten lineup questions, and the fourth survey has only four lineup questions. Only one lineup question appears in the survey twice, thus, we have 33 ($10\times3+4-1$) distinct questions in total. A total number of 22 people have participated. Five people evaluated two surveys. One people selected four plots for each lineup, this person's response is removed from the data. In summary, we have 218 effective evaluations from 21 people. 
 
-Each lineup question contains one real plot and The lineup is simulated using the methods stated below.
+Figure \ref{heterlu} is an example of the lineup used as a question in the survey.
+
+\begin{figure*}[h]
+\centerline{\includegraphics[width=15cm]{figures/heter_lineup_example.png}}
+\caption{An example question in the survey, 4 out of 6 people picked the real plot, the real plot is the first one.}
+\label{heterlu}
+\end{figure*}
+
+The "real plot" and "null plot" data is simulated using the same specifications given in the next two sections respectively.
 
 ## Heteroskedasticity simulation
 
-Linear model with heteroskedasticity is the model implied in the alternative hypothesis of the second experiment in this paper, where the constant variance assumption of the linear model is violated while all other conditions are met. 
-By the definition given in @IE17, "The homoskedasticity states that the variance of the unobserved error, u, conditional on the explanatory variables, is constant. Homoskedasticity fails whenver the variance of the unobserved factors changes across different segments of the population, where the segments are determined by the different values of the explanatory variables."
-There are countless types of heteroskedasticity since the "change of the variance" could be related to "the explanatory variables" in various ways. It is not feasible to list out all kinds of heteroskedasticity by a single function. For simplicity, we will focus on one example of them, a linear correlation between the explanatory variable X and the standard deviation of the error term. The conclusion from this experiment though can be generalized to more complicated cases.  
-A new human experiment will be rendered to produce the human's performance on detecting heteroskedasticity by reading residual plots. After the deep learning model is trained on the data generated from this section, it will be tested on the same data set that is used for the human experiment. And the accuracy of the model will be compared to the human's performance from this new human experiment. To provide a reference to evaluate how computer perform in detecing heteroskedasticity issues, a special case of the White test will be used. Each image in test set will be evaluated using White test. The associated accuracy of White test will be compared to computers' accuracy on the same set.
+Linear model with heteroskedasticity is the model implied in the alternative hypothesis of the second experiment in this paper, where the constant variance assumption of the linear model is violated while all other conditions are met. By the definition given in @IE17, "The homoskedasticity states that the variance of the unobserved error, u, conditional on the explanatory variables, is constant. Homoskedasticity fails whenver the variance of the unobserved factors changes across different segments of the population, where the segments are determined by the different values of the explanatory variables." There are countless types of heteroskedasticity since the "change of the variance" could be related to "the explanatory variables" in various ways. It is not feasible to list out all kinds of heteroskedasticity by a single function. For simplicity, we will focus on one example of them, a linear correlation between the explanatory variable X and the standard deviation of the error term. Hence the relationship between the explanatory variable X and the variance of the error term will be quadratic. The results from this experiment though can be generalized to more complicated cases.  
 
 The model structure is the same with the classic linear model:
 $$Y_i = \beta_0 + \beta_1 X_{i}  + \varepsilon_i, ~~i=1, \dots , n$$
 with elements of the model generated by the following processes
 
 - $X\sim U[-1,\ 1]$
-To better present the heteroskedasticity in the data, a uniform distribution of X is used instead of normal distribution. The range is set to be small (from -1 to 1) in order to produce the data with weak heteroskedasticity more frequently.
+To better present the heteroskedasticity in the data, a uniform distribution of X is used instead of normal distribution. The range is set to be small (from -1 to 1) in order to balance the data with weak heteroskedasticity appearing more frequently.
 - $\beta_0 = 0$
-Intercept is set to be zero for the same reason stated above.
+Intercept is set to be zero. Because the residual plot but not data plot is used in this experiment. Therefore, the information contained in $\beta_0$ will be extracted by the linear regression we fit to the data.
 - $\beta_1\sim U[0.5,\ 1]$
-$\beta_1$ has little impact in this case so it is set to be uniformly generated from 0.5 to 1. Because the residual plot but not data plot will be used here, therefore, the information contained in $\beta_1$ will be extracted by the linear regression we fit to the data.
+$\beta_1$ has little impact in this case as well so it is set to be uniformly generated from 0.5 to 1. 
 - $\varepsilon\sim N(0,\ (aX+v)^2)$
 The variance of the error term is a quadratic function of the explanatory variable which controls the magnitude of heteroskedasticity in the model.
 - $a\sim U(-5,\ -0.05)\bigcup(0.05,\ 5)$
 The parameter a here, following uniform distribution from -5 to 5 (excluding -0.05 to 0.05), is the correlation coefficient between X and the standard deviation. Larger a gives stronger heteroskedasticity. This range is wide enough for our purpose.
 - $v \sim N(0,\ 1)$
 This new error term is added to the variance of $\varepsilon$ so the relationship between the data can be more flexible.
-- $n\sim U[20,\ 1500]$
-The sample sizes will be randomly generated from 20 to 1500. We choose 20 to 1500, because when the sample size is smaller than 20, there is hardly any systematic patterns to see. And 1500 is large enough to give a good description about the true relationship within the data, and is light enough to be processed. Since we make the transparency of the points to be 0.4, more points being added to the plot will just make the plot looks darker. 
+- $ax+v-min(ax+v)$ when $min(ax+v)<0$ 
+To keep the simulated standard deviation positive, and to keep the structure of the relationship between X and the residuals, the $min(ax+v)$ is substracted from $ax+v$ whenever the former is negative.
+- $n\sim U[50,\ 500]$
+The sample sizes are randomly generated from 50 to 500 to provide reasonable variations.
 
-In general, the choice of the parameters is an empirical work. Primarily, we want the residual plots to show more variation; on the other hand, we need to limit the range of these parameters in order to keep the key features in the data. 
+In general, the choice of the parameters is an empirical work. Primarily, we want the residual plots to show more variation; on the other hand, we need to limit the range of these parameters in order to keep the key features in the data.
 
 ```{r heter_plot, message=FALSE, cache=TRUE, fig.cap="Four examples of residual plots generated from linear model with heteroskedasticity"}
 heter<-function(i){
   
-  n = sample(20:1500, 1)
+  n = sample(50:500, 1)
   x <- runif(n, -1, 1)
   beta <- runif(1,0.5,1)
   a <- runif(1,0.05,4)*(-1)^(rbinom(1, 1, 0.5))
@@ -76,9 +83,37 @@ grid.arrange(p1,p2,p3,p4, nrow=2)
 
 ## Null plot simulation
 
+The null scenario in this experiment is the classic linear model. The model structure is the same as the heteroskedasticity one. When we simulate this data, we kept most of the parameters as the same with the alternative data and only changed the key feature of the error term. So the difference in this data set is:
+
+- $\varepsilon\sim N(0,\ c)$
+
+- $c=mean(ax+v)$
+
+$c$ is a constant which equals to the mean of the $ax+v$. All other parameters in the null data are the same with the heteroskedasticity data.
+
+## White test
+
+To provide a reference level of how computer and human perform, a special case of White test is used in this experiment. Every data set simulated from this section has been tested by the White test. The procedure of the White test [@IE17] is:
+
+- Estimate OLS model for the data, obtain residuals ($\hat{u}$) and the fitted values ($\hat{y}$). Computer the squared OLS residuals ($\hat{u}^2$) and the squared fitted values ($\hat{y}^2$).
+
+- Run an auxiliary regression as $\hat{u}^2=\eta_0+\eta_1  \hat{y}+\eta_2 \hat{y}^2+error$, obtain the R-squared $R_{\hat{u}^2}^2$
+
+- Calculate the LM statistic which follows $\chi_2^2$ distribution
+
+- Conclude based on p-values given certain $\alpha$
+
 ## Computer model
 
-For the second experiment, a linear model will be fit to the data firstly. Residuals from the fitted model will be standardized and extracted. The residual plot will be made of standardized residuals against X.
+In this experiment, a linear model is fit to the data firstly. Residuals from the fitted model are standardized and extracted. The residual plot is made of standardized residuals against X. The model is still the convnets, and all hyper-parameter in this model are exactly the same as the previous one.
+
+15 epoches are done in this section. All 15 convnets models are saved. The training and validation metrics are shown in figure \ref{histheter}.
+
+\begin{figure*}[h]
+\centerline{\includegraphics[width=15cm]{figures/heter_history_plot.png}}
+\caption{Training and validation metrics of heteroskedasticity vs. null model in our second experiment}
+\label{histheter}
+\end{figure*}
 
 ## Comparing results  
 
