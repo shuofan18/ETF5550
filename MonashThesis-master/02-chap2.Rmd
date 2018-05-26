@@ -102,15 +102,18 @@ grid.arrange(p1,p2,p3,p4,nrow=2, heights=c(1,1))
 ```
 
 
-```{r simplot, fig.height=8, fig.width=6, fig.cap="The histograms and scatter plots of simulated variables show good coverage over all the values."}
+```{r simplot, fig.height=8, fig.width=6, fig.cap="Overview of parameter values used in the linear class simulation, for computer model training. Good coverage is obtained across the parameter space."}
 parameters_b <- read.csv("data/parameters_b.csv")
-hist_n_l <- ggplot(data = parameters_b, aes(n)) + geom_histogram(binwidth = 1) + theme(plot.title = element_text(size = 8)) + ggtitle("Histogram of simulated n")
+hist_n_l <- ggplot(data = parameters_b, aes(n)) + geom_histogram(binwidth = 50, center = 25) + theme(plot.title = element_text(size = 8)) + ggtitle("Histogram of simulated n")
 
-hist_b_l <- ggplot(data = parameters_b, aes(beta)) + geom_histogram(binwidth = 0.1) + theme(plot.title = element_text(size = 8)) + ggtitle("Histogram of simulated beta from linear model")
+hist_b_l <- ggplot(data = parameters_b, aes(beta)) + geom_histogram(binwidth = 1, center=-10.5) + theme(plot.title = element_text(size = 8)) + ggtitle("Histogram of simulated beta from linear model")
 
-hist_p_l <- ggplot(data = parameters_b, aes(ct.p.value)) + geom_histogram(binwidth = 0.01) + theme(plot.title = element_text(size = 8)) + ggtitle("Histogram of estimated p value of t-test from linear model")
+hist_p_l <- ggplot(data = parameters_b, aes(ct.p.value)) + geom_histogram(binwidth = 0.1) +
+  xlab("p-value") + 
+  theme(plot.title = element_text(size = 8)) + 
+  ggtitle("Histogram of estimated p value of t-test from linear model")
 
-hist_s_l <- ggplot(data = parameters_b, aes(sigma)) + geom_histogram(binwidth = 0.1) + theme(plot.title = element_text(size = 8)) + ggtitle("Histogram of simulated sigma from linear model")
+hist_s_l <- ggplot(data = parameters_b, aes(sigma)) + geom_histogram(binwidth = 1, center=-0.5) + theme(plot.title = element_text(size = 8)) + ggtitle("Histogram of simulated sigma from linear model")
 
 scap_beta_n <- ggplot(data = parameters_b, aes(x=n, y=beta)) + geom_point(shape=".") + ggtitle("Scatter plot of simulated n and beta from linear model") + theme(plot.title = element_text(size = 8))
 
@@ -153,20 +156,23 @@ p4 <- norela(4)
 grid.arrange(p1,p2,p3,p4, nrow=2)
 ```
 
-```{r simplot2, fig.height=6, fig.width=6, fig.cap="The histograms and scatter plots of simulated variables show good coverage over all the values."}
+```{r simplot2, fig.height=6, fig.width=6, fig.cap="Overview of parameter values used in the null class simulation, for computer model training. Good coverage is obtained across the parameter space."}
 parameters_0 <- read.csv("data/parameters_0.csv")
-hist_n_0 <- ggplot(data = parameters_0, aes(n)) + geom_histogram(binwidth = 1) + theme(plot.title = element_text(size = 8)) + ggtitle("Histogram of simulated n from null model")
+hist_n_0 <- ggplot(data = parameters_0, aes(n)) + geom_histogram(binwidth = 50, center = 25) + theme(plot.title = element_text(size = 8)) + ggtitle("Histogram of simulated n from null model")
 
-hist_p_0 <- ggplot(data = parameters_0, aes(ct.p.value)) + geom_histogram(binwidth = 0.01) + theme(plot.title = element_text(size = 8)) + ggtitle("Histogram of estimated p value of t-test from null model")
+hist_p_0 <- ggplot(data = parameters_0, aes(ct.p.value)) + geom_histogram(binwidth = 0.1) +
+  xlab("p-value") + 
+  theme(plot.title = element_text(size = 8)) + 
+  ggtitle("Histogram of estimated p value of t-test from null model")
 
-hist_s_0 <- ggplot(data = parameters_0, aes(sigma)) + geom_histogram(binwidth = 0.1) + theme(plot.title = element_text(size = 8)) + ggtitle("Histogram of simulated sigma from null model")
+hist_s_0 <- ggplot(data = parameters_0, aes(sigma)) + geom_histogram(binwidth = 1, center=-0.5) + theme(plot.title = element_text(size = 8)) + ggtitle("Histogram of simulated sigma from null model")
 
 scap_sigma_n0 <- ggplot(data = parameters_0, aes(x=n,y=sigma)) + geom_point(shape=".") + ggtitle("Scatter plot of simulated n and sigma from null model") + theme(plot.title = element_text(size = 8))
 
 grid.arrange(hist_n_0, hist_s_0, hist_p_0, scap_sigma_n0, ncol=2)
 ```
 
-## Computer model
+## Computer model  
 
 A convolutional neural network will be used to build the computer model because it proves powerful in all kinds of computer vision applications. And it has two interesting properties: "the patterns they learn are translation invariant", and "they can learn spatial hierarchies of patterns" [@DLR18]. Given the first one, once it learn how to recognize the linear pattern, they can detect it regardless of the direction of that patter. Thus it can handle different slopes. As to the second one, it allows the convnets to learn complicated visual concepts. 
 
@@ -176,7 +182,7 @@ As mentioned above, 240,000 data sets are generated for each of the two groups i
 
 "A convnet takes as input tensors of shape (image height, image width, image channels)."[@DLR18] The channels are normally equal to three for RGB. In our case, the input tensors are of shape $150 \times 150 \times 1$ because they are grayscale images. Therefore the convnet will be configured to process inputs of size (150, 150, 1). We’ll do this by passing the argument input_shape = c(28, 28, 1) to the first layer.
 
-```{r modelstructure, echo=TRUE, fig.height=6, results='asis' ,warning=FALSE}
+```{r modelstructure, echo=TRUE, fig.height=6, results='none', warning=FALSE}
 library(keras)
 model <- keras_model_sequential() %>%
   layer_conv_2d(filters = 32, kernel_size = c(3, 3), 
@@ -198,7 +204,7 @@ model <- keras_model_sequential() %>%
 model
 ```
 
-As shown in figure \ref{fig:modelstructure} and the R code, the "conv" and "pooling" working together slided the data from $150 \times 150 \times 1$ to $7 \times 7 \times 128$ (3D output). The figure \ref{conv} from @DLR18 decribes this transformation. 
+As shown in the table above, the "conv" and "pooling" working together slided the data from $150 \times 150 \times 1$ to $7 \times 7 \times 128$ (3D output). The figure \ref{conv} from @DLR18 decribes this transformation. 
 
 \begin{figure*}[h]
 \centerline{\includegraphics[width=15cm]{figures/conv.png}}
@@ -208,7 +214,7 @@ As shown in figure \ref{fig:modelstructure} and the R code, the "conv" and "pool
 
 Then we need to flatten these 3D tensor into 1D tensor so that they can be processed by the "sigmoid" function in the end. The "sigmoid" is in fact a special case of logistic function. $S(x)=\frac{1}{1+e^{-x}}$. This function is the same one used to predict $\hat{y_i}$ and to calculate the cost function.
 
-From the model structrue we can see that a total number of 3,452,545 parameters need to be estimated, this is done by gradient descent. 10 epoches (1 epoch = 1 iteration over all samples) are done for training. The model specification given by each epoch is saved, the one gives the overall best performance is chosen to represent the computers. Because the plot of the training history (figure \ref{histlinear}) shows overfitting starts from the fourth epoch, the accuracy and loss of validation set are close
+From the model structrue we can see that a total number of 3,452,545 parameters need to be estimated, this is done by gradient descent. 10 epoches (1 epoch = 1 iteration over all samples) are done for training. The model specification given by each epoch is saved, the one gives the overall best performance is chosen to represent the computers. Because the plot of the training history (figure \ref{histlinear}) shows overfitting starts from the fourth epoch, the values of accuracy and loss from validation set are very close after the fourth epoch.
 
 \begin{figure*}[h]
 \centerline{\includegraphics[width=15cm]{figures/linear_history_plot.png}}
@@ -216,45 +222,76 @@ From the model structrue we can see that a total number of 3,452,545 parameters 
 \label{histlinear}
 \end{figure*}
 
+Hence, we select the fourth, sixth, eighth and the tenth model to have them tested on the unseen test set. And the results are shown in the table below. The "$1-\alpha$" is the accuracy of each computer model tested on the "null data" in test set only. $\alpha$ here is an analogy to the Type I error in the conventional hypothesis test. Similarly, the "power" is the accuracy of each computer model tested on the "linear data" in the test set only. The t-test performance is calculated under 5% significance level. 
 
+<!-- table display is weird
 
+```{r checkpoints, echo=FALSE, message=FALSE, warning=FALSE, results='asis'}
+checkpoints <- c("4 epoch", "6 epoch", "8 epoch", "10 epoch","5% T-test")
+powers <- c(0.8916, 0.8885, 0.8958, 0.9042, 0.9206)
+alpha_1 <- c(0.9842, 0.9858, 0.9812, 0.9712, 0.9489) 
+accuracy <- c(0.9379, 0.9372, 0.9385, 0.9377, 0.9348)
+tbl <- tibble(checkpoints, powers, alpha_1, accuracy) 
+kable(tbl, col.names = c("Tests", "Power", "1-Alpha", "Overall accuracy"), caption = "Performance of four checkpoints from the convnets as well as 5% significant t-test tested on the unseen test set, where the power means the accuracy on the linear ones, (1-alpha) is the accuracy on the no-relationship ones. All numbers have been rounded to four decimal places.")
+```
+-->
+\begin{table}[ht]
+\begin{center}
+\begin{tabular}{|l|rrr|}\hline
+Tests & Linear & Null & Overall \\\hline
+4 epoch & 0.892 & 0.984 &  0.938 \\   
+6 epoch & 0.889 & 0.986 & 0.937 \\
+8 epoch & 0.896 & 0.981 & 0.939 \\
+10 epoch & 0.904 & 0.971 & 0.938 \\
+5\% $t$-test & 0.921 & 0.949 & 0.935\\\hline
+\end{tabular}
+\end{center}
+\caption{Performance of four checkpoints from the {\em convnets} model, and the 5\% significant $t$-test, computed on the test set. Accuracy is reported for each class, and overall. There is a slight improvement as the number of epochs increases, with 10 epochs being reasonably close to the ideal $t$-test accuracy.}
+\label{checkpoints}
+\end{table}
+
+Since the test set is large enough (200,000 in total) to provide reliable reference. The 8th model is chosen according to the overall accuracy on the test set.
+
+For a fair competition, the Type I error ($\alpha$) should be the same for all test methods. However, we do not have direct control over the $\alpha$ of the computer model. 
+Since the majority of the data plots in Turk's experiment have been generated with linear relationship (when the alternative hypothesis is true), this is a disadvantage for the computer comparing to the 5% significant t-test in terms of being tested on the Turk's data. Because of the difference in $\alpha$ ($\alpha \approx 0.02$ for the 8th computer model) the t-test has higher power than the computer model even though their overall accuracy are very close to each other.
+
+Therefore, 2% significant t-test and 2% significant human conclusion is also included to give a complete picture of the comparison. 
+
+## Comparing results  
+
+First compare the experiment process for human and computer respectively by two diagrams figure \ref{dgpc} and figure \ref{dfhm}.
 
 \begin{figure*}[h]
-\centerline{\includegraphics[width=15cm]{figures/new_plot.png}}
-\caption{Training and validation metrics of the first experiment}
-\label{expt2}
+\centerline{\includegraphics[width=15cm]{figures/diagpc.png}}
+\caption{Diagram illustrating the training, diagnosis and choice of the computer model. Based on 240,000 simulated data sets used to create $150\times 150$ pixel images, divided into training, validation and test sets.}
+\label{dgpc}
 \end{figure*}
 
-From the plot of the traning history, we can see the fourth specification gives the overall best performance with lowest loss and highest accuracy on validation set. Its accuracy on the unseen test set is also the best among other models. After the fourth checkpoint, the model starts to overfit.
+\begin{figure*}[h]
+\centerline{\includegraphics[width=15cm]{figures/diaghm.png}}
+\caption{Process of human experiment and results calculation}
+\label{dghm}
+\end{figure*}
 
-```{r checkpoints, echo=F, paged.print=FALSE, results='asis'}
-checkpoints <- c("4 epoch", "6 epoch", "10 epoch", "T-test")
-powers <- c(0.8790, 0.8910, 0.8826, 0.9003)
-alpha_1 <- c(0.9757, 0.9569, 0.9687, 0.9487) 
-accuracy <- c(0.9273, 0.9239, 0.9257, 0.9245)
-tibble(checkpoints, powers, alpha_1, accuracy) %>% kable(col.names = c("Tests", "Power", "1-Alpha", "Overall accuracy"), caption = "Performance of three checkpoints of the deep learning model on the unseen test set, where the power means the accuracy on the linear ones, (1-alpha) is the accuracy on the no-relationship ones. All numbers have been rounded to four decimal places.")
-```
-
-However, since the majority of the data plots in Turk's experiment have been generated with linear relationship, we will choose the sixth model here because it has the highest test power which provides the deep learning model a better chance. What's more, the $\alpha$ of the sixth model, which is the probability of Type I error, is the closest to 0.05. We can see the sixth model's performance is quite close to the conventional T-test.
-
-## Comparing results
+The conclusion of human evaluation is obtained using the p-value calculation introduced in section 2 of @MM13, the null hypothesis is rejected if the calculated p-value is smaller than 0.05. 
 
 ```{r linearresults, echo=F, paged.print=FALSE, results='asis'}
-tests <- c("human", "computer", "t-test")
-correct <- c(47, 44, 43)
-accuracy <- c(0.6714, 0.6286, 0.6143)
-tibble(tests, correct, accuracy) %>% kable(col.names = c("Tests", "No. of correct", "Accuracy"), caption = "Accuracy of testing the 70 data plots evaluated by human computer and the conventional t-test.")
+tests <- c("Human 5%", "Human 2%", "T-test 5%", "Computer 2%", "T-test 2%")
+rank <- c(1,1,2,3,4)
+correct <- c(47, 47, 43, 39, 39)
+accuracy <- c(0.6714,0.6714, 0.6143, 0.5571, 0.5571)
+tibble(rank, tests, correct, accuracy) %>% kable(col.names = c("Rank","Tests", "No. of correct", "Accuracy"), caption = "Accuracy of testing the 70 data plots evaluated by human computer and the conventional t-test.")
 ```
 
-The conclusion of human evaluation is calculated using the p-value calculation introduced in section 2 of @MM13, the null hypothesis is rejected if the calculated p-value is smaller than 0.05. 
-
-The $\alpha$ of the conventional t-test we used in this comparison is 0.05. 
-
-From this table, we can see human evaluation achieves the best accuracy on the Turk's experiment data set. Deep learning model and the conventional t-test perform similarly. 
+The comparing result is interesting. Human achieves the highest accuracy, and the conclusion from human evaluation is robust to smaller p-values; 5% significant t-test is the second best, 2% significant t-test and the computer model perform similarly.
 
 ## Aside discussion related to the comparing results
-As we can see from the table, t-test and deep learning model behave quite similarly on both the test data set and Turk's experiment data. It is possible that the "Backpropagation algorithm" used in deep learning model is equivalent to maximum likelihood estimation in terms of linear regression problem in this case. Because all the error terms are following normal distribution as designed, they are also equivalent to the ordinary least square estimation. 
-Since the fourth-epoch model behaves the best in all 10 models, and its estimated Type I error ($\alpha$) is not 0.05. We think the deep learning model may be in fact just finding the "best" $\alpha$ for t-test in this experiment, where "best" means giving the highest expected accuracy of the null and alternative hypothesis. 
+
+As we can see from the two performance table above, t-test and convnets behave quite similarly on both the test data set and Turk's experiment data. 
+
+<!-- graph -->
+
+It is possible that the convnets is in fact doing the same thing as t-test in this case. 
 To confirm this idea, a small simulation experiment was conducted to search for the "best" $\alpha$ for t-test. The data was simulated using the same specification as in the section "Linear relationship simulation" and "null plots simulation". The range of the $\alpha$ is from $(0.005,\ 0.010,\ 0.015,\ \dots,\ 0.100)$, with 200,000 iterations, the "best" $\alpha$ is found to be $\alpha=0.02$ which is very close to the one suggested by the fourth-epoch model $0.02435$.
 
 

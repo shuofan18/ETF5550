@@ -1,8 +1,8 @@
 
 ####################### to find the best alpha for t-test for the "test set" in 1st experiment ######################
 
-ttest_power <- read.csv("~/documents/linear&norela/parameters/parameters3.csv")
-ttest_alpha <- read.csv("~/documents/linear&norela/parameters/parameters4.csv")
+ttest_power <- read.csv("~/documents/github/etf5550/linear&norela/parameters/parameters3.csv")
+ttest_alpha <- read.csv("~/documents//github/etf5550/linear&norela/parameters/parameters4.csv")
 
 library(tidyverse)
 datf<-NULL
@@ -14,7 +14,8 @@ for (alpha in seq(0.005,0.1, 0.005)) {
   datf <- rbind(datf,res)
 }
 
-datf
+colnames(datf) <- c("power", "alpha_1", "accuracy", "alpha")
+
 datf[which.max(datf[,3]),]
 
 ####################### to find the best alpha for white-test for the "test set" in 2nd experiment ######################
