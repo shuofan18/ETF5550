@@ -105,27 +105,63 @@ dlacc_test_hat_linear_norela <- model %>% evaluate_generator(test_generator, ste
 
 linear10alpha <- model %>% evaluate_generator(test_generator, steps=1000)  ##### remember to re-do test-generator
 
-linear8model <- load_model_hdf5("~/documents/linear&norela/new10epoches/weights.08-0.18.hdf5")
-linear8alpha <- linear8model %>% evaluate_generator(test_generator, steps=1000)
-linear8power <- linear8model %>% evaluate_generator(test_generator, steps=1000)  ##### remember to re-do test-generator
+linear1model <- load_model_hdf5("~/documents/etf5550/linear&norela/checkpoints/weights.01-0.19.hdf5")
+linear2model <- load_model_hdf5("~/documents/etf5550/linear&norela/checkpoints/weights.02-0.18.hdf5")
+linear3model <- load_model_hdf5("~/documents/etf5550/linear&norela/checkpoints/weights.03-0.18.hdf5")
+linear4model <- load_model_hdf5("~/documents/etf5550/linear&norela/checkpoints/weights.04-0.18.hdf5")
+linear5model <- load_model_hdf5("~/documents/etf5550/linear&norela/checkpoints/weights.05-0.19.hdf5")
+linear6model <- load_model_hdf5("~/documents/etf5550/linear&norela/checkpoints/weights.06-0.18.hdf5")
+linear7model <- load_model_hdf5("~/documents/etf5550/linear&norela/checkpoints/weights.07-0.18.hdf5")
+linear8model <- load_model_hdf5("~/documents/etf5550/linear&norela/checkpoints/weights.08-0.18.hdf5")
+linear9model <- load_model_hdf5("~/documents/etf5550/linear&norela/checkpoints/weights.09-0.18.hdf5")
+linear10model <- load_model_hdf5("~/documents/etf5550/linear&norela/checkpoints/weights.10-0.18.hdf5")
 
-linear6model <- load_model_hdf5("~/documents/linear&norela/new10epoches/weights.06-0.18.hdf5")
+
+linear1alpha <- linear1model %>% evaluate_generator(test_generator, steps=1000)
+linear2alpha <- linear2model %>% evaluate_generator(test_generator, steps=1000)
+linear3alpha <- linear3model %>% evaluate_generator(test_generator, steps=1000)
+linear5alpha <- linear5model %>% evaluate_generator(test_generator, steps=1000)
+linear7alpha <- linear7model %>% evaluate_generator(test_generator, steps=1000)
+linear9alpha <- linear9model %>% evaluate_generator(test_generator, steps=1000)
+
+linear1power <- linear1model %>% evaluate_generator(test_generator, steps=1000)
+linear1power
+linear2power <- linear2model %>% evaluate_generator(test_generator, steps=1000)
+linear2power
+linear3power <- linear3model %>% evaluate_generator(test_generator, steps=1000)
+linear3power
+linear5power <- linear5model %>% evaluate_generator(test_generator, steps=1000)
+linear5power
+linear7power <- linear7model %>% evaluate_generator(test_generator, steps=1000)
+linear7power
+linear9power <- linear9model %>% evaluate_generator(test_generator, steps=1000)
+linear9power
+
+linear4acc <- linear4model %>% evaluate_generator(test_generator, steps=1000)  ##### remember to re-do test-generator
 linear6alpha <- linear6model %>% evaluate_generator(test_generator, steps=1000)  ##### remember to re-do test-generator
 
-linear4model <- load_model_hdf5("~/documents/etf5550/linear&norela/checkpoints/weights.04-0.18.hdf5")
-linear4acc <- linear4model %>% evaluate_generator(test_generator, steps=1000)  ##### remember to re-do test-generator
+###################################################################################
+#alphas <- c(linear1alpha$acc, linear2alpha$acc, linear3alpha$acc, linear4alpha$acc, 
+#            linear5alpha$acc, linear6alpha, linear7alpha$acc, linear8alpha, 
+#            linear9alpha$acc, linear10alpha)
 
+#powers <- c(linear1power$acc, linear2power$acc, linear3power$acc, linear4power$acc, 
+#            linear5power$acc, linear6power, linear7power$acc, linear8power, 
+#            linear9power$acc, linear10power)
+#epoches <- 1:10
+#eap <- tibble(epoches, alphas, powers) %>% mutate(accuracy=(alphas+powers)/2)
+#write.csv(eap, file = "~/documents/etf5550/linear&norela/test_acc_10epoches.csv")
 ################# evaluate convnets on turk data (70 real plots only) ###### 0523 up to here
 
 evaluate_turk70real <- flow_images_from_directory(
-  "/Volumes/5550/evaluate_turk_70real",
+  "~/documents/linear&norela/evaluate_turk_70real",
   test_datagen,
   target_size = c(150, 150),
   color_mode = "grayscale",
   batch_size = 1,
   class_mode = "binary"
 )
-dl_acc_turk70real <- linear8model %>% evaluate_generator(evaluate_turk70real, steps = 70)
+dl_acc_turk70real <- linear10model %>% evaluate_generator(evaluate_turk70real, steps = 70)
 
 ######### t test accuracy #######
 ttest_power <- read.csv("~/documents/linear&norela/parameters/parameters3.csv")
