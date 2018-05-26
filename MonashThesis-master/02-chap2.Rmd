@@ -204,12 +204,12 @@ model <- keras_model_sequential() %>%
 model
 ```
 
-As shown in the table above, the "conv" and "pooling" working together slided the data from $150 \times 150 \times 1$ to $7 \times 7 \times 128$ (3D output). The figure \ref{conv} from @DLR18 decribes this transformation. 
+As shown in the table above, the "conv" and "pooling" working together slided the data from $150 \times 150 \times 1$ to $7 \times 7 \times 128$ (3D output). The figure \ref{diagconv} decribes this transformation. 
 
 \begin{figure*}[h]
-\centerline{\includegraphics[width=15cm]{figures/conv.png}}
-\caption{How convolution works (Figure is from 'Deep Learning with R' by Allaire, JJ)}
-\label{conv}
+\centerline{\includegraphics[width=15cm]{figures/diagconv.png}}
+\caption{How convolution works}
+\label{diagconv}
 \end{figure*}
 
 Then we need to flatten these 3D tensor into 1D tensor so that they can be processed by the "sigmoid" function in the end. The "sigmoid" is in fact a special case of logistic function. $S(x)=\frac{1}{1+e^{-x}}$. This function is the same one used to predict $\hat{y_i}$ and to calculate the cost function.
