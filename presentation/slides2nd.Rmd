@@ -65,7 +65,6 @@ ggplot(lineup(null_permute(".std.resid"), df_mod), aes(x=x, y=.std.resid)) + geo
 - Combining results from multiple observers enables $p$-value calculation
 
 ## Aside: Computers can't tell difference between blueberry muffins and chihuahuas  
-
 ![Computers can't tell difference between blueberry muffins and chihuahuas](figures/choc_chip_muffins.jpg)
 
 ## Amazon Turk study
