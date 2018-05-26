@@ -232,7 +232,7 @@ kable(tbl, col.names = c("Tests", "Power", "1-Alpha", "Overall accuracy"), capti
 \begin{table}[ht]
 \begin{center}
 \begin{tabular}{|l|rrr|}
-Tests & Power & $1-\alpha$ & Overall accuracy \\\hline
+Tests & Linear & Null & Overall accuracy \\\hline
 4 epoch & 0.892 & 0.984 &  0.938 \\   
 6 epoch & 0.889 & 0.986 & 0.937 \\
 8 epoch & 0.896 & 0.981 & 0.939 \\
@@ -240,7 +240,7 @@ Tests & Power & $1-\alpha$ & Overall accuracy \\\hline
 5\% $t$-test & 0.921 & 0.949 & 0.935\\\hline
 \end{tabular}
 \end{center}
-\caption{Performance of four checkpoints from the convnets as well as 5\% significant $t$-test tested on the unseen test set, where the power means the accuracy on the linear ones, ($1-\alpha$) is the accuracy on the no-relationship ones. }
+\caption{Performance of four checkpoints from the {\em convnets} model, and the 5\% significant $t$-test, computed on the test set. Accuracy is reported for each class, and overall. There is a slight improvement as the number of epochs increases, with 10 epochs being reasonably close to the ideal $t$-test accuracy.}
 \label{checkpoints}
 \end{table}
 
