@@ -122,12 +122,17 @@ model <- keras_model_sequential() %>%
 $H_0$: There are no relationships between the two variables. (Null)
 $H_1$: There is linear relationship between the two variables where all Gauss-Markov assumptions are met. (Linear)
 
-Steps:
+Computer model procedures:
+
 1. Simulate data (X, Y) from the null and the alternative models
 2. Generate scatter plots of X and Y
 3. Save scatter plots as $150\times150$ pixels images
 4. Train a deep learning classifier to recognise the patterns from two groups
 5. Test the model's performance on new data and compute the accuracy
+
+## First Experiment: Computer model procedures
+
+![Procedure of computer model experiment](figures/diagpc.png)
 
 ## First Experiment: Data simulation {#sec:simulation}  
 
@@ -145,7 +150,6 @@ $$Y_i = \beta_0 + \beta_1 X_{i}  + \varepsilon_i, ~~i=1, \dots , n$$
 library(gridExtra)
 linear<-function(n){
    beta <- sample(c((-10:-0.1),(0.1:10)), 1)
-  
   sigma <- sample(1:12 , 1)
   x<-rnorm(n, 0, 1)
   y<-rnorm(n, beta*x, sigma)
