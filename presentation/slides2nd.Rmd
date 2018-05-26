@@ -25,6 +25,7 @@ A major component used to diagnose model fits is a plot of the residuals. Residu
 - Gauss-Markov assumption
 - Heteroskedasticity
 - Clumps of outliers 
+- ...
 
 ## Why plots? 
 
@@ -54,7 +55,7 @@ df_mod <- augment(df_lm, df)
 ggplot(lineup(null_permute(".std.resid"), df_mod), aes(x=x, y=.std.resid)) + geom_point() + facet_wrap(~.sample)
 ```
 
-## Visual inference
+## Visual inference  
 
 - Plot of data is a test statistic
 - Type of plot determines null hypothesis, e.g. residuals vs fitted scatterplot would imply $H_o:$ no relationship, vs $H_a:$ some relationship
@@ -62,33 +63,31 @@ ggplot(lineup(null_permute(".std.resid"), df_mod), aes(x=x, y=.std.resid)) + geo
 - If data plot is "identified" as different from null, $H_o$ is rejected
 - Combining results from multiple observers enables $p$-value calculation
 
-## Deep learning
+## Deep learning  
 
 - Computer vision has advanced substantially
 - Computer vision underlying self-driving cars, robotics
 - Computer vision is being build on deep learning models
--
+
 - If we can train a computer to read residual plots we can have it process a lot more data, than a human can manage.
 
-## Aside: Volvo admits its self-driving cars are confused by kangaroos
-
-[Volvo admits its self-driving cars are confused by kangaroos](https://www.theguardian.com/technology/2017/jul/01/volvo-admits-its-self-driving-cars-are-confused-by-kangaroos)
-
-Volvo's self-driving car is unable to detect kangaroos because hopping confounds its systems, the Swedish carmaker says.
-
-## Aside: Computers can't tell difference between blueberry muffins and chihuahuas
+## Aside: Computers can't tell difference between blueberry muffins and chihuahuas  
 
 ![Computers can't tell difference between blueberry muffins and chihuahuas](figures/choc_chip_muffins.jpg)
 
-## Experiment
+## First Experiment  
 
-1. Simulate data from the different models
-2. Fit a linear model to the data, extract standardized residuals and fitted values
-3. Save residual plots as fixed-sized images
-4. Train a deep learning classifier to recognise the departures from assumptions
+$$H_0$$: There are no relationships between the two variables.
+$$H_1$$: There is linear relationship between the two variables where all Gauss-Markov assumptions are met.
+
+Steps:
+1. Simulate data (X, Y) from the null and the alternative models
+2. Generate scatter plots of X and Y
+3. Save scatter plots as $150\times150$ pixels images
+4. Train a deep learning classifier to recognise the patterns from two groups
 5. Test the model's performance on new data and compute the accuracy
 
-## Data simulation {#sec:simulation}
+## First Experiment: Data simulation {#sec:simulation}  
 
 These factors are being controlled in the data simulation
 
@@ -97,7 +96,7 @@ These factors are being controlled in the data simulation
 - Sample size: randomly generated between 20-1500
 - Image size: fixed `150x150`
 
-## Type of relationship
+## Type of relationship  
 
 ```{r levels}
 library(gridExtra)
@@ -123,17 +122,7 @@ p4 <- ggplot(lm4, aes(x=x, y=.std.resid)) + geom_point() + ggtitle("Heteroskedas
 grid.arrange(p1, p2, p3, p4, ncol=2)
 ```
 
-## Simchoni's analysis
-
-- Simulate data from linear relationship with $\rho=-0.9\ \ to\ \ \rho=0.9$
-- Separate into two groups: significant/insignificant by t-test
-- Train deep learning model with these two groups
-- Test the model on lineup 
-- Successful in detecing linear relationship but fail in non-linear
-
-- [Simchoni's blog](http://giorasimchoni.com/2018/02/07/2018-02-07-book-em-danno/)
-
-## Comparison with human subject experiments
+## Comparison with human subject experiments  
 
 - Majumder et al (2013) conducted a large study to compare the performance of the lineup protocol, assessed by human evaluators, in comaprison to the classical test
 - Experiment 2 examined $H_o: \beta_k=0$ vs $H_a: \beta_k\neq 0$ assessing the importance of including variable $k$ in the linear model, conducted with a $t$-test, and also lineup protocol

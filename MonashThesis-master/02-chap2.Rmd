@@ -160,7 +160,7 @@ grid.arrange(p1,p2,p3,p4, nrow=2)
 parameters_0 <- read.csv("data/parameters_0.csv")
 hist_n_0 <- ggplot(data = parameters_0, aes(n)) + geom_histogram(binwidth = 50, center = 25) + theme(plot.title = element_text(size = 8)) + ggtitle("Histogram of simulated n from null model")
 
-hist_p_0 <- ggplot(data = parameters_0, aes(ct.p.value)) + geom_histogram(binwidth = 0.1) +
+hist_p_0 <- ggplot(data = parameters_0, aes(ct.p.value)) + geom_histogram(binwidth = 0.1, center=0.05) +
   xlab("p-value") + 
   theme(plot.title = element_text(size = 8)) + 
   ggtitle("Histogram of estimated p value of t-test from null model")
