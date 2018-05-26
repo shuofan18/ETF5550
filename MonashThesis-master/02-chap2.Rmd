@@ -237,7 +237,7 @@ Therefore, 2% significant t-test and 2% significant human conclusion is also inc
 
 ## Comparing results  
 
-First compare the experiment process for human and computer respectively by two diagrams.
+First compare the experiment process for human and computer respectively by two diagrams figure \ref{dgpc} and figure \ref{dfhm}.
 
 \begin{figure*}[h]
 \centerline{\includegraphics[width=15cm]{figures/diagpc.png}}
@@ -245,28 +245,31 @@ First compare the experiment process for human and computer respectively by two 
 \label{dgpc}
 \end{figure*}
 
-<!-- diagram of human experiment -->
+\begin{figure*}[h]
+\centerline{\includegraphics[width=15cm]{figures/diaghm.png}}
+\caption{Process of human experiment and results calculation}
+\label{dghm}
+\end{figure*}
 
 The conclusion of human evaluation is obtained using the p-value calculation introduced in section 2 of @MM13, the null hypothesis is rejected if the calculated p-value is smaller than 0.05. 
 
 ```{r linearresults, echo=F, paged.print=FALSE, results='asis'}
-tests <- c("Human", "T-test 5%" , "Computer", "T-test 2%")
-rank <- 1:4
-correct <- c(47, 43, 39, 39)
-accuracy <- c(0.6714, 0.6143, 0.5571, 0.5571)
+tests <- c("Human 5%", "Human 2%", "T-test 5%", "Computer 2%", "T-test 2%")
+rank <- c(1,1,2,3,4)
+correct <- c(47, 47, 43, 39, 39)
+accuracy <- c(0.6714,0.6714, 0.6143, 0.5571, 0.5571)
 tibble(rank, tests, correct, accuracy) %>% kable(col.names = c("Rank","Tests", "No. of correct", "Accuracy"), caption = "Accuracy of testing the 70 data plots evaluated by human computer and the conventional t-test.")
 ```
 
-The comparing result is interesting. Human achieves the highest accuracy, 5% significant t-test is the second, 2% significant t-test and the computer model perform similarly.
-
-
-
-From this table, we can see human evaluation achieves the best accuracy on the Turk's experiment data set. Deep learning model and the conventional t-test perform similarly. 
+The comparing result is interesting. Human achieves the highest accuracy, and the conclusion from human evaluation is robust to smaller p-values; 5% significant t-test is the second best, 2% significant t-test and the computer model perform similarly.
 
 ## Aside discussion related to the comparing results
 
-As we can see from the table, t-test and deep learning model behave quite similarly on both the test data set and Turk's experiment data. It is possible that the "Backpropagation algorithm" used in deep learning model is equivalent to maximum likelihood estimation in terms of linear regression problem in this case. Because all the error terms are following normal distribution as designed, they are also equivalent to the ordinary least square estimation. 
-Since the fourth-epoch model behaves the best in all 10 models, and its estimated Type I error ($\alpha$) is not 0.05. We think the deep learning model may be in fact just finding the "best" $\alpha$ for t-test in this experiment, where "best" means giving the highest expected accuracy of the null and alternative hypothesis. 
+As we can see from the two performance table above, t-test and convnets behave quite similarly on both the test data set and Turk's experiment data. 
+
+<!-- graph -->
+
+It is possible that the convnets is in fact doing the same thing as t-test in this case. 
 To confirm this idea, a small simulation experiment was conducted to search for the "best" $\alpha$ for t-test. The data was simulated using the same specification as in the section "Linear relationship simulation" and "null plots simulation". The range of the $\alpha$ is from $(0.005,\ 0.010,\ 0.015,\ \dots,\ 0.100)$, with 200,000 iterations, the "best" $\alpha$ is found to be $\alpha=0.02$ which is very close to the one suggested by the fourth-epoch model $0.02435$.
 
 
