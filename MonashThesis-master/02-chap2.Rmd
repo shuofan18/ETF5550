@@ -182,7 +182,7 @@ As mentioned above, 240,000 data sets are generated for each of the two groups i
 
 "A convnet takes as input tensors of shape (image height, image width, image channels)."[@DLR18] The channels are normally equal to three for RGB. In our case, the input tensors are of shape $150 \times 150 \times 1$ because they are grayscale images. Therefore the convnet will be configured to process inputs of size (150, 150, 1). We’ll do this by passing the argument input_shape = c(28, 28, 1) to the first layer.
 
-```{r modelstructure, echo=TRUE, fig.height=6, results='asis' ,warning=FALSE}
+```{r modelstructure, echo=TRUE, fig.height=6, results='none', warning=FALSE}
 library(keras)
 model <- keras_model_sequential() %>%
   layer_conv_2d(filters = 32, kernel_size = c(3, 3), 

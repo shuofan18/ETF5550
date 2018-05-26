@@ -3,7 +3,7 @@ chapter: 4
 knit: "bookdown::render_book"
 ---
 
-# Conclusion 
+# Conclusion and discussion
 
 SUMMARISE RESULTS BRIEFLY
 The convnet can be trained to perform similarly to human perception, when the structure in the residual plots is very specific. Performance on the linear vs no structure is comparable to the human subjects results. Performance on detecting heteroskedasticity is also good. 
@@ -11,8 +11,7 @@ The convnet can be trained to perform similarly to human perception, when the st
 SUMMARISE OTHER FINDINGS BRIEFLY
 Performance of the convnet exceeds the results obtained by a $t$-test. 
 
-# Discussion
-
+WHAT WOULD YOU DO DIFFERENTLY
 - Training of the convnet requires many images. Time to train the model was long.
 
 - Other types of structure: could we have many classes of structure? 
