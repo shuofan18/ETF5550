@@ -257,7 +257,7 @@ First compare the experiment process for human and computer respectively by two 
 
 \begin{figure*}[h]
 \centerline{\includegraphics[width=15cm]{figures/diagpc.png}}
-\caption{Process of computer model training and selection}
+\caption{Diagram illustrating the training, diagnosis and choice of the computer model. Based on 240,000 simulated data sets used to create $150\times 150$ pixel images, divided into training, validation and test sets.}
 \label{dgpc}
 \end{figure*}
 
