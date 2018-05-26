@@ -11,7 +11,9 @@ Turk's experiment mainly considers linear data, in this paper, we extend their s
 
 The experiment is rendered at Monash University, Melbourne Australia. The participants are all students or lecturers in this university.
 
-Four survey (including three formal ones and an extra one) are randomly sent to 84 people by email, each survey consists of 10 lineup questions (the extra one has 4 lineup questions). Only one lineup question repeatly appears in two survey, thus, we have 33 distinct questions in total. A total number of 22 people have participated. Five people evaluated two surveys including the extra one. 
+Four survey (including three formal ones and an extra one) are randomly sent to 84 people by email, each survey consists of 10 lineup questions (the extra one has 4 lineup questions). Only one lineup question repeatly appears in two survey, thus, we have 33 distinct questions in total. A total number of 22 people have participated. Five people evaluated two surveys including the extra one. <!-- number of evaluations -->
+
+Each lineup question contains one real plot and The lineup is simulated using the methods stated below.
 
 ## Heteroskedasticity simulation
 
