@@ -218,15 +218,31 @@ From the model structrue we can see that a total number of 3,452,545 parameters 
 
 Hence, we select the fourth, sixth, eighth and the tenth model to have them tested on the unseen test set. And the results are shown in the table below. The "$1-\alpha$" is the accuracy of each computer model tested on the "null data" in test set only. $\alpha$ here is an analogy to the Type I error in the conventional hypothesis test. Similarly, the "power" is the accuracy of each computer model tested on the "linear data" in the test set only. The t-test performance is calculated under 5% significance level. 
 
-<!-- table display is weird-->
+<!-- table display is weird
 
 ```{r checkpoints, echo=FALSE, message=FALSE, warning=FALSE, results='asis'}
 checkpoints <- c("4 epoch", "6 epoch", "8 epoch", "10 epoch","5% T-test")
 powers <- c(0.8916, 0.8885, 0.8958, 0.9042, 0.9206)
 alpha_1 <- c(0.9842, 0.9858, 0.9812, 0.9712, 0.9489) 
 accuracy <- c(0.9379, 0.9372, 0.9385, 0.9377, 0.9348)
-tibble(checkpoints, powers, alpha_1, accuracy) %>% kable(col.names = c("Tests", "Power", "1-Alpha", "Overall accuracy"), caption = "Performance of four checkpoints from the convnets as well as 5% significant t-test tested on the unseen test set, where the power means the accuracy on the linear ones, (1-alpha) is the accuracy on the no-relationship ones. All numbers have been rounded to four decimal places.")
+tbl <- tibble(checkpoints, powers, alpha_1, accuracy) 
+kable(tbl, col.names = c("Tests", "Power", "1-Alpha", "Overall accuracy"), caption = "Performance of four checkpoints from the convnets as well as 5% significant t-test tested on the unseen test set, where the power means the accuracy on the linear ones, (1-alpha) is the accuracy on the no-relationship ones. All numbers have been rounded to four decimal places.")
 ```
+-->
+\begin{table}[ht]
+\begin{center}
+\begin{tabular}{|l|rrr|}
+Tests & Power & $1-\alpha$ & Overall accuracy \\\hline
+4 epoch & 0.892 & 0.984 &  0.938 \\   
+6 epoch & 0.889 & 0.986 & 0.937 \\
+8 epoch & 0.896 & 0.981 & 0.939 \\
+10 epoch & 0.904 & 0.971 & 0.938 \\
+5\% $t$-test & 0.921 & 0.949 & 0.935\\\hline
+\end{tabular}
+\end{center}
+\caption{Performance of four checkpoints from the convnets as well as 5\% significant $t$-test tested on the unseen test set, where the power means the accuracy on the linear ones, ($1-\alpha$) is the accuracy on the no-relationship ones. }
+\label{checkpoints}
+\end{table}
 
 Since the test set is large enough (200,000 in total) to provide reliable reference. The 8th model is chosen according to the overall accuracy on the test set.
 
