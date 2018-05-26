@@ -14,7 +14,8 @@ for (alpha in seq(0.005,0.1, 0.005)) {
   datf <- rbind(datf,res)
 }
 
-datf
+colnames(datf) <- c("power", "alpha_1", "accuracy", "alpha")
+
 datf[which.max(datf[,3]),]
 
 ####################### to find the best alpha for white-test for the "test set" in 2nd experiment ######################
