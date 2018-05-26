@@ -166,7 +166,7 @@ scap_sigma_n0 <- ggplot(data = parameters_0, aes(x=n,y=sigma)) + geom_point(shap
 grid.arrange(hist_n_0, hist_s_0, hist_p_0, scap_sigma_n0, ncol=2)
 ```
 
-## Computer model
+## Computer model  
 
 A convolutional neural network will be used to build the computer model because it proves powerful in all kinds of computer vision applications. And it has two interesting properties: "the patterns they learn are translation invariant", and "they can learn spatial hierarchies of patterns" [@DLR18]. Given the first one, once it learn how to recognize the linear pattern, they can detect it regardless of the direction of that patter. Thus it can handle different slopes. As to the second one, it allows the convnets to learn complicated visual concepts. 
 
@@ -198,7 +198,7 @@ model <- keras_model_sequential() %>%
 model
 ```
 
-As shown in figure \ref{fig:modelstructure} and the R code, the "conv" and "pooling" working together slided the data from $150 \times 150 \times 1$ to $7 \times 7 \times 128$ (3D output). The figure \ref{conv} from @DLR18 decribes this transformation. 
+As shown in the table above, the "conv" and "pooling" working together slided the data from $150 \times 150 \times 1$ to $7 \times 7 \times 128$ (3D output). The figure \ref{conv} from @DLR18 decribes this transformation. 
 
 \begin{figure*}[h]
 \centerline{\includegraphics[width=15cm]{figures/conv.png}}
@@ -218,7 +218,9 @@ From the model structrue we can see that a total number of 3,452,545 parameters 
 
 Hence, we select the fourth, sixth, eighth and the tenth model to have them tested on the unseen test set. And the results are shown in the table below. The "$1-\alpha$" is the accuracy of each computer model tested on the "null data" in test set only. $\alpha$ here is an analogy to the Type I error in the conventional hypothesis test. Similarly, the "power" is the accuracy of each computer model tested on the "linear data" in the test set only. The t-test performance is calculated under 5% significance level. 
 
-```{r checkpoints, echo=F, paged.print=FALSE, results='asis'}
+<!-- table display is weird-->
+
+```{r checkpoints, echo=FALSE, message=FALSE, warning=FALSE, results='asis'}
 checkpoints <- c("4 epoch", "6 epoch", "8 epoch", "10 epoch","5% T-test")
 powers <- c(0.8916, 0.8885, 0.8958, 0.9042, 0.9206)
 alpha_1 <- c(0.9842, 0.9858, 0.9812, 0.9712, 0.9489) 
@@ -226,30 +228,43 @@ accuracy <- c(0.9379, 0.9372, 0.9385, 0.9377, 0.9348)
 tibble(checkpoints, powers, alpha_1, accuracy) %>% kable(col.names = c("Tests", "Power", "1-Alpha", "Overall accuracy"), caption = "Performance of four checkpoints from the convnets as well as 5% significant t-test tested on the unseen test set, where the power means the accuracy on the linear ones, (1-alpha) is the accuracy on the no-relationship ones. All numbers have been rounded to four decimal places.")
 ```
 
-Since the test set is large enough (200,000 in total) to provide reliable reference. We will choose the computer model according to their accuracy on the test set. The 8th model is chosen in this case. However, we should note that the majority of the data plots in Turk's experiment have been generated with linear relationship, this may be a disadvantage for the computer comparing to the 5% significant t-test. Because of the difference in $\alpha$ of this two tests, the later has higher power than the former even though their overall accuracy are very close to each other.
+Since the test set is large enough (200,000 in total) to provide reliable reference. The 8th model is chosen according to the overall accuracy on the test set.
 
-## Comparing results
+For a fair competition, the Type I error ($\alpha$) should be the same for all test methods. However, we do not have direct control over the $\alpha$ of the computer model. 
+Since the majority of the data plots in Turk's experiment have been generated with linear relationship (when the alternative hypothesis is true), this is a disadvantage for the computer comparing to the 5% significant t-test in terms of being tested on the Turk's data. Because of the difference in $\alpha$ ($\alpha \approx 0.02$ for the 8th computer model) the t-test has higher power than the computer model even though their overall accuracy are very close to each other.
 
-<!-- results needs to be updated -->
+Therefore, 2% significant t-test and 2% significant human conclusion is also included to give a complete picture of the comparison. 
 
-```{r linearresults, echo=F, paged.print=FALSE, results='asis'}
-tests <- c("Human", "Computer", "T-test")
-correct <- c(47, 44, 43)
-accuracy <- c(0.6714, 0.6286, 0.6143)
-tibble(tests, correct, accuracy) %>% kable(col.names = c("Tests", "No. of correct", "Accuracy"), caption = "Accuracy of testing the 70 data plots evaluated by human computer and the conventional t-test.")
-```
+## Comparing results  
+
+First compare the experiment process for human and computer respectively by two diagrams.
 
 \begin{figure*}[h]
-\centerline{\includegraphics[width=15cm]{figures/diagram.png}}
+\centerline{\includegraphics[width=15cm]{figures/diagpc.png}}
 \caption{Process of computer model training and selection}
-\label{dgc}
+\label{dgpc}
 \end{figure*}
 
-The conclusion of human evaluation is calculated using the p-value calculation introduced in section 2 of @MM13, the null hypothesis is rejected if the calculated p-value is smaller than 0.05. 
+<!-- diagram of human experiment -->
+
+The conclusion of human evaluation is obtained using the p-value calculation introduced in section 2 of @MM13, the null hypothesis is rejected if the calculated p-value is smaller than 0.05. 
+
+```{r linearresults, echo=F, paged.print=FALSE, results='asis'}
+tests <- c("Human", "T-test 5%" , "Computer", "T-test 2%")
+rank <- 1:4
+correct <- c(47, 43, 39, 39)
+accuracy <- c(0.6714, 0.6143, 0.5571, 0.5571)
+tibble(rank, tests, correct, accuracy) %>% kable(col.names = c("Rank","Tests", "No. of correct", "Accuracy"), caption = "Accuracy of testing the 70 data plots evaluated by human computer and the conventional t-test.")
+```
+
+The comparing result is interesting. Human achieves the highest accuracy, 5% significant t-test is the second, 2% significant t-test and the computer model perform similarly.
+
+
 
 From this table, we can see human evaluation achieves the best accuracy on the Turk's experiment data set. Deep learning model and the conventional t-test perform similarly. 
 
 ## Aside discussion related to the comparing results
+
 As we can see from the table, t-test and deep learning model behave quite similarly on both the test data set and Turk's experiment data. It is possible that the "Backpropagation algorithm" used in deep learning model is equivalent to maximum likelihood estimation in terms of linear regression problem in this case. Because all the error terms are following normal distribution as designed, they are also equivalent to the ordinary least square estimation. 
 Since the fourth-epoch model behaves the best in all 10 models, and its estimated Type I error ($\alpha$) is not 0.05. We think the deep learning model may be in fact just finding the "best" $\alpha$ for t-test in this experiment, where "best" means giving the highest expected accuracy of the null and alternative hypothesis. 
 To confirm this idea, a small simulation experiment was conducted to search for the "best" $\alpha$ for t-test. The data was simulated using the same specification as in the section "Linear relationship simulation" and "null plots simulation". The range of the $\alpha$ is from $(0.005,\ 0.010,\ 0.015,\ \dots,\ 0.100)$, with 200,000 iterations, the "best" $\alpha$ is found to be $\alpha=0.02$ which is very close to the one suggested by the fourth-epoch model $0.02435$.
