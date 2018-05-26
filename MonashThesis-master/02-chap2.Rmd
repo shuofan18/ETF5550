@@ -102,15 +102,18 @@ grid.arrange(p1,p2,p3,p4,nrow=2, heights=c(1,1))
 ```
 
 
-```{r simplot, fig.height=8, fig.width=6, fig.cap="The histograms and scatter plots of simulated variables show good coverage over all the values."}
+```{r simplot, fig.height=8, fig.width=6, fig.cap="Overview of parameter values used in the linear class simulation, for computer model training. Good coverage is obtained across the parameter space."}
 parameters_b <- read.csv("data/parameters_b.csv")
-hist_n_l <- ggplot(data = parameters_b, aes(n)) + geom_histogram(binwidth = 1) + theme(plot.title = element_text(size = 8)) + ggtitle("Histogram of simulated n")
+hist_n_l <- ggplot(data = parameters_b, aes(n)) + geom_histogram(binwidth = 50) + theme(plot.title = element_text(size = 8)) + ggtitle("Histogram of simulated n")
 
-hist_b_l <- ggplot(data = parameters_b, aes(beta)) + geom_histogram(binwidth = 0.1) + theme(plot.title = element_text(size = 8)) + ggtitle("Histogram of simulated beta from linear model")
+hist_b_l <- ggplot(data = parameters_b, aes(beta)) + geom_histogram(binwidth = 1) + theme(plot.title = element_text(size = 8)) + ggtitle("Histogram of simulated beta from linear model")
 
-hist_p_l <- ggplot(data = parameters_b, aes(ct.p.value)) + geom_histogram(binwidth = 0.01) + theme(plot.title = element_text(size = 8)) + ggtitle("Histogram of estimated p value of t-test from linear model")
+hist_p_l <- ggplot(data = parameters_b, aes(ct.p.value)) + geom_histogram(binwidth = 0.1) +
+  xlab("p-value") + 
+  theme(plot.title = element_text(size = 8)) + 
+  ggtitle("Histogram of estimated p value of t-test from linear model")
 
-hist_s_l <- ggplot(data = parameters_b, aes(sigma)) + geom_histogram(binwidth = 0.1) + theme(plot.title = element_text(size = 8)) + ggtitle("Histogram of simulated sigma from linear model")
+hist_s_l <- ggplot(data = parameters_b, aes(sigma)) + geom_histogram(binwidth = 1) + theme(plot.title = element_text(size = 8)) + ggtitle("Histogram of simulated sigma from linear model")
 
 scap_beta_n <- ggplot(data = parameters_b, aes(x=n, y=beta)) + geom_point(shape=".") + ggtitle("Scatter plot of simulated n and beta from linear model") + theme(plot.title = element_text(size = 8))
 
@@ -153,13 +156,16 @@ p4 <- norela(4)
 grid.arrange(p1,p2,p3,p4, nrow=2)
 ```
 
-```{r simplot2, fig.height=6, fig.width=6, fig.cap="The histograms and scatter plots of simulated variables show good coverage over all the values."}
+```{r simplot2, fig.height=6, fig.width=6, fig.cap="Overview of parameter values used in the null class simulation, for computer model training. Good coverage is obtained across the parameter space."}
 parameters_0 <- read.csv("data/parameters_0.csv")
-hist_n_0 <- ggplot(data = parameters_0, aes(n)) + geom_histogram(binwidth = 1) + theme(plot.title = element_text(size = 8)) + ggtitle("Histogram of simulated n from null model")
+hist_n_0 <- ggplot(data = parameters_0, aes(n)) + geom_histogram(binwidth = 50) + theme(plot.title = element_text(size = 8)) + ggtitle("Histogram of simulated n from null model")
 
-hist_p_0 <- ggplot(data = parameters_0, aes(ct.p.value)) + geom_histogram(binwidth = 0.01) + theme(plot.title = element_text(size = 8)) + ggtitle("Histogram of estimated p value of t-test from null model")
+hist_p_0 <- ggplot(data = parameters_0, aes(ct.p.value)) + geom_histogram(binwidth = 0.1) +
+  xlab("p-value") + 
+  theme(plot.title = element_text(size = 8)) + 
+  ggtitle("Histogram of estimated p value of t-test from null model")
 
-hist_s_0 <- ggplot(data = parameters_0, aes(sigma)) + geom_histogram(binwidth = 0.1) + theme(plot.title = element_text(size = 8)) + ggtitle("Histogram of simulated sigma from null model")
+hist_s_0 <- ggplot(data = parameters_0, aes(sigma)) + geom_histogram(binwidth = 1) + theme(plot.title = element_text(size = 8)) + ggtitle("Histogram of simulated sigma from null model")
 
 scap_sigma_n0 <- ggplot(data = parameters_0, aes(x=n,y=sigma)) + geom_point(shape=".") + ggtitle("Scatter plot of simulated n and sigma from null model") + theme(plot.title = element_text(size = 8))
 
