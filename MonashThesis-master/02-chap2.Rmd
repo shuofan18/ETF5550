@@ -238,7 +238,7 @@ kable(tbl, col.names = c("Tests", "Power", "1-Alpha", "Overall accuracy"), capti
 \begin{table}[ht]
 \begin{center}
 \begin{tabular}{|l|rrr|}\hline
-Tests & Linear & Null & Overall accuracy \\\hline
+Tests & Linear & Null & Overall \\\hline
 4 epoch & 0.892 & 0.984 &  0.938 \\   
 6 epoch & 0.889 & 0.986 & 0.937 \\
 8 epoch & 0.896 & 0.981 & 0.939 \\
