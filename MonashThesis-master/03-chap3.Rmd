@@ -117,6 +117,12 @@ In this experiment, a linear model is fit to the data firstly. Residuals from th
 
 ## Comparing results  
 
+\begin{figure*}[h]
+\centerline{\includegraphics[width=15cm]{figures/human_against_a.png}}
+\caption{Proportion of correct answers for each lineup question against the simulated correlation "a" from human evaluation}
+\label{humana}
+\end{figure*}
+
 
 ```{r heteresults, echo=F, paged.print=FALSE, results='asis'}
 tests <- c("Computer 2%", "Human 5%", "White-test 5%", "White-test 2%", "Human 2%")
@@ -127,7 +133,29 @@ tibble(rank, tests, correct, accuracy) %>% kable(col.names = c("Rank","Tests", "
 ```
 
 
+```{r hetercompare, echo=F, fig.height=6, fig.width=8, fig.cap="P.values for each real plot given by human, computer and white-test respectively."}
+library(reshape2)
+survey <- read.csv("~/documents/github/etf5550/heter&linear/survey_ans_nonull.csv")
+survey <- survey %>% mutate(wtpvalue=1-pchisq(wt.stat,2))
+graphdata <- survey %>% select(form, question, pval, pcpvalue, wtpvalue, a) %>% 
+  mutate(id=1:27)
+colnames(graphdata) <- c("form", "question", "Human p.values",
+                         "Computer prediction of Null", "White-test p.values",
+                         "a", "ID")
 
+graphdata <- graphdata %>% melt(id=c("form","question","ID","a"))
+
+ggplot(graphdata, aes(x=ID, y=value, group=variable, color=variable))+
+  geom_point()+
+  geom_line()+
+  facet_wrap(~variable, nrow = 3)+
+  #xlab("Lineup Questions")
+  scale_x_continuous(name="Lineup Questions", breaks=1:27, 
+                   labels=c("1","2","3","4","5","6","7","8",
+                            "9","10","11","12","13","14","15",
+                            "16","17","18","19","20","21","22",
+                            "23","24","25","26","27"))
+```
 
 
 

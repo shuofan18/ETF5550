@@ -308,7 +308,7 @@ The comparing result is interesting. Human achieves the highest accuracy, and th
 
 As we can see from the two performance tables above, t-test and convnets behave quite similarly on both the test data set and Turk's experiment data. 
 
-```{r ttdl, echo=FALSE, fig.cap="Comparison between computer model and t-test for alpha in (0.01, 0.04), they perform very similarly, but t-test has overall better performance."}
+```{r ttdl, echo=FALSE, fig.height=3, fig.width=5, fig.align='center', fig.cap="Comparison between computer model and t-test for alpha in (0.01, 0.04), they perform very similarly, but t-test has overall better performance."}
 
 tt <- read.csv("~/documents/github/etf5550/linear&norela/ttest_test_set.csv")
 tt <- select(tt, alpha, power, accuracy)
@@ -328,7 +328,7 @@ library(reshape2)
 tt_dl <- tt_dl %>% melt(id=c("model","alpha"))
 
 ggplot(tt_dl, aes(x=alpha, y=value, group=variable, color=model))+
-  geom_point(size=4)+
+  geom_point(size=3)+
   geom_smooth(method = lm, formula = y ~ splines::bs(x, 3), se = FALSE)
 ```
 
