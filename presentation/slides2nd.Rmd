@@ -98,13 +98,17 @@ model <- keras_model_sequential() %>%
 
 ## Our Experiments
 
-First experiment: Linear vs. Null
-$$H_0$$: There are no relationships between the two variables. (Null)
-$$H_1$$: There is linear relationship between the two variables where all Gauss-Markov assumptions are met. (Linear)
+- First experiment: Linear vs. Null
 
-Second experiment: Heteroskedasticity vs. Null
-$$H_0$$: There is linear relationship between the two variables where all Gauss-Markov assumptions are met. (Null)
-$$H_1$$: There is linear relationship between the two variables where the variance of the error term is not a constant while all other Gauss-Markov assumptions are met. (Heteroskedasticity)
+$H_0$: There are no relationships between the two variables. (Null)
+
+$H_1$: There is linear relationship between the two variables where all Gauss-Markov assumptions are met. (Linear)
+
+- Second experiment: Heteroskedasticity vs. Null
+
+$H_0$: There is linear relationship between the two variables where all Gauss-Markov assumptions are met. (Null)
+
+$H_1$: There is linear relationship between the two variables where the variance of the error term is not a constant while all other Gauss-Markov assumptions are met. (Heteroskedasticity)
 
 
 ## First Experiment: Amazon Mechanical Turk study
@@ -133,20 +137,38 @@ $$H_1$$: There is linear relationship between the two variables where the varian
 
 ## First Experiment: Data simulation {#sec:simulation}  
 
-The model:
+The linear model:
 $$Y_i = \beta_0 + \beta_1 X_{i}  + \varepsilon_i, ~~i=1, \dots , n$$
+
 - $X \sim N[0,\ 1]$  
+
 - $\beta_0 = 0$  
+
 - $\beta_1\sim U[-10, -0.1] \bigcup [0.1, 10]$  
+
 - $\varepsilon\sim N(0, \sigma^2) \ where\ \sigma \sim U[1,12]$  
+
 - $n=U[50,500]$  
 
-## First Experiment: Examples of scatter plots
+The null model:
+
+- $\beta_1=0$
+
+## First Experiment: Histogram of simulated parameters from linear model
+![Histogram of simulated parameters for linear model](figures/histlinear.png)
+
+## First Experiment: Histogram of simulated parameters from null model
+<!-- display -->
+
+![Histogram of simulated parameters for null model](figures/histnull.png)
+
+## First Experiment: Examples of scatter plots from the linear model
 
 ```{r levels}
 library(gridExtra)
 linear<-function(n){
    beta <- sample(c((-10:-0.1),(0.1:10)), 1)
+  
   sigma <- sample(1:12 , 1)
   x<-rnorm(n, 0, 1)
   y<-rnorm(n, beta*x, sigma)
@@ -167,9 +189,30 @@ p2 <- linear(n2)
 p3 <- linear(n3)
 p4 <- linear(n4)
 
-grid.arrange(p1,p2,p3,p4,nrow=2, heights=c(1,1)) 
+grid.arrange(p1,p2,p3,p4,nrow=2, heights=c(1,1))
 ```
 
+## First Experiment: Examples of scatter plots from the null model
+
+```{r norela}
+norela<-function(i){
+  n <- sample(c(100, 300), 1)
+  beta <- 0
+  sigma <- sample(1:12 , 1)
+  x<-rnorm(n, 0, 1)
+  y<-rnorm(n, beta*x, sigma)
+  pic <- tibble(x, y) %>% 
+    ggplot(aes(x = x, y=y)) + 
+    geom_point(alpha = 0.4) +
+    theme(aspect.ratio = 1)
+}
+set.seed(0518)
+p1 <- norela(1)
+p2 <- norela(2)
+p3 <- norela(3)
+p4 <- norela(4)
+grid.arrange(p1,p2,p3,p4, nrow=2)
+```
 
 ## Human experiment procedures
 ![Procedure of computer model experiment](figures/diaghm.png)
