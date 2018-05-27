@@ -362,6 +362,22 @@ tibble(rank, tests, correct, accuracy) %>% kable(col.names = c("Rank","Tests", "
 knitr::include_graphics("figures/heter_pvalues_3test.png")
 ```
 
+## Summary
+
+- Human outperformed computer and t-test in detecting linear vs. null, according to Turk study and ours;
+
+- Computer outperformed human and white-test in detecting heteroskedasticity vs. homoskedasticity, according to our experiment.
+
+
+## Discussion
+
+- Mistake made in the human experiment of reading heteroskedasticity.
+
+We had to remove the data of "all-null" lineup questions.
+
+- Future study
+
+More patterns can be included in training the computer model. There are many possibilities.
 
 ## Materials
 

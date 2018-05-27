@@ -129,8 +129,34 @@ There are similar studies have been done, for example, Simchoni has rendered an 
 
 This is an example of lineup from experiment 2.
 
-## Timeline
+## Discussion
+
+The original design was to include 2 lineup questions which only has homoskedasticity plots in each survey. 
+However instead of using a single constant as the variance of the error terms to generate the "real plot", I incidentally used a series of random numbers. So for each observation in the sample, it has a distinct variance. Although they are not correlated with X, other undesired patterns like non-linearity and outliers were present in the data. So we had to remove those 6 lineup questions from our data set.
 
 
-## Materials
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
