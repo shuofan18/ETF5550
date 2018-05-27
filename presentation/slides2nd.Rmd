@@ -60,16 +60,9 @@ ggplot(lineup(null_permute(".std.resid"), df_mod), aes(x=x, y=.std.resid)) + geo
 - Computer vision has advanced substantially
 - If we can train a computer to read residual plots we can have it process a lot more data, than a human can manage.
 
-## How convnets works: Diagram of convolution and max pooling
-
-```{r diagconv, fig.height=4, fig.retina=NULL, out.width='80%', echo=FALSE}
-knitr::include_graphics("figures/diagconv.png")
-```
-
-
 ## Aside: Computers can't tell difference between blueberry muffins and chihuahuas 
 
-```{r chihuahuas, fig.align='center', fig.cap="Computers can't tell difference between blueberry muffins and chihuahuas", fig.retina=NULL, out.width='100%', echo=FALSE}
+```{r chihuahuas, fig.align='center', fig.retina=NULL, out.width='100%', echo=FALSE}
 knitr::include_graphics("figures/choc_chip_muffins.png")
 ```
 
@@ -101,7 +94,7 @@ $H_1$: There is linear relationship between the two variables where the variance
 ## Frist Experiment: Linear vs. Null
 ### Example lineup from Turk experiment 2  
 <!--display-->
-```{r turkexp, fig.align='center', fig.height=4, fig.cap="63 of 65 identified the data plot in this lineup", fig.retina=NULL, out.width='80%', echo=FALSE}
+```{r turkexp, fig.align='center', fig.height=4, fig.retina=NULL, out.width='80%', echo=FALSE}
 knitr::include_graphics("figures/plot_turk2_300_350_12_3.png")
 ```
 
@@ -113,7 +106,7 @@ knitr::include_graphics("figures/plot_turk2_300_350_12_3.png")
 ## First experiment: Linear vs. Null
 ### Computer model procedures (diagram)
 
-```{r diagpc, fig.align='center', fig.cap="Procedure of computer model experiment", fig.retina=NULL, out.width='100%', echo=FALSE}
+```{r diagpc, fig.align='center',  fig.retina=NULL, out.width='100%', echo=FALSE}
 knitr::include_graphics("figures/diagpc.png")
 ```
 
@@ -154,71 +147,12 @@ The null model:
 ## First Experiment: Linear vs. Null
 ### Histogram of simulated parameters from null model
 
-```{r histnull, fig.align='center', fig.cap="Histogram of simulated parameters for null model", fig.retina=NULL, out.width='60%', echo=FALSE}
+```{r histnull, fig.align='center', fig.retina=NULL, out.width='60%', echo=FALSE}
 knitr::include_graphics("figures/histnull.png")
 ```
 
-
-## First Experiment: Linear vs. Null
-### Examples of scatter plots from the linear model
-
-```{r levels}
-library(gridExtra)
-linear<-function(n){
-   beta <- sample(c((-10:-0.1),(0.1:10)), 1)
-  
-  sigma <- sample(1:12 , 1)
-  x<-rnorm(n, 0, 1)
-  y<-rnorm(n, beta*x, sigma)
-  
-  tibble(x, y) %>% 
-  ggplot(aes(x = x, y = y)) + 
-    geom_point(alpha = 0.4) +
-    theme(aspect.ratio = 1)
-}
-set.seed(0420)
-n1 <- sample(c(100, 300), 1)
-n2 <- sample(c(100, 300), 1)
-n3 <- sample(c(100, 300), 1)
-n4 <- sample(c(100, 300), 1)
-
-p1 <- linear(n1)
-p2 <- linear(n2)
-p3 <- linear(n3)
-p4 <- linear(n4)
-
-grid.arrange(p1,p2,p3,p4,nrow=2, heights=c(1,1))
-```
-
-## First Experiment: Linear vs. Null
-### Examples of scatter plots from the null model
-
-```{r norela}
-norela<-function(i){
-  n <- sample(c(100, 300), 1)
-  beta <- 0
-  sigma <- sample(1:12 , 1)
-  x<-rnorm(n, 0, 1)
-  y<-rnorm(n, beta*x, sigma)
-  pic <- tibble(x, y) %>% 
-    ggplot(aes(x = x, y=y)) + 
-    geom_point(alpha = 0.4) +
-    theme(aspect.ratio = 1)
-}
-set.seed(0518)
-p1 <- norela(1)
-p2 <- norela(2)
-p3 <- norela(3)
-p4 <- norela(4)
-grid.arrange(p1,p2,p3,p4, nrow=2)
-```
-
-
 ## First Experiment: Linear vs. Null
 ### Convnets R code
-
-<!-- adjust the fontsize of R code --> 
-<!-- removed one layer for display-->
 
 ```{r modelstructure, echo=TRUE, tidy=TRUE, size=12, message=FALSE, warning=FALSE, results='none'}
 library(keras)
@@ -243,16 +177,24 @@ model <- keras_model_sequential() %>%
 
 ![convnets model structure](figures/modelstruc.png)
 
+## How convnets works: Diagram of convolution and max pooling
+
+```{r diagconv, fig.height=4, fig.retina=NULL, out.width='80%', echo=FALSE}
+knitr::include_graphics("figures/diagconv.png")
+```
+
 ## First Experiment: Linear vs. Null
 ### Training and validation metrics of convnets
 
-```{r metrics1, fig.align='center', fig.cap="Training and validation metrics of convnets for the first experiment", fig.retina=NULL, out.width='70%', echo=FALSE}
+```{r metrics1, fig.align='center', fig.retina=NULL, out.width='70%', echo=FALSE}
 knitr::include_graphics("figures/linear_history_plot.png")
 ```
 
 
 ## First Experiment: Linear vs. Null
 ### Convnets model selection
+
+The 8th model is chosen according to the overall accuracy on the test set.
 
 \begin{table}[ht]
 \begin{center}
@@ -265,11 +207,11 @@ Tests & Linear & Null & Overall \\\hline
 5\% $t$-test & 0.921 & 0.949 & 0.935\\\hline
 \end{tabular}
 \end{center}
-\caption{Performance of four checkpoints from the {\em convnets} model, and the 5\% significant $t$-test, computed on the test set. Accuracy is reported for each class, and overall. There is a slight improvement as the number of epochs increases, with 10 epochs being reasonably close to the ideal $t$-test accuracy.}
+\caption{Performance of four checkpoints from the {\em convnets} model, and the 5\% significant $t$-test, computed on the test set. Accuracy is reported for each class, and overall.}
 \label{checkpoints}
 \end{table}
 
-The 8th model is chosen according to the overall accuracy on the test set.
+
 
 ## First Experiment: Linear vs. Null
 ### Computer model performance calculation 
@@ -291,7 +233,7 @@ The conclusion of human evaluation is obtained differently from the computer's. 
 
 - Obtain N and k for all 70 lineup;
 
-- Calculate p-value associated with each real plot using the formula introduced in section 2 of @MM13;
+- Calculate p-value associated with each real plot using the formula introduced in section 2 of Majumder et al (2013);
 
 - Draw conclusion: reject the null when the calculated p-value is smaller than $\alpha$.
 
@@ -314,7 +256,7 @@ tibble(rank, tests, correct, accuracy) %>% kable(col.names = c("Rank","Tests", "
 
 It is possible that the best classification strategy found by convnets is in fact the convetional t-test.
 
-```{r ttdl, fig.align='center', fig.cap="The estimated power and overall accuracy of T-test and convnets for test set", fig.retina=NULL, out.width='80%', echo=FALSE}
+```{r ttdl, fig.align='center', fig.retina=NULL, out.width='80%', echo=FALSE}
 knitr::include_graphics("figures/ttest_dl_graph.png")
 ```
 
@@ -328,7 +270,7 @@ knitr::include_graphics("figures/heter_exp_diag.png")
 ## Second Experiment: Heter vs. Homo
 ### An example of questions used in the human experiment 
 
-```{r heterlineup, fig.align='center', fig.height=4, fig.cap="An example question in the survey, 4 out of 6 people picked the real plot.", fig.retina=NULL, out.width='80%', echo=FALSE}
+```{r heterlineup, fig.align='center', fig.height=4,  fig.retina=NULL, out.width='80%', echo=FALSE}
 knitr::include_graphics("figures/heter_lineup_example.png")
 ```
 
@@ -378,7 +320,7 @@ To provide a reference level of how computer and human perform, a special case o
 ## Second Experiment: Heter vs. Homo
 ### Training and validation metrics of convnets
 
-```{r metrics2, fig.align='center', fig.height=4, fig.cap="Training and validation metrics of convnets for the second experiment", fig.retina=NULL, out.width='80%', echo=FALSE}
+```{r metrics2, fig.align='center', fig.height=4,  fig.retina=NULL, out.width='80%', echo=FALSE}
 knitr::include_graphics("figures/heter_history_plot.png")
 ```
 
@@ -398,7 +340,7 @@ tibble(Tests, Heter, Homo, Overall) %>% kable(caption = "Performance of three ch
 ## Second Experiment: Heter vs. Homo
 ### Human performance in the experiment
 
-```{r hheter, fig.align='center', fig.height=4, fig.cap="Proportion of correct answers for each lineup question against the simulated correlation a from human evaluation", fig.retina=NULL, out.width='80%', echo=FALSE}
+```{r hheter, fig.align='center', fig.height=4,  fig.retina=NULL, out.width='80%', echo=FALSE}
 knitr::include_graphics("figures/human_against_a.png")
 ```
 
@@ -416,7 +358,7 @@ tibble(rank, tests, correct, accuracy) %>% kable(col.names = c("Rank","Tests", "
 ## Second Experiment: Heter vs. Homo
 ### Comparing results -- p.values
 
-```{r heterp, fig.align='center', fig.height=4, fig.cap="P.values for each real plot given by human, computer and white-test.", fig.retina=NULL, out.width='80%', echo=FALSE}
+```{r heterp, fig.align='center', fig.height=4, fig.retina=NULL, out.width='80%', echo=FALSE}
 knitr::include_graphics("figures/heter_pvalues_3test.png")
 ```
 
