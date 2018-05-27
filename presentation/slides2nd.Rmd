@@ -2,7 +2,7 @@
 title: "Human vs. Computer"
 author: "Shuofan Zhang"
 date: "5/28/2018"
-fontsize: 12pt
+fontsize: 10pt
 output: 
   beamer_presentation:
     fig_height: 5
@@ -18,7 +18,7 @@ knitr::opts_chunk$set(echo = FALSE, message=FALSE, warning=FALSE, cache=TRUE, de
 ```
 
 ## Reminder of the first presentation
-
+### Our goal
 **Teach the computer to read residual plots**
 
 A major component used to diagnose model fits is a plot of the residuals. Residual plots are used to assess:
@@ -40,7 +40,6 @@ ggplot(datasaurus_dozen, aes(x = x, y = y, colour = dataset)) +
   #theme(aspect.ratio = 1) +
   facet_wrap( ~ dataset, ncol = 5)
 ```
-
 $E(x)=54.3, E(y)= 47.8, sd(x) = 16.8, sd(y) = 26.9, r = -0.06$
 
 ## Visual inference
@@ -61,36 +60,13 @@ ggplot(lineup(null_permute(".std.resid"), df_mod), aes(x=x, y=.std.resid)) + geo
 - Computer vision has advanced substantially
 - If we can train a computer to read residual plots we can have it process a lot more data, than a human can manage.
 
-## How convnets works: R code
-
-<!-- adjust the fontsize of R code --> 
-<!-- removed one layer for display-->
-
-```{r modelstructure, echo=TRUE, tidy=TRUE, size=12, message=FALSE, warning=FALSE, results='none'}
-library(keras)
-model <- keras_model_sequential() %>%
-  layer_conv_2d(filters = 32, kernel_size = c(3, 3), 
-                activation = "relu",
-                input_shape = c(150, 150, 1)) %>%
-  layer_max_pooling_2d(pool_size = c(2, 2)) %>%
-  layer_conv_2d(filters = 64, kernel_size = c(3, 3), 
-                activation = "relu") %>%
-  layer_max_pooling_2d(pool_size = c(2, 2)) %>%
-  layer_conv_2d(filters = 128, kernel_size = c(3, 3), 
-                activation = "relu") %>%
-  layer_max_pooling_2d(pool_size = c(2, 2)) %>%
-  layer_flatten() %>%
-  layer_dense(units = 512, activation = "relu") %>%
-  layer_dense(units = 1, activation = "sigmoid")
-```
-
-## How convnets works: Model structure
-
-![convnets model structure](figures/modelstruc.png)
-
 ## How convnets works: Diagram of convolution and max pooling
 
 ![How convolution works](figures/diagconv.png)
+
+## How convnets works
+
+<!-- deep learning explain --> diagram
 
 ## Aside: Computers can't tell difference between blueberry muffins and chihuahuas  
 ![Computers can't tell difference between blueberry muffins and chihuahuas](figures/choc_chip_muffins.jpg)
@@ -111,7 +87,8 @@ $H_0$: There is linear relationship between the two variables where all Gauss-Ma
 $H_1$: There is linear relationship between the two variables where the variance of the error term is not a constant while all other Gauss-Markov assumptions are met. (Heteroskedasticity)
 
 
-## First Experiment: Amazon Mechanical Turk study
+## First Experiment: Linear vs. Null
+### Amazon Mechanical Turk study
 
 - Majumder et al (2013) conducted a large study to compare the performance of the lineup protocol, assessed by human evaluators, in comaprison to the classical test
 - Experiment 2 examined $H_o: \beta_k=0$ vs $H_a: \beta_k\neq 0$ assessing the importance of including variable $k$ in the linear model, conducted with a $t$-test, and also lineup protocol
@@ -120,10 +97,12 @@ $H_1$: There is linear relationship between the two variables where the variance
 -
 - Trained deep learning model will be used to classify plots from this study. Accuracy will be compared with results by human subjects.
 
-## Frist Experiment: Example lineup from Turk experiment 2
-
+## Frist Experiment: Linear vs. Null
+### Example lineup from Turk experiment 2  
+<!--display-->
 ![63 of 65 identified the data plot in this lineup](figures/plot_turk2_300_350_12_3.png)
-## First experiment: Computer model procedures
+## First experiment: Linear vs. Null
+### Computer model procedures
 
 1. Simulate data (X, Y) from the null and the alternative models
 2. Generate scatter plots of X and Y
@@ -131,11 +110,13 @@ $H_1$: There is linear relationship between the two variables where the variance
 4. Train a deep learning classifier to recognise the patterns from two groups
 5. Test the model's performance on new data and compute the accuracy
 
-##  First experiment: Computer model procedures (diagram)
+## First experiment: Linear vs. Null
+### Computer model procedures (diagram)
 
 ![Procedure of computer model experiment](figures/diagpc.png)
 
-## First Experiment: Data simulation {#sec:simulation}  
+## First Experiment: Linear vs. Null
+### Data simulation {#sec:simulation}  
 
 The linear model:
 $$Y_i = \beta_0 + \beta_1 X_{i}  + \varepsilon_i, ~~i=1, \dots , n$$
@@ -154,15 +135,18 @@ The null model:
 
 - $\beta_1=0$
 
-## First Experiment: Histogram of simulated parameters from linear model
+## First Experiment: Linear vs. Null
+### Histogram of simulated parameters from linear model
 ![Histogram of simulated parameters for linear model](figures/histlinear.png)
 
-## First Experiment: Histogram of simulated parameters from null model
+## First Experiment: Linear vs. Null
+### Histogram of simulated parameters from null model
 <!-- display -->
 
 ![Histogram of simulated parameters for null model](figures/histnull.png)
 
-## First Experiment: Examples of scatter plots from the linear model
+## First Experiment: Linear vs. Null
+### Examples of scatter plots from the linear model
 
 ```{r levels}
 library(gridExtra)
@@ -192,7 +176,8 @@ p4 <- linear(n4)
 grid.arrange(p1,p2,p3,p4,nrow=2, heights=c(1,1))
 ```
 
-## First Experiment: Examples of scatter plots from the null model
+## First Experiment: Linear vs. Null
+### Examples of scatter plots from the null model
 
 ```{r norela}
 norela<-function(i){
@@ -214,8 +199,110 @@ p4 <- norela(4)
 grid.arrange(p1,p2,p3,p4, nrow=2)
 ```
 
-## Human experiment procedures
+
+## First Experiment: Linear vs. Null
+### Convnets R code
+
+<!-- adjust the fontsize of R code --> 
+<!-- removed one layer for display-->
+
+```{r modelstructure, echo=TRUE, tidy=TRUE, size=12, message=FALSE, warning=FALSE, results='none'}
+library(keras)
+model <- keras_model_sequential() %>%
+  layer_conv_2d(filters = 32, kernel_size = c(3, 3), 
+                activation = "relu",
+                input_shape = c(150, 150, 1)) %>%
+  layer_max_pooling_2d(pool_size = c(2, 2)) %>%
+  layer_conv_2d(filters = 64, kernel_size = c(3, 3), 
+                activation = "relu") %>%
+  layer_max_pooling_2d(pool_size = c(2, 2)) %>%
+  layer_conv_2d(filters = 128, kernel_size = c(3, 3), 
+                activation = "relu") %>%
+  layer_max_pooling_2d(pool_size = c(2, 2)) %>%
+  layer_flatten() %>%
+  layer_dense(units = 512, activation = "relu") %>%
+  layer_dense(units = 1, activation = "sigmoid")
+```
+
+## First Experiment: Linear vs. Null
+### Convnets structure
+
+![convnets model structure](figures/modelstruc.png)
+
+## First Experiment: Linear vs. Null
+### Training and validation metrics of convnets
+
+![Training and validation metrics of convnets for the first experiment](figures/heter_history_plot.png)
+
+## First Experiment: Linear vs. Null
+### Convnets model selection
+
+\begin{table}[ht]
+\begin{center}
+\begin{tabular}{|l|rrr|}\hline
+Tests & Linear & Null & Overall \\\hline
+4 epoch & 0.892 & 0.984 &  0.938 \\   
+6 epoch & 0.889 & 0.986 & 0.937 \\
+8 epoch & 0.896 & 0.981 & 0.939 \\
+10 epoch & 0.904 & 0.971 & 0.938 \\
+5\% $t$-test & 0.921 & 0.949 & 0.935\\\hline
+\end{tabular}
+\end{center}
+\caption{Performance of four checkpoints from the {\em convnets} model, and the 5\% significant $t$-test, computed on the test set. Accuracy is reported for each class, and overall. There is a slight improvement as the number of epochs increases, with 10 epochs being reasonably close to the ideal $t$-test accuracy.}
+\label{checkpoints}
+\end{table}
+
+The 8th model is chosen according to the overall accuracy on the test set.
+
+## First Experiment: Linear vs. Null
+### Computer model performance calculation 
+
+The performance of the computer model for the Turk study data is tested in three steps:
+
+- Re-generate the 70 "real plots" using the same data in Turk study (without null plots);
+
+- Create a seperate test directory for the 70 "real plots" exclusively;
+
+- The computer model's predicted accuracy over the 70 "real plots" are recorded as the model's performance.
+
+## First Experiment: Linear vs. Null
+### Human evaluation performance calculation 
+
+The conclusion of human evaluation is obtained differently from the computer's. Because human evaluated "lineup", not only the "real plots". The performance is tested in five steps:
+
+- Count total number of evaluations made by human for one lineup (N) and the number of correct answers for that lineup (k);
+
+- Obtain N and k for all 70 lineup;
+
+- Calculate p-value associated with each real plot using the formula introduced in section 2 of @MM13;
+
+- Draw conclusion: reject the null when the calculated p-value is smaller than $\alpha$.
+
+- The accuracy of the conclusions the 70 real plots is presenting for the human performance.
+
+## First Experiment: Linear vs. Null
+### Comparing results
+
+```{r linearresults, echo=F, results='asis'}
+library(knitr)
+tests <- c("Human 5%", "Human 2%", "T-test 5%", "Computer 2%", "T-test 2%")
+rank <- c(1,1,2,3,4)
+correct <- c(47, 47, 43, 39, 39)
+accuracy <- c(0.6714,0.6714, 0.6143, 0.5571, 0.5571)
+tibble(rank, tests, correct, accuracy) %>% kable(col.names = c("Rank","Tests", "No. of correct", "Accuracy"), caption = "Accuracy of testing the 70 data plots evaluated by human computer and the conventional t-test.")
+```
+
+## First Experiment: Linear vs. Null
+### Aside discussion
+
+It is possible that the best classification strategy found by convnets is in fact the convetional t-test.
+
+![The estimated power and overall accuracy of T-test and convnets for test set](figures/ttest_dl_graph.png)
+
+## Second Experiment: Heteroskedasticity vs. Null
+### Human experiment procedures
 ![Procedure of computer model experiment](figures/diaghm.png)
+
 
 
 ## Materials

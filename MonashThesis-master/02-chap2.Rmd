@@ -172,6 +172,23 @@ scap_sigma_n0 <- ggplot(data = parameters_0, aes(x=n,y=sigma)) + geom_point(shap
 grid.arrange(hist_n_0, hist_s_0, hist_p_0, scap_sigma_n0, ncol=2)
 ```
 
+```{r simplot2, fig.height=6, fig.width=6, fig.cap="Overview of parameter values used in the null class simulation, for computer model training. Good coverage is obtained across the parameter space."}
+parameters_0 <- read.csv("data/parameters_0.csv")
+hist_n_0 <- ggplot(data = parameters_0, aes(n)) + geom_histogram(binwidth = 50, center = 25) + theme(plot.title = element_text(size = 20)) + ggtitle("Histogram of simulated n")
+
+hist_p_0 <- ggplot(data = parameters_0, aes(ct.p.value)) + geom_histogram(binwidth = 0.1, center=0.05) +
+  xlab("p-value") + 
+  theme(plot.title = element_text(size = 20)) + 
+  ggtitle("Histogram of estimated p value of t-test")
+
+hist_s_0 <- ggplot(data = parameters_0, aes(sigma)) + geom_histogram(binwidth = 1, center=-0.5) + theme(plot.title = element_text(size = 20)) + ggtitle("Histogram of simulated sigma")
+
+scap_sigma_n0 <- ggplot(data = parameters_0, aes(x=n,y=sigma)) + geom_point(shape=".") + ggtitle("Scatter plot of simulated n and sigma") + theme(plot.title = element_text(size = 20))
+
+histnull <- grid.arrange(hist_n_0, hist_s_0, hist_p_0, scap_sigma_n0, ncol=2)
+ggsave(histnull, filename = "~/documents/etf5550/presentation/figures/histnull.png")
+```
+
 All simulated data and associated parameters including estimated sample p-values of t-test are saved and are used later on for calculating the performance of conventional t-test. 
 
 ## Computer model  
