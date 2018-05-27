@@ -137,13 +137,13 @@ tibble(rank, tests, correct, accuracy) %>% kable(col.names = c("Rank","Tests", "
 library(reshape2)
 survey <- read.csv("~/documents/github/etf5550/heter&linear/survey_ans_nonull.csv")
 survey <- survey %>% mutate(wtpvalue=1-pchisq(wt.stat,2))
-graphdata <- survey %>% select(form, question, pval, pcpvalue, wtpvalue, a) %>% 
+graphdata <- survey %>% select(form, question, pval, pcpvalue, wtpvalue) %>% 
   mutate(id=1:27)
-colnames(graphdata) <- c("form", "question", "Human p.values",
-                         "Computer prediction of Null", "White-test p.values",
-                         "a", "ID")
+colnames(graphdata) <- c("form", "question", "5% Human p.values",
+                         "Computer prediction of Null", 
+                         "5% White-test p.values", "ID")
 
-graphdata <- graphdata %>% melt(id=c("form","question","ID","a"))
+graphdata <- graphdata %>% melt(id=c("form","question","ID"))
 
 ggplot(graphdata, aes(x=ID, y=value, group=variable, color=variable))+
   geom_point()+
