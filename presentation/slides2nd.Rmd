@@ -62,14 +62,10 @@ ggplot(lineup(null_permute(".std.resid"), df_mod), aes(x=x, y=.std.resid)) + geo
 
 ## How convnets works: Diagram of convolution and max pooling
 
-```{r diagconv, fig.retina=NULL, out.width='100%', echo=FALSE}
+```{r diagconv, fig.height=4, fig.retina=NULL, out.width='80%', echo=FALSE}
 knitr::include_graphics("figures/diagconv.png")
 ```
 
-
-## How convnets works
-
-<!-- deep learning explain --> diagram
 
 ## Aside: Computers can't tell difference between blueberry muffins and chihuahuas 
 
@@ -85,7 +81,7 @@ $H_0$: There are no relationships between the two variables. (Null)
 
 $H_1$: There is linear relationship between the two variables where all Gauss-Markov assumptions are met. (Linear)
 
-- Second experiment: Heteroskedasticity vs. Null
+- Second experiment: Heteroskedasticity vs. Homoskedasticity
 
 $H_0$: There is linear relationship between the two variables where all Gauss-Markov assumptions are met. (Null)
 
@@ -105,7 +101,7 @@ $H_1$: There is linear relationship between the two variables where the variance
 ## Frist Experiment: Linear vs. Null
 ### Example lineup from Turk experiment 2  
 <!--display-->
-```{r turkexp, fig.align='center', fig.cap="63 of 65 identified the data plot in this lineup", fig.retina=NULL, out.width='100%', echo=FALSE}
+```{r turkexp, fig.align='center', fig.height=4, fig.cap="63 of 65 identified the data plot in this lineup", fig.retina=NULL, out.width='80%', echo=FALSE}
 knitr::include_graphics("figures/plot_turk2_300_350_12_3.png")
 ```
 
@@ -322,20 +318,21 @@ It is possible that the best classification strategy found by convnets is in fac
 knitr::include_graphics("figures/ttest_dl_graph.png")
 ```
 
-## Second Experiment: Heteroskedasticity vs. Null
+## Second Experiment: Heter vs. Homo
 ### Human experiment setup
-The experiment is to evaluate the human ability of reading heteroskedasticity from residual plots. It is rendered at Monash University, Melbourne Australia. The participants are all students or lecturers in this university.
-<!-- diagram or graph-->
-Four survey are randomly sent to 84 people by email, three of the survey consist of ten lineup questions, and the fourth survey has only four lineup questions. Only one lineup question appears in the survey twice, thus, we have 33 ($10\times3+4-1$) distinct questions in total. A total number of 22 people have participated. Five people evaluated two surveys. One people selected four plots for each lineup, this person's response is removed from the data. In summary, we have 218 effective evaluations from 21 people. 
+ 
+```{r heterexpdiag, fig.align='center', fig.cap="Human subjects experiment setup", fig.retina=NULL, out.width='100%', echo=FALSE}
+knitr::include_graphics("figures/heter_exp_diag.png")
+```
 
-## Second Experiment: Heteroskedasticity vs. Null
+## Second Experiment: Heter vs. Homo
 ### An example of questions used in the human experiment 
 
-```{r heterlineup, fig.align='center', fig.cap="An example question in the survey, 4 out of 6 people picked the real plot.", fig.retina=NULL, out.width='80%', echo=FALSE}
+```{r heterlineup, fig.align='center', fig.height=4, fig.cap="An example question in the survey, 4 out of 6 people picked the real plot.", fig.retina=NULL, out.width='80%', echo=FALSE}
 knitr::include_graphics("figures/heter_lineup_example.png")
 ```
 
-## Second Experiment: Heteroskedasticity vs. Null
+## Second Experiment: Heter vs. Homo
 ### Heteroskedasticity simulation
 
 The Heteroskedasticity model:
@@ -365,7 +362,7 @@ The null model:
 - $c=mean(ax+v)$
 
 
-## Second Experiment: Heteroskedasticity vs. Null
+## Second Experiment: Heter vs. Homo
 ### White test
 
 To provide a reference level of how computer and human perform, a special case of White test is used in this experiment. The procedure of the White test [@IE17] is:
@@ -378,26 +375,34 @@ To provide a reference level of how computer and human perform, a special case o
 
 - Conclude based on p-values given certain $\alpha$
 
-## Second Experiment: Heteroskedasticity vs. Null
+## Second Experiment: Heter vs. Homo
 ### Training and validation metrics of convnets
 
-```{r metrics2, fig.align='center', fig.cap="Training and validation metrics of convnets for the second experiment", fig.retina=NULL, out.width='70%', echo=FALSE}
-knitr::include_graphics("figures/human_against_a.png")
-```
-
-## Second Experiment: Heteroskedasticity vs. Null
-### Convnets model selection
-
-<!-- tables -->
-
-## Second Experiment: Heteroskedasticity vs. Null
-### Human performance in the experiment
-
-```{r hheter, fig.align='center', fig.cap="Proportion of correct answers for each lineup question against the simulated correlation a from human evaluation", fig.retina=NULL, out.width='80%', echo=FALSE}
+```{r metrics2, fig.align='center', fig.height=4, fig.cap="Training and validation metrics of convnets for the second experiment", fig.retina=NULL, out.width='80%', echo=FALSE}
 knitr::include_graphics("figures/heter_history_plot.png")
 ```
 
-## Second Experiment: Heteroskedasticity vs. Null
+## Second Experiment: Heter vs. Homo
+### Convnets model selection
+
+The performance of models from different epoch are very similar. The 11th is selected according to overall accuracy.
+
+```{r heterselect, echo=F, paged.print=FALSE, results='asis'}
+Tests <- c("4 epoch", "11 epoch", "15 epoch","5% White test")
+Heter <- c("0.970","0.963","0.959","0.856")
+Homo <- c("0.967", "0.984","0.984", "0.952")
+Overall <- c("0.968", "0.974", "0.972","0.904")
+tibble(Tests, Heter, Homo, Overall) %>% kable(caption = "Performance of three checkpoints from the convnets model, and the 5% significant white-test, computed on the test set. Accuracy is reported for each class, and overall.")
+```
+
+## Second Experiment: Heter vs. Homo
+### Human performance in the experiment
+
+```{r hheter, fig.align='center', fig.height=4, fig.cap="Proportion of correct answers for each lineup question against the simulated correlation a from human evaluation", fig.retina=NULL, out.width='80%', echo=FALSE}
+knitr::include_graphics("figures/human_against_a.png")
+```
+
+## Second Experiment: Heter vs. Homo
 ### Comparing results
 
 ```{r heteresults, echo=F, paged.print=FALSE, results='asis'}
@@ -408,10 +413,10 @@ accuracy <- c("92.59%","62.96%", "62.96%","59.26%","55.56%")
 tibble(rank, tests, correct, accuracy) %>% kable(col.names = c("Rank","Tests", "No. of correct", "Accuracy"), caption = "Accuracy of testing the 27 data plots evaluated by human computer and the conventional white-test.")
 ```
 
-## Second Experiment: Heteroskedasticity vs. Null
-### Comparing results for p.values
+## Second Experiment: Heter vs. Homo
+### Comparing results -- p.values
 
-```{r heterp, fig.align='center', fig.cap="P.values for each real plot given by human, computer and white-test.", fig.retina=NULL, out.width='80%', echo=FALSE}
+```{r heterp, fig.align='center', fig.height=4, fig.cap="P.values for each real plot given by human, computer and white-test.", fig.retina=NULL, out.width='80%', echo=FALSE}
 knitr::include_graphics("figures/heter_pvalues_3test.png")
 ```
 

@@ -88,6 +88,10 @@ diagram
 
 ## Human experiment procedures
 
+The experiment is to evaluate the human ability of reading heteroskedasticity from residual plots. It is rendered at Monash University, Melbourne Australia. The participants are all students or lecturers in this university.
+<!-- diagram or graph-->
+Four survey are randomly sent to 84 people by email, three of the survey consist of ten lineup questions, and the fourth survey has only four lineup questions. Only one lineup question appears in the survey twice, thus, we have 33 ($10\times3+4-1$) distinct questions in total. A total number of 22 people have participated. Five people evaluated two surveys. One people selected four plots for each lineup, this person's response is removed from the data. In summary, we have 218 effective evaluations from 21 people.
+
 ## Data simulation {#sec:simulation}
 
 A lot of decisions have been made in the model design process, like sample sizes for each plot, the coefficients variances and a whole lot of other parameters.

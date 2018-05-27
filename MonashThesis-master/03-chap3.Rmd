@@ -123,6 +123,14 @@ In this experiment, a linear model is fit to the data firstly. Residuals from th
 \label{humana}
 \end{figure*}
 
+```{r heterselect, echo=F, paged.print=FALSE, results='asis'}
+Tests <- c("4 epoch", "11 epoch", "15 epoch","5% White test")
+Heter <- c("0.970","0.963","0.959","0.856")
+Homo <- c("0.967", "0.984","0.984", "0.952")
+Overall <- c("0.968", "0.974", "0.972","0.904")
+tibble(Tests, Heter, Homo, Overall) %>% kable(caption = "Performance of three checkpoints from the convnets model, and the 5% significant white-test, computed on the test set. Accuracy is reported for each class, and overall.")
+```
+
 
 ```{r heteresults, echo=F, paged.print=FALSE, results='asis'}
 tests <- c("Computer 2%", "Human 5%", "White-test 5%", "White-test 2%", "Human 2%")
