@@ -411,8 +411,8 @@ tibble(rank, tests, correct, accuracy) %>% kable(col.names = c("Rank","Tests", "
 ## Second Experiment: Heteroskedasticity vs. Null
 ### Comparing results for p.values
 
-```{r heterp, fig.align='center', fig.cap="Proportion of correct answers for each lineup question against the simulated correlation a from human evaluation", fig.retina=NULL, out.width='80%', echo=FALSE}
-knitr::include_graphics("figures/heter_history_plot.png")
+```{r heterp, fig.align='center', fig.cap="P.values for each real plot given by human, computer and white-test.", fig.retina=NULL, out.width='80%', echo=FALSE}
+knitr::include_graphics("figures/heter_pvalues_3test.png")
 ```
 
 
