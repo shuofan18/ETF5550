@@ -268,7 +268,7 @@ First compare the experiment process for human and computer respectively by two 
 
 \begin{figure*}[h]
 \centerline{\includegraphics[width=15cm]{figures/diaghm.png}}
-\caption{Process of human experiment and results calculation}
+\caption{Diagram illustrating the process of human subject evaluation of lineups, and how performance is computed.}
 \label{dghm}
 \end{figure*}
 
