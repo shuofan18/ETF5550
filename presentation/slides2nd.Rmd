@@ -245,7 +245,7 @@ The conclusion of human evaluation is obtained differently from the computer's. 
 ```{r linearresults, echo=F, results='asis'}
 library(knitr)
 tests <- c("Human 5%", "Human 2%", "T-test 5%", "Computer 2%", "T-test 2%")
-rank <- c(1,1,2,3,4)
+rank <- c(1,1,2,3,3)
 correct <- c(47, 47, 43, 39, 39)
 accuracy <- c(0.6714,0.6714, 0.6143, 0.5571, 0.5571)
 tibble(rank, tests, correct, accuracy) %>% kable(col.names = c("Rank","Tests", "No. of correct", "Accuracy"), caption = "Accuracy of testing the 70 data plots evaluated by human computer and the conventional t-test.")
@@ -364,9 +364,9 @@ knitr::include_graphics("figures/heter_pvalues_3test.png")
 
 ## Summary
 
-- Human outperformed computer and t-test in detecting linear vs. null, according to Turk study and ours;
+The convnet can be trained to perform similarly to human perception, when the structure in the residual plots is very specific. Performance on the linear vs no structure is comparable to the human subjects results. Performance on detecting heteroskedasticity is surprisingly good. 
 
-- Computer outperformed human and white-test in detecting heteroskedasticity vs. homoskedasticity, according to our experiment.
+Performance of the convnet is a little bit below the results obtained by a $t$-test, but much higher than white-test.
 
 
 ## Discussion
@@ -377,7 +377,11 @@ We had to remove the data of "all-null" lineup questions.
 
 - Future study
 
-More patterns can be included in training the computer model. There are many possibilities.
+If I had more time, I would like to also include other types of structure to the model, like non-linear structure, or time series structure.
+
+I would try other convnets structure or fine tuning the hyper-parameters in the current convnets.
+
+I would like to find the reason of why convnets did so well in heter ...
 
 ## Materials
 

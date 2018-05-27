@@ -53,7 +53,7 @@ The design for this model is similar to what @SIM18 did in his blog but is tailo
 
 The model is designed as:
 $$Y_i = \beta_0 + \beta_1 X_{i}  + \varepsilon_i, ~~i=1, \dots , n$$
-which is the same with the data generating model of Turk's experiment 2. And all the parameters in our model will be designed to cover the range used in the second experiment in @MM13. The relevant parameters are generated using the following specification.
+which is the same with the data generating model of Turk's experiment 2. And all the parameters in our model were designed to cover the range used in the second experiment in @MM13. The relevant parameters are generated using the following specification.
 
 - $X \sim N[0,\ 1]$  
 Distributions of X has impact on the shape of the scatters. For instance, if X is generated from a uniform distribution, then the plots will look like a square especially when the sample size is large; while more like a circle if X follows normal distribution. 
