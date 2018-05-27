@@ -7,7 +7,6 @@ output:
   beamer_presentation:
     fig_height: 5
     fig_width: 8
-    fontsize: 12pt
     highlight: tango
     theme: metropolis
 header-includes:
@@ -57,45 +56,17 @@ df_mod <- augment(df_lm, df)
 ggplot(lineup(null_permute(".std.resid"), df_mod), aes(x=x, y=.std.resid)) + geom_point() + facet_wrap(~.sample)
 ```
 
-## Visual inference  
-
-- Plot of data is a test statistic
-- Type of plot determines null hypothesis, e.g. residuals vs fitted scatterplot would imply $H_o:$ no relationship, vs $H_a:$ some relationship
-- Human visual system evaluates lineup of data plot in field of null plots
-- If data plot is "identified" as different from null, $H_o$ is rejected
-- Combining results from multiple observers enables $p$-value calculation
-
-## Aside: Computers can't tell difference between blueberry muffins and chihuahuas  
-![Computers can't tell difference between blueberry muffins and chihuahuas](figures/choc_chip_muffins.jpg)
-
-## Amazon Turk study
-
-- Majumder et al (2013) conducted a large study to compare the performance of the lineup protocol, assessed by human evaluators, in comaprison to the classical test
-- Experiment 2 examined $H_o: \beta_k=0$ vs $H_a: \beta_k\neq 0$ assessing the importance of including variable $k$ in the linear model, conducted with a $t$-test, and also lineup protocol
-- 70 lineups of size 20 plots
-- 351 evaluations by human subjects
--
-- Trained deep learning model will be used to classify plots from this study. Accuracy will be compared with results by human subjects.
-
-## Example lineup from experiment 2
-
-![63 of 65 identified the data plot in this lineup](figures/plot_turk2_300_350_12_3.png)
-
 ## Convolutional neural network (convnets)
 
 - Computer vision has advanced substantially
 - If we can train a computer to read residual plots we can have it process a lot more data, than a human can manage.
-
-## How convnets works: Diagram of regression
-
-![How regression works](figures/diagreg.png)
 
 ## How convnets works: R code
 
 <!-- adjust the fontsize of R code --> 
 <!-- removed one layer for display-->
 
-```{r modelstructure, echo=TRUE, message=FALSE, warning=FALSE, results='none'}
+```{r modelstructure, echo=TRUE, tidy=TRUE, size=12, message=FALSE, warning=FALSE, results='none'}
 library(keras)
 model <- keras_model_sequential() %>%
   layer_conv_2d(filters = 32, kernel_size = c(3, 3), 
@@ -113,16 +84,42 @@ model <- keras_model_sequential() %>%
   layer_dense(units = 1, activation = "sigmoid")
 ```
 
+## How convnets works: Model structure
+
+![convnets model structure](figures/modelstruc.png)
+
 ## How convnets works: Diagram of convolution and max pooling
 
 ![How convolution works](figures/diagconv.png)
 
-## First Experiment: Linear vs. Null
+## Aside: Computers can't tell difference between blueberry muffins and chihuahuas  
+![Computers can't tell difference between blueberry muffins and chihuahuas](figures/choc_chip_muffins.jpg)
 
-$H_0$: There are no relationships between the two variables. (Null)
-$H_1$: There is linear relationship between the two variables where all Gauss-Markov assumptions are met. (Linear)
 
-Computer model procedures:
+## Our Experiments
+
+First experiment: Linear vs. Null
+$$H_0$$: There are no relationships between the two variables. (Null)
+$$H_1$$: There is linear relationship between the two variables where all Gauss-Markov assumptions are met. (Linear)
+
+Second experiment: Heteroskedasticity vs. Null
+$$H_0$$: There is linear relationship between the two variables where all Gauss-Markov assumptions are met. (Null)
+$$H_1$$: There is linear relationship between the two variables where the variance of the error term is not a constant while all other Gauss-Markov assumptions are met. (Heteroskedasticity)
+
+
+## First Experiment: Amazon Mechanical Turk study
+
+- Majumder et al (2013) conducted a large study to compare the performance of the lineup protocol, assessed by human evaluators, in comaprison to the classical test
+- Experiment 2 examined $H_o: \beta_k=0$ vs $H_a: \beta_k\neq 0$ assessing the importance of including variable $k$ in the linear model, conducted with a $t$-test, and also lineup protocol
+- 70 lineups of size 20 plots
+- 351 evaluations by human subjects
+-
+- Trained deep learning model will be used to classify plots from this study. Accuracy will be compared with results by human subjects.
+
+## Frist Experiment: Example lineup from Turk experiment 2
+
+![63 of 65 identified the data plot in this lineup](figures/plot_turk2_300_350_12_3.png)
+## First experiment: Computer model procedures
 
 1. Simulate data (X, Y) from the null and the alternative models
 2. Generate scatter plots of X and Y
@@ -130,7 +127,7 @@ Computer model procedures:
 4. Train a deep learning classifier to recognise the patterns from two groups
 5. Test the model's performance on new data and compute the accuracy
 
-## First Experiment: Computer model procedures
+##  First experiment: Computer model procedures (diagram)
 
 ![Procedure of computer model experiment](figures/diagpc.png)
 
@@ -174,7 +171,8 @@ grid.arrange(p1,p2,p3,p4,nrow=2, heights=c(1,1))
 ```
 
 
-
+## Human experiment procedures
+![Procedure of computer model experiment](figures/diaghm.png)
 
 
 ## Materials

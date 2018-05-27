@@ -33,29 +33,36 @@ As Anscombe said in 1973,
 ## Visual inference
 
 So the graphs are very important, and it replys on human evaluation. How to utilize these information provided by graphs and more importantly, to make valid inference? 
-
 Wickham, Di, Hofmann and Buja have developed a protocol named lineup which is validated later on using human experiments in 2013. 
 
 This is an example of lineup. Which plot do you think is the most different? (3) We reject the null hypothesis that the data there is no relationship between the residuals and the fitted values.
-
- 
-## Visual inference
-
 Here we use this set of plots as our test statistics, and different type of plots can be used for different hypothesis, in this case, the null hypothesis is there is no relationship left in the residuals, while the alternative hypothesis is there are some kind of relationship.
 
 More formally, "The protocol consists of generating 19 null plots (could be other number), inserting the plot of the real data in a random location among the null plots and asking the human viewer to single out one of the 20 plots as most different from the others". If the real plot is chosen, it means the real data is different from the null hypothesis, so we reject the null hypothesis with 5% chance to be wrong (Type I error). (then same with slides)
 
-## Deep learning
+
+## Amazon Turk study
+- Majumder et al (2013) conducted a large study to compare the performance of the lineup protocol, assessed by human evaluators, in comaprison to the classical test
+- Experiment 2 examined $H_o: \beta_k=0$ vs $H_a: \beta_k\neq 0$ assessing the importance of including variable $k$ in the linear model, conducted with a $t$-test, and also lineup protocol
+- 70 lineups of size 20 plots
+- 351 evaluations by human subjects
+-
+- Trained deep learning model will be used to classify plots from this study. Accuracy will be compared with results by human subjects.
+
+## Example lineup from experiment 2
+
+## Convolutional neural network (convnets)
 Although human vision has been proved to be powerful and reliable, it is not realistic to render human experiments for every single hypothesis test. If we can train a computer to read residual plots we can have it process a lot more data, than a human can manage.
 How are we gonna teach computer to read residual plots for us? The answer is deep learning.
 - Computer vision has advanced substantially in recent years, you may all heard about self-driving cars, robotics
 - Convolutional neural networks is a type of deep-learning model almost universally used in computer vision applications.
 For simplicity, we can think of the deep learning neural network as a super complex nonlinear model which could estimate hundreds of thousands parameters with big enough dataset. As usual regression problem, to get the estimates of unknown parameters, we need to provide the model with dependent variable and independent variables. Since we wanna train the deep learning model to read residual plots, the independent variable will be the residual plots simulated from the null distribution and the alternative distribution, and dependent variable will be the labels of that plot indicating the true relationship of the original data. Once we have these estimated parameters, we then can use them to classify unseen residual plots, eg. to perform hypothesis tests. But is machine learning perfect?
 
+## How convnets works: R code
 
-## Aside: Volvo admits its self-driving cars are confused by kangaroos
+## How convnets works: Model structure
 
-However, computer has its own disadvantages, and is restricted by the presetting of training. As we can see in this case, the self-driving cars fails to detect the movement of kangaroos because their unique movement. Because the model was trained to detect movement based on the objects moving directions as left or right, forward and backwards but not up and down.
+## How convnets works: Diagram of convolution and max pooling
 
 ## Aside: Computers can't tell difference between blueberry muffins and chihuahuas
 
@@ -63,12 +70,15 @@ This is another example of computers confused by muffins and chihuahuas. Can you
 
 So deep learning model does have pitfalls, disadvantages compared to human visions. And we wanna know how it will perform in reading residual plots compared to human.
 
-## Experiment
+## Our Experiments
 
-1. simulation (the first line seems pretty simply and straightforward, isn't it? In fact, this is where I spent most of my time in the last one month) Think about it, there are countless possibilities in the residual plots genereated from a non-linear model. We will talk about this in more details later. 
-2. Fit a linear model to the data, extract standardized residuals and fitted values (we standardize the residuals and fitted value cause nothing will be lost by doing so, and it makes the plots more comparable with each other)
-3. Save residual plots as fixed-sized images to our local drive (we set all plots as same fix-sized images, it makes the comparison more reasonable and also easier for deep learning model to process)
-4. Train a deep learning classifier to recognise the departures from assumptions 
+## Computer model procedures
+Computer model procedures:
+
+1. Simulate data (X, Y) from the null and the alternative models
+2. Generate scatter plots of X and Y
+3. Save scatter plots as $150\times150$ pixels images
+4. Train a deep learning classifier to recognise the patterns from two groups
 5. Test the model's performance on new data and compute the accuracy
 
 ## Data simulation {#sec:simulation}
