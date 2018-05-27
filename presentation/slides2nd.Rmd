@@ -62,15 +62,20 @@ ggplot(lineup(null_permute(".std.resid"), df_mod), aes(x=x, y=.std.resid)) + geo
 
 ## How convnets works: Diagram of convolution and max pooling
 
-![How convolution works](figures/diagconv.png)
+```{r diagconv, fig.retina=NULL, out.width='100%', echo=FALSE}
+knitr::include_graphics("figures/diagconv.png")
+```
+
 
 ## How convnets works
 
 <!-- deep learning explain --> diagram
 
-## Aside: Computers can't tell difference between blueberry muffins and chihuahuas  
-![Computers can't tell difference between blueberry muffins and chihuahuas](figures/choc_chip_muffins.jpg)
+## Aside: Computers can't tell difference between blueberry muffins and chihuahuas 
 
+```{r chihuahuas, fig.align='center', fig.cap="Computers can't tell difference between blueberry muffins and chihuahuas", fig.retina=NULL, out.width='100%', echo=FALSE}
+knitr::include_graphics("figures/choc_chip_muffins.png")
+```
 
 ## Our Experiments
 
@@ -100,7 +105,22 @@ $H_1$: There is linear relationship between the two variables where the variance
 ## Frist Experiment: Linear vs. Null
 ### Example lineup from Turk experiment 2  
 <!--display-->
-![63 of 65 identified the data plot in this lineup](figures/plot_turk2_300_350_12_3.png)
+```{r turkexp, fig.align='center', fig.cap="63 of 65 identified the data plot in this lineup", fig.retina=NULL, out.width='100%', echo=FALSE}
+knitr::include_graphics("figures/plot_turk2_300_350_12_3.png")
+```
+
+## First Experiment: Linear vs. Null
+### Human experiment procedures (diagram)
+
+![Procedure of computer model experiment](figures/diaghm.png)
+
+## First experiment: Linear vs. Null
+### Computer model procedures (diagram)
+
+```{r diagpc, fig.align='center', fig.cap="Procedure of computer model experiment", fig.retina=NULL, out.width='100%', echo=FALSE}
+knitr::include_graphics("figures/diagpc.png")
+```
+
 ## First experiment: Linear vs. Null
 ### Computer model procedures
 
@@ -110,15 +130,11 @@ $H_1$: There is linear relationship between the two variables where the variance
 4. Train a deep learning classifier to recognise the patterns from two groups
 5. Test the model's performance on new data and compute the accuracy
 
-## First experiment: Linear vs. Null
-### Computer model procedures (diagram)
-
-![Procedure of computer model experiment](figures/diagpc.png)
-
 ## First Experiment: Linear vs. Null
 ### Data simulation {#sec:simulation}  
 
 The linear model:
+
 $$Y_i = \beta_0 + \beta_1 X_{i}  + \varepsilon_i, ~~i=1, \dots , n$$
 
 - $X \sim N[0,\ 1]$  
@@ -141,9 +157,11 @@ The null model:
 
 ## First Experiment: Linear vs. Null
 ### Histogram of simulated parameters from null model
-<!-- display -->
 
-![Histogram of simulated parameters for null model](figures/histnull.png)
+```{r histnull, fig.align='center', fig.cap="Histogram of simulated parameters for null model", fig.retina=NULL, out.width='60%', echo=FALSE}
+knitr::include_graphics("figures/histnull.png")
+```
+
 
 ## First Experiment: Linear vs. Null
 ### Examples of scatter plots from the linear model
@@ -232,7 +250,10 @@ model <- keras_model_sequential() %>%
 ## First Experiment: Linear vs. Null
 ### Training and validation metrics of convnets
 
-![Training and validation metrics of convnets for the first experiment](figures/heter_history_plot.png)
+```{r metrics1, fig.align='center', fig.cap="Training and validation metrics of convnets for the first experiment", fig.retina=NULL, out.width='70%', echo=FALSE}
+knitr::include_graphics("figures/linear_history_plot.png")
+```
+
 
 ## First Experiment: Linear vs. Null
 ### Convnets model selection
@@ -297,12 +318,102 @@ tibble(rank, tests, correct, accuracy) %>% kable(col.names = c("Rank","Tests", "
 
 It is possible that the best classification strategy found by convnets is in fact the convetional t-test.
 
-![The estimated power and overall accuracy of T-test and convnets for test set](figures/ttest_dl_graph.png)
+```{r ttdl, fig.align='center', fig.cap="The estimated power and overall accuracy of T-test and convnets for test set", fig.retina=NULL, out.width='80%', echo=FALSE}
+knitr::include_graphics("figures/ttest_dl_graph.png")
+```
 
 ## Second Experiment: Heteroskedasticity vs. Null
-### Human experiment procedures
-![Procedure of computer model experiment](figures/diaghm.png)
+### Human experiment setup
+The experiment is to evaluate the human ability of reading heteroskedasticity from residual plots. It is rendered at Monash University, Melbourne Australia. The participants are all students or lecturers in this university.
+<!-- diagram or graph-->
+Four survey are randomly sent to 84 people by email, three of the survey consist of ten lineup questions, and the fourth survey has only four lineup questions. Only one lineup question appears in the survey twice, thus, we have 33 ($10\times3+4-1$) distinct questions in total. A total number of 22 people have participated. Five people evaluated two surveys. One people selected four plots for each lineup, this person's response is removed from the data. In summary, we have 218 effective evaluations from 21 people. 
 
+## Second Experiment: Heteroskedasticity vs. Null
+### An example of questions used in the human experiment 
+
+```{r heterlineup, fig.align='center', fig.cap="An example question in the survey, 4 out of 6 people picked the real plot.", fig.retina=NULL, out.width='80%', echo=FALSE}
+knitr::include_graphics("figures/heter_lineup_example.png")
+```
+
+## Second Experiment: Heteroskedasticity vs. Null
+### Heteroskedasticity simulation
+
+The Heteroskedasticity model:
+
+$$Y_i = \beta_0 + \beta_1 X_{i}  + \varepsilon_i, ~~i=1, \dots , n$$
+
+- $X\sim U[-1,\ 1]$
+
+- $\beta_0 = 0$
+
+- $\beta_1\sim U[0.5,\ 1]$
+
+- $\varepsilon\sim N(0,\ (aX+v)^2)$
+
+- $a\sim U(-5,\ -0.05)\bigcup(0.05,\ 5)$
+
+- $v \sim N(0,\ 1)$
+
+- $ax+v-min(ax+v)$ when $min(ax+v)<0$ 
+
+- $n\sim U[50,\ 500]$ 
+
+The null model:
+
+- $\varepsilon\sim N(0,\ c)$
+
+- $c=mean(ax+v)$
+
+
+## Second Experiment: Heteroskedasticity vs. Null
+### White test
+
+To provide a reference level of how computer and human perform, a special case of White test is used in this experiment. The procedure of the White test [@IE17] is:
+
+- Estimate OLS model for the data, obtain residuals ($\hat{u}$) and the fitted values ($\hat{y}$). Computer the squared OLS residuals ($\hat{u}^2$) and the squared fitted values ($\hat{y}^2$).
+
+- Run an auxiliary regression as $\hat{u}^2=\eta_0+\eta_1  \hat{y}+\eta_2 \hat{y}^2+error$, obtain the R-squared $R_{\hat{u}^2}^2$
+
+- Calculate the LM statistic which follows $\chi_2^2$ distribution
+
+- Conclude based on p-values given certain $\alpha$
+
+## Second Experiment: Heteroskedasticity vs. Null
+### Training and validation metrics of convnets
+
+```{r metrics2, fig.align='center', fig.cap="Training and validation metrics of convnets for the second experiment", fig.retina=NULL, out.width='70%', echo=FALSE}
+knitr::include_graphics("figures/human_against_a.png")
+```
+
+## Second Experiment: Heteroskedasticity vs. Null
+### Convnets model selection
+
+<!-- tables -->
+
+## Second Experiment: Heteroskedasticity vs. Null
+### Human performance in the experiment
+
+```{r hheter, fig.align='center', fig.cap="Proportion of correct answers for each lineup question against the simulated correlation a from human evaluation", fig.retina=NULL, out.width='80%', echo=FALSE}
+knitr::include_graphics("figures/heter_history_plot.png")
+```
+
+## Second Experiment: Heteroskedasticity vs. Null
+### Comparing results
+
+```{r heteresults, echo=F, paged.print=FALSE, results='asis'}
+tests <- c("Computer 2%", "Human 5%", "White-test 5%", "White-test 2%", "Human 2%")
+rank <- c(1,2,2,3,4)
+correct <- c(25, 17, 17, 16, 15)
+accuracy <- c("92.59%","62.96%", "62.96%","59.26%","55.56%")
+tibble(rank, tests, correct, accuracy) %>% kable(col.names = c("Rank","Tests", "No. of correct", "Accuracy"), caption = "Accuracy of testing the 27 data plots evaluated by human computer and the conventional white-test.")
+```
+
+## Second Experiment: Heteroskedasticity vs. Null
+### Comparing results for p.values
+
+```{r heterp, fig.align='center', fig.cap="Proportion of correct answers for each lineup question against the simulated correlation a from human evaluation", fig.retina=NULL, out.width='80%', echo=FALSE}
+knitr::include_graphics("figures/heter_history_plot.png")
+```
 
 
 ## Materials

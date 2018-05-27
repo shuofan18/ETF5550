@@ -73,6 +73,7 @@ So deep learning model does have pitfalls, disadvantages compared to human visio
 ## Our Experiments
 
 ## Computer model procedures
+
 Computer model procedures:
 
 1. Simulate data (X, Y) from the null and the alternative models
@@ -80,6 +81,12 @@ Computer model procedures:
 3. Save scatter plots as $150\times150$ pixels images
 4. Train a deep learning classifier to recognise the patterns from two groups
 5. Test the model's performance on new data and compute the accuracy
+
+## Computer model procedures
+
+diagram
+
+## Human experiment procedures
 
 ## Data simulation {#sec:simulation}
 
