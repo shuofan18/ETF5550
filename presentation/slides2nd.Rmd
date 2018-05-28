@@ -84,14 +84,14 @@ $H_1$: There is linear relationship between the two variables where the variance
 ## First Experiment: Linear vs. Null
 ### Amazon Mechanical Turk study
 
-- Majumder et al (2013) conducted a large study to compare the performance of the lineup protocol, assessed by human evaluators, in comaprison to the classical test
+- Majumder et al (2013) conducted a large study to compare the performance of the lineup protocol, assessed by human evaluators, in comparison to the classical test
 - Experiment 2 examined $H_o: \beta_k=0$ vs $H_a: \beta_k\neq 0$ assessing the importance of including variable $k$ in the linear model, conducted with a $t$-test, and also lineup protocol
 - 70 lineups of size 20 plots
 - 351 evaluations by human subjects
 -
 - Trained deep learning model will be used to classify plots from this study. Accuracy will be compared with results by human subjects.
 
-## Frist Experiment: Linear vs. Null
+## First Experiment: Linear vs. Null
 ### Example lineup from Turk experiment 2  
 <!--display-->
 ```{r turkexp, fig.align='center', fig.height=4, fig.retina=NULL, out.width='80%', echo=FALSE}
@@ -355,18 +355,11 @@ accuracy <- c("92.59%","62.96%", "62.96%","59.26%","55.56%")
 tibble(rank, tests, correct, accuracy) %>% kable(col.names = c("Rank","Tests", "No. of correct", "Accuracy"), caption = "Accuracy of testing the 27 data plots evaluated by human computer and the conventional white-test.")
 ```
 
-## Second Experiment: Heter vs. Homo
-### Comparing results -- p.values
-
-```{r heterp, fig.align='center', fig.height=4, fig.retina=NULL, out.width='80%', echo=FALSE}
-knitr::include_graphics("figures/heter_pvalues_3test.png")
-```
-
 ## Summary
 
 The convnet can be trained to perform similarly to human perception, when the structure in the residual plots is very specific. Performance on the linear vs no structure is comparable to the human subjects results. Performance on detecting heteroskedasticity is surprisingly good. 
 
-Performance of the convnet is a little bit below the results obtained by a $t$-test, but much higher than white-test.
+Performance of the convnet is a little bit below the results obtained by a $t$-test for the linear experiment, but much higher than white-test for the heteroskedasticity experiment.
 
 
 ## Discussion
@@ -377,11 +370,11 @@ We had to remove the data of "all-null" lineup questions.
 
 - Future study
 
-If I had more time, I would like to also include other types of structure to the model, like non-linear structure, or time series structure.
+Include other types of structure to the model, like non-linear structure, or time series structure.
 
-I would try other convnets structure or fine tuning the hyper-parameters in the current convnets.
+Try other convnets structure or fine tuning the hyper-parameters in the current convnets.
 
-I would like to find the reason of why convnets did so well in heter ...
+A bigger group of human subjects.
 
 ## Materials
 
