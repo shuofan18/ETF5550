@@ -7,23 +7,23 @@ knit: "bookdown::render_book"
 
 Turk experiment mainly considers linear data; we extend their study by including heteroscedasticity in this paper. A new database of human evaluating heteroskedasticity is created by a small experiment. This new database is used to compare the performance of the computer model, the convnets. The convnets is trained on the same parameter simulation framework and tested on the same data as the human evaluations.
 
+## A new human experiment
+
 \begin{figure*}[h]
 \centerline{\includegraphics[width=15cm]{figures/diag2exp.png}}
 \caption{Human subject experiment set-up for the second hypothesis test. Four surveys were sent to 84 people, 22 participated, 218 effective evaluations were collected.}
 \label{diag2exp}
 \end{figure*}
 
-## A new human experiment
+The experiment is to evaluate the human ability to read heteroskedasticity from residual plots. It is rendered at Monash University, Melbourne Australia. The participants are all students or lecturers in the department of econometrics and business statistics.
+
+Four surveys were randomly sent to 84 people by email, three of the survey consists of ten lineup questions, and the fourth survey has only four lineup questions. All lineup questions are of size 20 plot and are designed to have different difficulty levels. Only one lineup question appears in the survey twice, thus, we have 33 ($10\times3+4-1$) distinct questions in total. A total number of 22 people have participated. Five people evaluated two surveys. One people selected four plots for each lineup by accident, this person's response was removed from the data. In summary, we collected 218 effective evaluations from 21 people. Figure \ref{heterlu} is an example of the lineup used as a question in the survey. The "real plot" and "null plot" data in all lineup questions was simulated using the same specifications given in the next two sections respectively.
 
 \begin{figure*}[h]
 \centerline{\includegraphics[width=15cm]{figures/heter_lineup_example.png}}
 \caption{An example question in the survey, 4 out of 6 people picked the real plot, the real plot is the first one.}
 \label{heterlu}
 \end{figure*}
-
-The experiment is to evaluate the human ability to read heteroskedasticity from residual plots. It is rendered at Monash University, Melbourne Australia. The participants are all students or lecturers in the department of econometrics and business statistics.
-
-Four surveys were randomly sent to 84 people by email, three of the survey consists of ten lineup questions, and the fourth survey has only four lineup questions. All lineup questions are of size 20 plot and are designed to have different difficulty levels. Only one lineup question appears in the survey twice, thus, we have 33 ($10\times3+4-1$) distinct questions in total. A total number of 22 people have participated. Five people evaluated two surveys. One people selected four plots for each lineup by accident, this person's response was removed from the data. In summary, we collected 218 effective evaluations from 21 people. Figure \ref{heterlu} is an example of the lineup used as a question in the survey. The "real plot" and "null plot" data in all lineup questions was simulated using the same specifications given in the next two sections respectively.
 
 ## Heteroskedasticity simulation
 
