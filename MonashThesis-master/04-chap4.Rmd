@@ -5,23 +5,13 @@ knit: "bookdown::render_book"
 
 # Conclusion and discussion
 
-SUMMARISE RESULTS BRIEFLY
-The convnet can be trained to perform similarly to human perception, when the structure in the residual plots is very specific. Performance on the linear vs no structure is comparable to the human subjects results. Performance on detecting heteroskedasticity is also good. 
+The convnet can be trained to perform similarly to human perception when the structure in the residual plots is very specific. Performance on the linear vs no structure is comparable to the human subjects' results. Performance on detecting heteroskedasticity is surprisingly good. Performance of the convnet is a little bit below the results obtained by the $t$-test for the linear experiment, but much higher than the white-test for the heteroskedasticity experiment.
 
-SUMMARISE OTHER FINDINGS BRIEFLY
-Performance of the convnet exceeds the results obtained by a $t$-test. 
+As mentioned in the previous chapter, a large number of images were generated and employed in this study, relying only on the CPU, 10-20 hours is required for generating and saving all images, another 10-20 hours will be used for convnets model training and testing. With an NVIDIA GPU, this time may be shortened.
 
-WHAT WOULD YOU DO DIFFERENTLY
-- Training of the convnet requires many images. Time to train the model was long.
+Although this study has shown that the computer model, more specifically, the convnets is approaching the best test (t-test) in linear relationship detection task, the white test we used in the second experiment is too general to draw any meaningful conclusion. It is possible that a more powerful white test or BP, which is specific to the structure designed in our second experiment, can achieve higher accuracy than the convnets. However, this study gives hope to the future utilization of convnets in reading the residual plot. Unlike the conventional distribution tests, convnets does not require convoluted mathematical derivations and can be applied to any visualizable problems. What's more, convnets is not restricted to be valid under any assumptions, it is valid whenever there are distinguishable patterns in the residuals. Compared to human, the convnets is more stable in that it always gives consistent prediction once it is well trained while different groups of people may have different opinions on one plot. In addition, the computer training and testing can be done by a single computer which barely costs anything (other than our genuine efforts) while human evaluations could be much more expensive. 
 
-- Other types of structure: could we have many classes of structure? 
-
-- How would you expand the experiment to build a model for general residual plot reading?  
-
-
-
-
-
+On the other hand, the computer also has pitfalls. Its ability is limited to the patterns provided by training. The more patterns we want the convnets to recognize, the more structures we need to feed it. As for the future study, more types of structure could be considered, for example, other types of heteroskedasticity, the non-linear relationship, outliers, etc. The binary classification can also be extended into a multiclass classification, e.g. one convnets can be trained to recognize all departures from the null. What's more, to provide a more reliable comparison between human and computers, a larger human experiment is required. For an even further step, the convnets can be designed for even more general hypothesis testing purposes, the biggest challenge would be finding the most appropriate plot (the test statistic) which can show the key features for certain tests. For instance, if we are interested in telling a time series data with unit root from a trend stationary one, the most suitable plot may be the time plot.
 
 
 
