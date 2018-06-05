@@ -5,9 +5,7 @@ knit: "bookdown::render_book"
 
 # New experiment comparing human vs. computer on reading heteroskedasticity
 
-Turk experiment mainly considers linear data; we extend their study by including heteroscedasticity in this paper. A new database of human evaluations of heteroskedasticity is created by a small experiment. This new database is used to compare the performance of the computer model. The computer is trained on the same parameter simulation framework and tested on the same data as the human evaluations.
-
-## Human experiment explanation
+Turk experiment mainly considers linear data; we extend their study by including heteroscedasticity in this paper. A new database of human evaluating heteroskedasticity is created by a small experiment. This new database is used to compare the performance of the computer model, the convnets. The convnets is trained on the same parameter simulation framework and tested on the same data as the human evaluations.
 
 \begin{figure*}[h]
 \centerline{\includegraphics[width=15cm]{figures/diag2exp.png}}
@@ -15,11 +13,7 @@ Turk experiment mainly considers linear data; we extend their study by including
 \label{diag2exp}
 \end{figure*}
 
-The experiment is to evaluate the human ability to read heteroskedasticity from residual plots. It is rendered at Monash University, Melbourne Australia. The participants are all students or lecturers in the department of econometrics and business statistics.
-
-Four surveys were randomly sent to 84 people by email, three of the survey consists of ten lineup questions, and the fourth survey has only four lineup questions. All lineup questions are of size 20 plot. Only one lineup question appears in the survey twice, thus, we have 33 ($10\times3+4-1$) distinct questions in total. A total number of 22 people have participated. Five people evaluated two surveys. One people selected four plots for each lineup by accident, this person's response was removed from the data. In summary, we collected 218 effective evaluations from 21 people. 
-
-Figure \ref{heterlu} is an example of the lineup used as a question in the survey.
+## A new human experiment
 
 \begin{figure*}[h]
 \centerline{\includegraphics[width=15cm]{figures/heter_lineup_example.png}}
@@ -27,7 +21,9 @@ Figure \ref{heterlu} is an example of the lineup used as a question in the surve
 \label{heterlu}
 \end{figure*}
 
-The "real plot" and "null plot" data in all lineup questions was simulated using the same specifications given in the next two sections respectively.
+The experiment is to evaluate the human ability to read heteroskedasticity from residual plots. It is rendered at Monash University, Melbourne Australia. The participants are all students or lecturers in the department of econometrics and business statistics.
+
+Four surveys were randomly sent to 84 people by email, three of the survey consists of ten lineup questions, and the fourth survey has only four lineup questions. All lineup questions are of size 20 plot and are designed to have different difficulty levels. Only one lineup question appears in the survey twice, thus, we have 33 ($10\times3+4-1$) distinct questions in total. A total number of 22 people have participated. Five people evaluated two surveys. One people selected four plots for each lineup by accident, this person's response was removed from the data. In summary, we collected 218 effective evaluations from 21 people. Figure \ref{heterlu} is an example of the lineup used as a question in the survey. The "real plot" and "null plot" data in all lineup questions was simulated using the same specifications given in the next two sections respectively.
 
 ## Heteroskedasticity simulation
 
@@ -54,9 +50,9 @@ To keep the simulated standard deviation positive, and to keep the structure of 
 - $n\sim U[50,\ 500]$
 The sample sizes are randomly generated from 50 to 500 to provide reasonable variations.
 
-In general, the choice of the parameters is an empirical work. Primarily, we want the residual plots to show more variation; on the other hand, we need to limit the range of these parameters in order to keep the key features in the data.
+In general, the choice of the parameters is an empirical work. Primarily, we want the residual plots to show more variation; on the other hand, we need to limit the range of these parameters in order to keep the key features in the data. Figure \ref{fig:heterplot4} shows four examples of residual plots generated under this structure.
 
-```{r heterplot4, message=FALSE, cache=TRUE, fig.cap="Four examples of residual plots generated from linear model with heteroskedasticity"}
+```{r heterplot4, message=FALSE, cache=TRUE, fig.cap="Four examples of residual plots generated from the linear model with heteroskedasticity"}
 heter<-function(i){
   
   n = sample(50:500, 1)
@@ -95,11 +91,11 @@ The null scenario in this experiment is the classic linear model. The model stru
 
 - $c=mean(ax+v)$
 
-$c$ is a constant which equals to the mean of the $ax+v$. All other parameters in the null data are the same as the heteroskedasticity data.
+where $c$ is a constant which equals to the mean of the $ax+v$. All other parameters in the null data are the same as the heteroskedasticity data.
 
 ## White test
 
-To provide a reference level of how computer and human are performing, a special case of the White test is used in this experiment. Every data set simulated from this section has been tested by the White test. The procedure of the White test [@IE17] is:
+To provide a reference level of how computer and human are performing, a special case of the White test is used in this experiment. Every data set simulated from this section has been tested by this White test. The procedure of the White test [@IE17] is:
 
 - Estimate OLS model for the data, obtain residuals ($\hat{u}$) and the fitted values ($\hat{y}$). Computer the squared OLS residuals ($\hat{u}^2$) and the squared fitted values ($\hat{y}^2$).
 
@@ -109,19 +105,17 @@ To provide a reference level of how computer and human are performing, a special
 
 - Conclude based on p-values given certain $\alpha$.
 
+We think this test is suitable for detecting the heterskedasticity specified in this section, because $\hat{y_i}=\hat{\beta_0}+\hat{\beta_1}x_{i1}$, so the squared fitted value $\hat{y}^2$ contains both the squares of the independent variable $x^2$ and $x$ itself. This form is consistent with our model design where the variance of error term is a quadratic function of $x$.
+
 ## Computer model
 
-In this experiment, a linear model first fit to the data. Residuals from the fitted model are standardized and extracted. The residual plot is made of standardized residuals against X. The convnets has the same structure as in the first experiment, and all hyper-parameters in this model are exactly the same as the previous one.
-
-15 epochs are done in this section. All 15 convnets models are saved. The training and validation metrics are shown in figure \ref{histheter}. The overfitting issue is not severe in this case. The variation in accuracy and loss are very small since the beginning. We believe the training data and the convnets are large enough, and the model is well trained.
+In this experiment, a linear model first fit to the data. Residuals from the fitted model are standardized and extracted. The residual plot is made of standardized residuals against X. The convnets has the same structure as in the first experiment, and all hyper-parameters in this model are exactly the same as the previous one. Fifteen epochs are done in this experiment. All fifteen convnets models are saved. The training and validation metrics are shown in figure \ref{histheter}. The overfitting issue is again not severe in this case. The variation in accuracy and loss are very small even since the beginning. We believe the training data and the convnets are both large enough, and the model is well trained. Then the fourth, eleventh and fifteenth epoch models are selected to be tested on the test set and the accuracy is shown in table \ref{hetercheck}. The 11th model is chosen to represent computer for the competition according to the overall accuracy. It is also worth noting that the $\alpha$ (error rate in the null dataset) chosen by the convnets is between 1.6% to 3.3%, which is smaller than 5%; what's more, the power of the convnets (accuracy in the real dataset) is much higher than the white test. Therefore, the overall accuracy of the convnets is higher than the white test.
 
 \begin{figure*}[h]
 \centerline{\includegraphics[width=15cm]{figures/heter_history_plot.png}}
 \caption{Training and validation metrics of heteroskedasticity vs. null model in our second experiment}
 \label{histheter}
 \end{figure*}
-
-The fourth, eleventh and fifteenth epoch models were selected to be tested on the test set and the accuracy is shown in table \ref{hetercheck}. The 11th model is chosen to represent computer in this section.
 
 \begin{table}[ht]
 \centering
@@ -138,14 +132,9 @@ The fourth, eleventh and fifteenth epoch models were selected to be tested on th
 
 ## Comparing results
 
-The performance of computer and human were computed by the same methods stated in chapter 2. Figure \ref{humana} displays the relationship between the proportion of correct answers for each question against the value of the simulated "a" for the real plot in that lineup question. The proportion is increasing as the absolute value of "a" increases. This meets our expectation since the value of "a" controls the magnitude of "heteroskedasticity". The stronger the relationship is in the data, the more people are able to pick the real plot.
+The performance of computer and human are computed by the same methods stated in chapter 2. The final competition dataset is the twenty-seven "real plots" used in the four surveys. Figure \ref{humana} displays the relationship between the proportion of correct answers for each question against the value of the simulated "a" for the real plot in that lineup question. The proportion is increasing as the absolute value of "a" increases. This meets our expectation since the value of "a" controls the magnitude of "heteroskedasticity". The stronger the relationship is in the data, the more people are able to pick the real plot.
 
-\begin{figure*}[h]
-\centerline{\includegraphics[width=15cm]{figures/human_against_a.png}}
-\caption{Proportion of correct answers for each lineup question against the simulated correlation "a" from human evaluation}
-\label{humana}
-\end{figure*}
-
+Table \ref{heteresult} presents the accuracy achieved by our convnets, human and the white test for testing heteroskedasticity in those twenty-seven real plots. Different from the first experiment, this time the convnets achieves the best performance against human and the white test. In addition, the accuracy achieved by the convnets is also much higher than its competitors. 
 
 \begin{table}[ht]
 \centering
@@ -163,11 +152,15 @@ The performance of computer and human were computed by the same methods stated i
 \label{heteresult}
 \end{table}
 
+## Aside discussion
 
+Our original design was to have three surveys of size ten questions and to include two "all-null" lineup questions per survey. By "all-null", it means the "real plot" in that lineup was also generated from the null distribution. People were expected to having difficulties picking the real plot in that situation. However, because of one mistake we made in the data simulation procedure, the variance of the error terms associated with the real plots in the all-null lineups was not a single constant but a series of random numbers. Even if this series of random numbers had no relationship with the independent variable $x$, they led to undesired patterns in the data such as non-linearity and extreme outliers. Hence many participants picked the real plot successfully for the six all-null lineup questions. To fix this issue, we had to remove the information related to the six all-null questions and made one extra survey to collect more data. This was the reason why we made three normal surveys plus an extra small one.
 
-
-
-
+\begin{figure*}[h]
+\centerline{\includegraphics[width=15cm]{figures/human_against_a.png}}
+\caption{Proportion of correct answers for each lineup question against the simulated correlation "a" from human evaluation}
+\label{humana}
+\end{figure*}
 
 
 
