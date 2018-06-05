@@ -10,7 +10,7 @@ This thesis was written using R markdown with relevant code and data accessible 
 
 [https://github.com/shuofan18/ETF5550](https://github.com/shuofan18/ETF5550)
 
-Software used to conduct this research is R [@R], Keras [@keras], ggplot2 [@ggplot2]
+Software used to conduct this research is R [@R], Keras [@keras], ggplot2 [@ggplot2], Tensorflow [@Tensorflow]
 
 <!-- Tensorflow, tidyverse citation problem-->
 

@@ -105,7 +105,7 @@ To provide a reference level of how computer and human are performing, a special
 
 - Conclude based on p-values given certain $\alpha$.
 
-We think this test is suitable for detecting the heterskedasticity specified in this section, because $\hat{y_i}=\hat{\beta_0}+\hat{\beta_1}x_{i1}$, so the squared fitted value $\hat{y}^2$ contains both the squares of the independent variable $x^2$ and $x$ itself. This form is consistent with our model design where the variance of error term is a quadratic function of $x$.
+We think this test is suitable for detecting the heterskedasticity specified in this section, because $\hat{y_i}=\hat{\beta_0}+\hat{\beta_1}x_{i1}$, so the squared fitted value $\hat{y}^2$ contains both the squares of the independent variable $x^2$ and $x$ itself. This form is consistent with our model design where the variance of the error term is a quadratic function of $x$.
 
 ## Computer model
 
@@ -132,7 +132,7 @@ In this experiment, a linear model first fit to the data. Residuals from the fit
 
 ## Comparing results
 
-The performance of computer and human are computed by the same methods stated in chapter 2. The final competition dataset is the twenty-seven "real plots" used in the four surveys. Figure \ref{humana} displays the relationship between the proportion of correct answers for each question against the value of the simulated "a" for the real plot in that lineup question. The proportion is increasing as the absolute value of "a" increases. This meets our expectation since the value of "a" controls the magnitude of "heteroskedasticity". The stronger the relationship is in the data, the more people are able to pick the real plot.
+The performance of computer and human are computed by the same methods stated in chapter 2. The final competition dataset is the twenty-seven "real plots" used in the four surveys. Figure \ref{humana} displays the relationship between the proportion of correct answers for each question against the value of the simulated "a" for the real plot in that lineup question. The proportion is increasing as the absolute value of "a" increases. This meets our expectation since the value of "a" controls the magnitude of "heteroskedasticity". The stronger the relationship is in the data; the more people are able to pick the real plot.
 
 Table \ref{heteresult} presents the accuracy achieved by our convnets, human and the white test for testing heteroskedasticity in those twenty-seven real plots. Different from the first experiment, this time the convnets achieves the best performance against human and the white test. In addition, the accuracy achieved by the convnets is also much higher than its competitors. 
 
